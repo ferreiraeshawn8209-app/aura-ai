@@ -12,6 +12,12 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
  * Root screen that gates the chat UI behind runtime permission requests.
  * Non-critical permissions (contacts, calendar, SMS, phone) are requested
  * upfront but the user can proceed without them — AURA will degrade gracefully.
+ *
+ * **Testing note**: Runtime permission grant/denial flows require a real device
+ * or emulator with UIAutomator. Basic launch and UI-display assertions are
+ * covered in [MainActivityTest]. Full permission acceptance/rejection scenarios
+ * should be validated via instrumentation tests using the UIAutomator API or
+ * Accompanist's `PermissionState` testing utilities.
  */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

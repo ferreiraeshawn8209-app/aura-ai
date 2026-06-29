@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">AURA AI</string>
+    <string name="chat_hint">Ask AURA anything…</string>
+    <string name="voice_tooltip">Tap to speak</string>
+    <string name="send_tooltip">Send message</string>
+    <string name="permission_rationale_call">AURA needs permission to make phone calls on your behalf.</string>
+    <string name="permission_rationale_sms">AURA needs permission to send SMS messages on your behalf.</string>
+    <string name="permission_rationale_contacts">AURA needs access to contacts to find phone numbers by name.</string>
+    <string name="permission_rationale_calendar">AURA needs calendar access to create reminders and events.</string>
+    <string name="permission_rationale_microphone">AURA needs microphone access for voice input.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="error_no_api_key">OpenAI API key not configured. Please add OPENAI_API_KEY to local.properties.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="aura_greeting">Hi, I\'m AURA! I can make calls, send messages, set reminders, and more. How can I help?</string>
+    <string name="typing_indicator">AURA is thinking…</string>
+    <string name="you_label">You</string>
+    <string name="aura_label">AURA</string>
+</resources>

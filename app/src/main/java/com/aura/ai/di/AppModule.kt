@@ -6,6 +6,8 @@ import com.aura.ai.BuildConfig
 import com.aura.ai.data.database.AuraDatabase
 import com.aura.ai.data.database.dao.*
 import com.aura.ai.data.remote.OpenAIService
+import com.aura.ai.network.BodySanitizingInterceptor
+import com.aura.ai.network.RedactingLoggingInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -27,6 +29,16 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val authScheme = "Bearer"
+
+        val logger = HttpLoggingInterceptor.Logger.DEFAULT
+        val redacting = RedactingLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
+            // Delegate to default logger but ensure BuildConfig.OPENAI_API_KEY is not present
+            val sanitized = if (BuildConfig.OPENAI_API_KEY.isNotEmpty()) message.replace(BuildConfig.OPENAI_API_KEY, "[REDACTED_API_KEY]") else message
+            HttpLoggingInterceptor.Logger.DEFAULT.log(sanitized)
+        })
+
+        val sanitizer = BodySanitizingInterceptor()
+
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -35,13 +47,10 @@ object AppModule {
                     .build()
                 chain.proceed(request)
             }
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = if (BuildConfig.DEBUG) {
-                    HttpLoggingInterceptor.Level.BODY
-                } else {
-                    HttpLoggingInterceptor.Level.NONE
-                }
-            })
+            // Sanitize bodies before logging
+            .addInterceptor(sanitizer)
+            // Redacting logging interceptor that also masks Authorization header
+            .addInterceptor(redacting)
             .build()
     }
 

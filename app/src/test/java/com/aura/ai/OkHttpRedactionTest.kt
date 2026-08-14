@@ -36,10 +36,17 @@ class OkHttpRedactionTest {
                     .build()
                 chain.proceed(req)
             }
+            // Add a response body that contains the API key to ensure body sanitizer works
+            .addInterceptor { chain ->
+                val response = chain.proceed(chain.request())
+                // Return a response that includes the API key in body (simulate leak from server)
+                val bodyWithKey = "server-data: ${'$'}{BuildConfig.OPENAI_API_KEY}"
+                return@addInterceptor response.newBuilder().body(okhttp3.ResponseBody.create(response.body?.contentType(), bodyWithKey)).build()
+            }
             .addInterceptor(interceptor)
             .build()
 
-        server.enqueue(MockResponse().setBody("hello"))
+        server.enqueue(MockResponse().setBody("irrelevant"))
 
         val request = Request.Builder()
             .url(server.url("/test"))

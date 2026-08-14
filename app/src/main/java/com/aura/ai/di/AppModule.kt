@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.aura.ai.BuildConfig
 import com.aura.ai.data.database.AuraDatabase
-import com.aura.ai.data.database.dao.ConversationDao
-import com.aura.ai.data.database.dao.MemoryDao
+import com.aura.ai.data.database.dao.*
 import com.aura.ai.data.remote.OpenAIService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -66,16 +65,137 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAuraDatabase(@ApplicationContext context: Context): AuraDatabase {
+        val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
+            override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `skills` (
+                      `name` TEXT NOT NULL,
+                      `purpose` TEXT NOT NULL,
+                      `currentVersion` TEXT NOT NULL,
+                      `active` INTEGER NOT NULL,
+                      `createdAt` INTEGER NOT NULL,
+                      `updatedAt` INTEGER NOT NULL,
+                      PRIMARY KEY(`name`)
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `skill_versions` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `skillName` TEXT NOT NULL,
+                      `version` TEXT NOT NULL,
+                      `metadataJson` TEXT NOT NULL,
+                      `codeRef` TEXT,
+                      `createdAt` INTEGER NOT NULL,
+                      `testPassed` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `skill_stats` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `skillName` TEXT NOT NULL,
+                      `version` TEXT NOT NULL,
+                      `successfulRuns` INTEGER NOT NULL,
+                      `failedRuns` INTEGER NOT NULL,
+                      `averageConfidence` REAL NOT NULL,
+                      `lastObservedAt` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `learning_events` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `eventType` TEXT NOT NULL,
+                      `sourceSkill` TEXT,
+                      `detailsJson` TEXT NOT NULL,
+                      `createdAt` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `improvement_proposals` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `title` TEXT NOT NULL,
+                      `skillName` TEXT,
+                      `description` TEXT NOT NULL,
+                      `proposalJson` TEXT NOT NULL,
+                      `createdBy` TEXT NOT NULL,
+                      `approved` INTEGER NOT NULL,
+                      `approvedBy` TEXT,
+                      `createdAt` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `sandbox_test_results` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `skillName` TEXT NOT NULL,
+                      `version` TEXT NOT NULL,
+                      `passed` INTEGER NOT NULL,
+                      `metricsJson` TEXT NOT NULL,
+                      `runAt` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `permission_requests` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `permission` TEXT NOT NULL,
+                      `reason` TEXT NOT NULL,
+                      `requestedBy` TEXT NOT NULL,
+                      `granted` INTEGER NOT NULL,
+                      `handledAt` INTEGER,
+                      `requestedAt` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `audit_log` (
+                      `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      `eventType` TEXT NOT NULL,
+                      `eventSource` TEXT NOT NULL,
+                      `detailsJson` TEXT NOT NULL,
+                      `timestamp` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+            }
+        }
+
         return Room.databaseBuilder(
             context,
             AuraDatabase::class.java,
             "aura_database"
-        ).fallbackToDestructiveMigration().build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 
     @Provides
-    fun provideConversationDao(db: AuraDatabase): ConversationDao = db.conversationDao()
+    fun provideConversationDao(db: AuraDatabase): com.aura.ai.data.database.dao.ConversationDao = db.conversationDao()
 
     @Provides
-    fun provideMemoryDao(db: AuraDatabase): MemoryDao = db.memoryDao()
+    fun provideMemoryDao(db: AuraDatabase): com.aura.ai.data.database.dao.MemoryDao = db.memoryDao()
+
+    @Provides
+    fun provideSkillDao(db: AuraDatabase): com.aura.ai.data.database.dao.SkillDao = db.skillDao()
+
+    @Provides
+    fun provideSkillVersionDao(db: AuraDatabase): com.aura.ai.data.database.dao.SkillVersionDao = db.skillVersionDao()
+
+    @Provides
+    fun provideSkillStatDao(db: AuraDatabase): com.aura.ai.data.database.dao.SkillStatDao = db.skillStatDao()
+
+    @Provides
+    fun provideLearningEventDao(db: AuraDatabase): com.aura.ai.data.database.dao.LearningEventDao = db.learningEventDao()
+
+    @Provides
+    fun provideAuditLogDao(db: AuraDatabase): com.aura.ai.data.database.dao.AuditLogDao = db.auditLogDao()
+
+    @Provides
+    fun provideImprovementProposalDao(db: AuraDatabase): com.aura.ai.data.database.dao.ImprovementProposalDao = db.improvementProposalDao()
+
+    @Provides
+    fun provideSandboxTestResultDao(db: AuraDatabase): com.aura.ai.data.database.dao.SandboxTestResultDao = db.sandboxTestResultDao()
+
+    @Provides
+    fun providePermissionRequestDao(db: AuraDatabase): com.aura.ai.data.database.dao.PermissionRequestDao = db.permissionRequestDao()
 }

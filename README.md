@@ -1,3 +1,4 @@
+and roll out all phases
 # AURA AI
 
 **AURA AI** is a mobile-first AI personal assistant for Android, powered by OpenAI GPT.  

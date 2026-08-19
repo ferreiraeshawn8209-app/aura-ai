@@ -1,8 +1,59 @@
-and roll out all phases
 # AURA AI
 
 **AURA AI** is a mobile-first AI personal assistant for Android, powered by OpenAI GPT.  
 It understands natural language and performs real actions on your phone.
+
+---
+
+## Phases & Roadmap
+
+This project will be developed and rolled out across clear phases to ensure a stable, secure, and user-friendly product. Below is the proposed set of phases and what each phase includes.
+
+- Phase 0 — Proof of Concept (Completed)
+  - Basic chat UI and integration with OpenAI API
+  - Parse simple JSON actions (make_call, send_sms, set_reminder, launch_app)
+  - Local storage for conversation history (Room)
+  - Runtime permission handling for core features
+
+- Phase 1 — Private Beta
+  - Improve action parsing and error handling
+  - Contact resolution and fallback flows when contacts not found
+  - Add tests for repository and action parsing logic
+  - Basic onboarding and privacy notice for users
+  - Limit beta to invited testers and gather telemetry (opt-in)
+
+- Phase 2 — Public Beta
+  - Robust permission UX (granular explanations, graceful degradation)
+  - Improved voice interaction (hotword, better noise handling)
+  - Memory system improvements (context windows, summaries)
+  - Analytics and crash reporting (GDPR/consent compliant)
+  - Support for multiple assistant personalities (optional)
+
+- Phase 3 — Production Release
+  - Performance and battery optimizations
+  - Security review and data handling audit
+  - Accessibility improvements (TalkBack, large fonts)
+  - App store preparation (screenshots, privacy policy)
+  - Launch to public and staged rollouts
+
+- Phase 4 — Post-launch Growth & Features
+  - Multi-lingual support and localized models/prompts
+  - Integrations (calendar providers, messaging apps)
+  - Plugin/skill system for third-party actions
+  - Offline-first capabilities for basic actions
+  - Continuous model prompt tuning and monitoring
+
+Rollout plan
+- Start with internal testing (Phase 0 -> Phase 1 alpha testers).
+- Collect feedback and crash reports; prioritize P1 issues.
+- Expand to public beta with staged rollouts (Phase 2).
+- Finalize security and store requirements; perform production release (Phase 3).
+
+Success metrics
+- Task completion rate for actions (calls, SMS, reminders)
+- False-positive/incorrect-action rate
+- User retention and DAU/MAU for beta testers
+- Crash-free sessions and permission grant rates
 
 ---
 

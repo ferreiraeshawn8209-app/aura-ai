@@ -20,14 +20,14 @@ workflows:
             fi
           fi
 
-          # Ensure app module exists in settings
+          # Ensure app module exists in settings (robust check for ':app' in settings file)
           if [ -f settings.gradle.kts ]; then
-            if ! grep -q "include\(\":app\"\)" settings.gradle.kts; then
+            if ! grep -Eq "['\"]:app['\"]" settings.gradle.kts; then
               echo "ERROR: settings.gradle.kts does not include ':app' — expected Android module 'app'."
               exit 1
             fi
           elif [ -f settings.gradle ]; then
-            if ! grep -q "include\s*['\"]:app['\"]" settings.gradle; then
+            if ! grep -Eq "['\"]:app['\"]" settings.gradle; then
               echo "ERROR: settings.gradle does not include ':app' — expected Android module 'app'."
               exit 1
             fi
@@ -88,6 +88,8 @@ workflows:
       - app/build/outputs/**/*.apk
 
 # Notes:
+# - Made the ':app' check more robust by searching for the string ':app' with either single or double quotes
+#   anywhere in the settings.gradle(.kts) file. This avoids false negatives due to whitespace or formatting.
 # - Removed unsupported 'image' and 'cache' fields from under 'environment' to satisfy Codemagic YAML schema.
 # - debug-manual is intended to be started manually from Codemagic UI (no triggers configured).
 # - The workflow enforces Java 17 at runtime and will fail early with a clear message if the CI image

@@ -1,0 +1,77 @@
+workflows:
+  build-pr:
+    name: Build PR - Android Debug APK
+    triggers:
+      - pull_request:
+          branches:
+            - "*"
+    environment:
+      vars:
+        GRADLE_BUILD_TASK: "assembleDebug"
+    scripts:
+      - name: Checkout
+        script: |
+          echo "Checking out code"
+      - name: Install JDK/Android tools
+        script: |
+          ./gradlew --no-daemon -v
+      - name: Build APK
+        script: |
+          ./gradlew $GRADLE_BUILD_TASK --no-daemon --stacktrace
+    artifacts:
+      - app/build/outputs/**/*.apk
+      - app/build/outputs/**/*.aab
+
+  build-release:
+    name: Build Release - main/master
+    triggers:
+      - push:
+          branches:
+            - main
+            - master
+    environment:
+      vars:
+        GRADLE_BUILD_TASK: "assembleRelease"
+    scripts:
+      - name: Checkout
+        script: |
+          echo "Checking out code"
+      - name: Prepare signing (optional)
+        script: |
+          # To sign releases, set the following secure environment variables in Codemagic:
+          # KEYSTORE_BASE64 (base64-encoded keystore), KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            mkdir -p $HOME/keystore
+            echo "$KEYSTORE_BASE64" | base64 --decode > $HOME/keystore/release.keystore
+            cat > keystore.properties <<EOF
+storeFile=$HOME/keystore/release.keystore
+storePassword=$KEYSTORE_PASSWORD
+keyAlias=$KEY_ALIAS
+keyPassword=$KEY_PASSWORD
+EOF
+            echo "Keystore prepared at $HOME/keystore/release.keystore"
+          else
+            echo "No KEYSTORE_BASE64 provided — building unsigned APK/AAB"
+          fi
+      - name: Install JDK/Android tools
+        script: |
+          ./gradlew --no-daemon -v
+      - name: Build Release
+        script: |
+          ./gradlew $GRADLE_BUILD_TASK --no-daemon --stacktrace
+    artifacts:
+      - app/build/outputs/**/*.apk
+      - app/build/outputs/**/*.aab
+
+
+# Notes:
+# - This codemagic.yaml provides two workflows: one triggered for pull requests (debug builds)
+#   and one for pushes to main/master (release builds).
+# - To enable signing of release builds, add the following secure environment variables in Codemagic:
+#     KEYSTORE_BASE64: base64-encoded contents of your release keystore
+#     KEYSTORE_PASSWORD
+#     KEY_ALIAS
+#     KEY_PASSWORD
+#   The workflow will decode the keystore and write a keystore.properties file used by Gradle.
+# - Adjust GRADLE_BUILD_TASK or artifact paths if your module name is not `app` or you use productFlavors.
+# - After merging/creating a PR, Codemagic will produce APK/AAB artifacts which you can download from the build UI.

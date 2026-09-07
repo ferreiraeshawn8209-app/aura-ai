@@ -1,77 +1,107 @@
 workflows:
-  build-pr:
-    name: Build PR - Android Debug APK
-    triggers:
-      - pull_request:
-          branches:
-            - "*"
+  debug-manual:
+    name: Android Debug APK (manual)
+    # No automatic triggers so this workflow is started manually from the Codemagic UI.
+    max_build_duration: 60
     environment:
-      vars:
-        GRADLE_BUILD_TASK: "assembleDebug"
+      image: ubuntu-22.04
+      java: openjdk17
+      cache:
+        - gradle
     scripts:
-      - name: Checkout
+      - name: Verify repository and Gradle configuration
         script: |
-          echo "Checking out code"
-      - name: Install JDK/Android tools
-        script: |
-          ./gradlew --no-daemon -v
-      - name: Build APK
-        script: |
-          ./gradlew $GRADLE_BUILD_TASK --no-daemon --stacktrace
-    artifacts:
-      - app/build/outputs/**/*.apk
-      - app/build/outputs/**/*.aab
+          echo "Checking repository layout and Gradle configuration..."
 
-  build-release:
-    name: Build Release - main/master
-    triggers:
-      - push:
-          branches:
-            - main
-            - master
-    environment:
-      vars:
-        GRADLE_BUILD_TASK: "assembleRelease"
-    scripts:
-      - name: Checkout
-        script: |
-          echo "Checking out code"
-      - name: Prepare signing (optional)
-        script: |
-          # To sign releases, set the following secure environment variables in Codemagic:
-          # KEYSTORE_BASE64 (base64-encoded keystore), KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            mkdir -p $HOME/keystore
-            echo "$KEYSTORE_BASE64" | base64 --decode > $HOME/keystore/release.keystore
-            cat > keystore.properties <<EOF
-storeFile=$HOME/keystore/release.keystore
-storePassword=$KEYSTORE_PASSWORD
-keyAlias=$KEY_ALIAS
-keyPassword=$KEY_PASSWORD
-EOF
-            echo "Keystore prepared at $HOME/keystore/release.keystore"
-          else
-            echo "No KEYSTORE_BASE64 provided — building unsigned APK/AAB"
+          # Ensure Gradle wrapper exists
+          if [ ! -x ./gradlew ]; then
+            if [ -f ./gradlew ]; then
+              chmod +x ./gradlew
+            else
+              echo "ERROR: Gradle wrapper (./gradlew) is missing. Aborting."
+              exit 1
+            fi
           fi
-      - name: Install JDK/Android tools
+
+          # Ensure app module exists in settings
+          if [ -f settings.gradle.kts ]; then
+            if ! grep -q "include\(\":app\"\)" settings.gradle.kts; then
+              echo "ERROR: settings.gradle.kts does not include ':app' — expected Android module 'app'."
+              exit 1
+            fi
+          elif [ -f settings.gradle ]; then
+            if ! grep -q "include\s*['\"]:app['\"]" settings.gradle; then
+              echo "ERROR: settings.gradle does not include ':app' — expected Android module 'app'."
+              exit 1
+            fi
+          else
+            echo "ERROR: No settings.gradle(.kts) found. Cannot determine modules."
+            exit 1
+          fi
+
+          # Ensure app build file exists
+          if [ ! -f app/build.gradle.kts ] && [ ! -f app/build.gradle ]; then
+            echo "ERROR: app/build.gradle(.kts) not found. Ensure Android module 'app' is present."
+            exit 1
+          fi
+
+          echo "Repository checks passed."
+
+      - name: Print Java & Android SDK information
         script: |
-          ./gradlew --no-daemon -v
-      - name: Build Release
+          echo "Java version:"; java -XshowSettings:properties -version 2>&1 | sed -n '1,3p' || java -version || true
+          echo "gradle (wrapper) will be used: ./gradlew --version"; ./gradlew --version || true
+          echo "sdkmanager check (optional):"
+          if command -v sdkmanager >/dev/null 2>&1; then
+            sdkmanager --version || true
+          else
+            echo "sdkmanager not found in PATH — Codemagic image may still provide Android SDK tools via other paths."
+          fi
+
+      - name: Clean
         script: |
-          ./gradlew $GRADLE_BUILD_TASK --no-daemon --stacktrace
+          ./gradlew --no-daemon clean
+
+      - name: Assemble Debug APK
+        script: |
+          set -euo pipefail
+          echo "Starting assembleDebug (this will fail the build if Gradle/Android SDK are misconfigured)"
+          ./gradlew --no-daemon assembleDebug --stacktrace
+
     artifacts:
       - app/build/outputs/**/*.apk
-      - app/build/outputs/**/*.aab
 
+  release-placeholder:
+    name: Release (configure signing later)
+    max_build_duration: 120
+    environment:
+      image: ubuntu-22.04
+      java: openjdk17
+      cache:
+        - gradle
+    # This workflow is intentionally left minimal and disabled for automatic triggers.
+    scripts:
+      - name: Prepare for release (no signing configured)
+        script: |
+          echo "Release workflow present but signing is not configured. Configure signing environment variables in Codemagic to enable releases."
+    artifacts:
+      - app/build/outputs/**/*.apk
 
 # Notes:
-# - This codemagic.yaml provides two workflows: one triggered for pull requests (debug builds)
-#   and one for pushes to main/master (release builds).
-# - To enable signing of release builds, add the following secure environment variables in Codemagic:
-#     KEYSTORE_BASE64: base64-encoded contents of your release keystore
-#     KEYSTORE_PASSWORD
-#     KEY_ALIAS
-#     KEY_PASSWORD
-#   The workflow will decode the keystore and write a keystore.properties file used by Gradle.
-# - Adjust GRADLE_BUILD_TASK or artifact paths if your module name is not `app` or you use productFlavors.
-# - After merging/creating a PR, Codemagic will produce APK/AAB artifacts which you can download from the build UI.
+# - Debug workflow (debug-manual) is designed to be started manually from the Codemagic UI.
+# - It uses the Codemagic-provided Ubuntu 22.04 image and requests OpenJDK 17 which matches the project's
+#   compileOptions / jvmTarget = 17.
+# - The Gradle wrapper (./gradlew) is used to run the build (requirement #3).
+# - The workflow verifies that the `app` module exists (requirement #4) and fails early with clear error messages
+#   if the Gradle project layout is invalid (requirement #10).
+# - The Debug build does not require a keystore (requirement #7).
+# - No Google Play publishing or signing secrets are added (requirements #8 and #9).
+# - The release workflow is kept separate (requirement #6) but left untriggered and unsigned for later configuration.
+# - To start the debug build: open Codemagic, find the app, choose the "debug-manual" workflow and click Start.
+
+# Local verification performed before committing:
+# - Confirmed settings.gradle.kts includes include(":app").
+# - Confirmed app/build.gradle.kts exists and requests Java 17 (sourceCompatibility/jvmTarget = 17).
+# - Confirmed gradlew wrapper is present in repository.
+
+# If you want additional checks (unit tests, lint), tell me and I will add them to the debug workflow.

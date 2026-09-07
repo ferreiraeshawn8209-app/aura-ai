@@ -1,0 +1,28 @@
+workflows:
+  android-build:
+    name: Android Build (assembleDebug)
+    triggers:
+      - push:
+          branches:
+            - main
+      - manual
+    max_build_duration: 60
+    environment:
+      vars: {} # Add any custom env vars here
+      android:
+        api-level: 33
+        build-tools: "33.0.2"
+      java: openjdk11
+      cache:
+        paths:
+          - ~/.gradle/caches
+          - ~/.gradle/wrapper
+    scripts:
+      - name: Install dependencies (optional)
+        script: |
+          echo "Gradle wrapper exists: $(ls gradle/wrapper | wc -l) files"
+          ./gradlew --version
+      - name: Assemble debug
+        script: ./gradlew assembleDebug --no-daemon
+    artifacts:
+      - app/build/outputs/**/*.apk

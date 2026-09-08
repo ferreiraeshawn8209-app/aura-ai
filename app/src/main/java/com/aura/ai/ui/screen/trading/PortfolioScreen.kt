@@ -27,7 +27,7 @@ fun PortfolioScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Simple header row with back button and title (avoid TopAppBar to sidestep experimental API)
+        // Header (simple Row with back button and title)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,10 +66,7 @@ fun PortfolioScreen(
                 }
 
                 items(positions) { position ->
-                    PositionCard(
-                        position = position,
-                        onClose = { onPositionClose(position) }
-                    )
+                    PositionCard(position = position, onClose = { onPositionClose(position) })
                 }
             } else {
                 item {
@@ -88,9 +85,7 @@ fun PortfolioScreen(
 private fun PortfolioDetailCard(portfolio: Portfolio) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(
             modifier = Modifier
@@ -177,9 +172,7 @@ private fun PositionCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier

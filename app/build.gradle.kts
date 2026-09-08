@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 android {
     namespace = "com.aura.ai"
     compileSdk = 34

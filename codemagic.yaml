@@ -10,13 +10,40 @@ workflows:
         script: |
           echo "Checking repository layout and Gradle configuration..."
 
-          # Ensure Gradle wrapper exists
-          if [ ! -x ./gradlew ]; then
+          # Ensure Gradle wrapper exists (attempt to regenerate it if missing by installing system Gradle)
+          if [ -x ./gradlew ]; then
+            echo "Using existing Gradle wrapper (./gradlew)"
+          else
             if [ -f ./gradlew ]; then
               chmod +x ./gradlew
+              echo "Made ./gradlew executable"
             else
-              echo "ERROR: Gradle wrapper (./gradlew) is missing. Aborting."
-              exit 1
+              echo "Gradle wrapper (./gradlew) not found. Attempting to regenerate using system Gradle..."
+
+              # Try to use system 'gradle' if available to run 'gradle wrapper'. If not available, try to install Gradle via apt.
+              if command -v gradle >/dev/null 2>&1; then
+                echo "System Gradle detected. Generating wrapper..."
+                gradle wrapper --gradle-version 8.7 || true
+              else
+                echo "System Gradle not found. Installing Gradle via apt (non-interactive)..."
+                export DEBIAN_FRONTEND=noninteractive
+                apt-get update -y && apt-get install -y gradle || true
+                if command -v gradle >/dev/null 2>&1; then
+                  echo "Gradle installed. Generating wrapper..."
+                  gradle wrapper --gradle-version 8.7 || true
+                else
+                  echo "ERROR: Unable to install or detect Gradle. Please add the Gradle wrapper to the repository (gradlew + gradle/wrapper/gradle-wrapper.jar)."
+                  exit 1
+                fi
+              fi
+
+              if [ -f ./gradlew ]; then
+                chmod +x ./gradlew
+                echo "Generated Gradle wrapper (./gradlew)"
+              else
+                echo "ERROR: Failed to generate Gradle wrapper. Please commit gradlew and gradle/wrapper/gradle-wrapper.jar to the repository."
+                exit 1
+              fi
             fi
           fi
 
@@ -88,11 +115,12 @@ workflows:
       - app/build/outputs/**/*.apk
 
 # Notes:
-# - Made the ':app' check more robust by searching for the string ':app' with either single or double quotes
+# - The ':app' check searches for the string ':app' with either single or double quotes
 #   anywhere in the settings.gradle(.kts) file. This avoids false negatives due to whitespace or formatting.
-# - Removed unsupported 'image' and 'cache' fields from under 'environment' to satisfy Codemagic YAML schema.
-# - debug-manual is intended to be started manually from Codemagic UI (no triggers configured).
+# - The Verify step now attempts to regenerate the Gradle wrapper using a system Gradle installation if
+#  the wrapper is missing. It will try to detect 'gradle' on PATH and, failing that, install Gradle via apt.
+# - If regeneration fails, the step will fail with a clear message instructing the maintainer to commit the
+#   Gradle wrapper files (gradlew + gradle/wrapper/gradle-wrapper.jar).
 # - The workflow enforces Java 17 at runtime and will fail early with a clear message if the CI image
 #   does not provide Java 17 or if Gradle/Android configuration is invalid.
-# - The Gradle wrapper (./gradlew) is used for all build tasks.
-# - No signing, Google Play publishing, or project changes were made.
+# - The Gradle wrapper (./gradlew) is used for all build tasks once available.

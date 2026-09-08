@@ -123,7 +123,7 @@ private fun ScannerSignalCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         signal.symbol,
                         style = MaterialTheme.typography.titleMedium,
@@ -137,7 +137,8 @@ private fun ScannerSignalCard(
                 }
                 Surface(
                     color = if (signal.direction == TradeDirection.BUY) Color(0xFF4CAF50) else Color(0xFFF44336),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
                         signal.direction.name,
@@ -155,19 +156,14 @@ private fun ScannerSignalCard(
                 maxLines = 2
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-            )
+            Divider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "AURA SCORE",
                         style = MaterialTheme.typography.labelSmall,
@@ -180,7 +176,7 @@ private fun ScannerSignalCard(
                         color = getScoreColor(signal.auraScore)
                     )
                 }
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         "R/R RATIO",
                         style = MaterialTheme.typography.labelSmall,

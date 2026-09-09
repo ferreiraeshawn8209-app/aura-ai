@@ -6,21 +6,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aura.ai.domain.trading.model.Portfolio
-import com.aura.ai.domain.trading.model.Position
+import com.aura.ai.domain.trading.model.*
 
 @Composable
 fun PortfolioScreen(
@@ -34,7 +27,7 @@ fun PortfolioScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header row with back button and title
+        // Simple header row with back button and title (avoid TopAppBar to sidestep experimental API)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,7 +66,10 @@ fun PortfolioScreen(
                 }
 
                 items(positions) { position ->
-                    PositionCard(position = position, onClose = { onPositionClose(position) })
+                    PositionCard(
+                        position = position,
+                        onClose = { onPositionClose(position) }
+                    )
                 }
             } else {
                 item {
@@ -92,7 +88,9 @@ fun PortfolioScreen(
 private fun PortfolioDetailCard(portfolio: Portfolio) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
         Column(
             modifier = Modifier
@@ -100,17 +98,19 @@ private fun PortfolioDetailCard(portfolio: Portfolio) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                "Total Portfolio Value",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Text(
-                "R${String.format("%.2f", portfolio.calculateTotalPortfolioValue())}",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
-            )
+            // Total Value
+            Column {
+                Text(
+                    "Total Portfolio Value",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    "R${String.format("%.2f", portfolio.calculateTotalPortfolioValue())}",
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             Divider()
 
@@ -177,7 +177,9 @@ private fun PositionCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(
             modifier = Modifier

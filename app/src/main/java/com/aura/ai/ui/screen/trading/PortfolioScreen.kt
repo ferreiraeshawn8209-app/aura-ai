@@ -6,14 +6,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.aura.ai.domain.trading.model.*
+import com.aura.ai.domain.trading.model.Portfolio
+import com.aura.ai.domain.trading.model.Position
 
 @Composable
 fun PortfolioScreen(
@@ -27,7 +34,7 @@ fun PortfolioScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header (simple Row with back button and title)
+        // Header row with back button and title
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,19 +100,17 @@ private fun PortfolioDetailCard(portfolio: Portfolio) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Total Value
-            Column {
-                Text(
-                    "Total Portfolio Value",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    "R${String.format("%.2f", portfolio.calculateTotalPortfolioValue())}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Text(
+                "Total Portfolio Value",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Text(
+                "R${String.format("%.2f", portfolio.calculateTotalPortfolioValue())}",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
 
             Divider()
 

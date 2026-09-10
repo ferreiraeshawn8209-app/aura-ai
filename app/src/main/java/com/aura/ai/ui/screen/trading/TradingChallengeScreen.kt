@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.aura.ai.domain.trading.model.TradingChallenge
 import com.aura.ai.domain.trading.usecase.ChallengeProgress
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TradingChallengeScreen(
     challenge: TradingChallenge?,

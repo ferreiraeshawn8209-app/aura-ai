@@ -19,8 +19,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // OpenAI API key — override via local.properties or environment variable
+        // OpenAI remains a legacy local provider; Core is the production control boundary.
         buildConfigField("String", "OPENAI_API_KEY", "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\"")
+        buildConfigField("String", "CORE_BASE_URL", "\"${project.findProperty("CORE_BASE_URL") ?: "https://core.invalid/"}\"")
     }
 
     buildTypes {

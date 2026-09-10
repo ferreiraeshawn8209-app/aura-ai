@@ -2,6 +2,8 @@ package com.aura.ai.data.repository
 
 import com.aura.ai.data.remote.core.CoreMasterResponse
 import com.aura.ai.data.remote.core.CoreResult
+import com.aura.ai.data.remote.core.CoreTask
+import com.aura.ai.data.remote.core.CreateTaskRequest
 import com.aura.ai.data.remote.core.CoreService
 import com.aura.ai.data.remote.core.SafeModeRequest
 import com.aura.ai.data.remote.core.SafeModeResponse
@@ -21,6 +23,33 @@ class CoreRepository @Inject constructor(
 
     suspend fun setSafeMode(enabled: Boolean): CoreResult<SafeModeResponse> =
         request { service.setSafeMode(SafeModeRequest(enabled = enabled)) }
+
+    suspend fun createTask(
+        user: String,
+        project: String,
+        request: String,
+        priority: String? = null,
+        metadata: Map<String, String>? = null
+    ): CoreResult<CoreTask> = request {
+        service.createTask(
+            CreateTaskRequest(
+                user = user,
+                project = project,
+                request = request,
+                priority = priority,
+                metadata = metadata
+            )
+        )
+    }
+
+    suspend fun listTasks(
+        user: String? = null,
+        project: String? = null,
+        status: String? = null,
+        limit: Int? = null
+    ): CoreResult<List<CoreTask>> = request {
+        service.listTasks(user = user, project = project, status = status, limit = limit)
+    }
 
     private suspend fun <T> request(call: suspend () -> retrofit2.Response<T>): CoreResult<T> =
         withContext(Dispatchers.IO) {

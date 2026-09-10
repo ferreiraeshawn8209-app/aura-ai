@@ -57,6 +57,15 @@ data class SafeModeRequest(val action: String = "safe_mode", val enabled: Boolea
 @JsonClass(generateAdapter = true)
 data class SafeModeResponse(val safeMode: Boolean)
 
+@JsonClass(generateAdapter = true)
+data class CreateTaskRequest(
+    val user: String,
+    val project: String,
+    val request: String,
+    val priority: String? = null,
+    val metadata: Map<String, String>? = null
+)
+
 enum class CoreModuleStatus {
     HEALTHY, UNCONFIGURED, UNAVAILABLE, DISCONNECTED, AUTHENTICATION_REQUIRED, ERROR, UNKNOWN;
 

@@ -5,7 +5,10 @@ import androidx.room.Room
 import com.aura.ai.BuildConfig
 import com.aura.ai.data.database.AuraDatabase
 import com.aura.ai.data.database.dao.*
+import com.aura.ai.data.auth.CoreTokenStore
 import com.aura.ai.data.remote.OpenAIService
+import com.aura.ai.data.remote.core.CoreAuthInterceptor
+import com.aura.ai.data.remote.core.CoreService
 import com.aura.ai.network.BodySanitizingInterceptor
 import com.aura.ai.network.RedactingLoggingInterceptor
 import com.squareup.moshi.Moshi
@@ -19,6 +22,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -53,6 +57,25 @@ object AppModule {
             .addInterceptor(redacting)
             .build()
     }
+
+    @Provides
+    @Singleton
+    @Named("core")
+    fun provideCoreOkHttpClient(coreAuthInterceptor: CoreAuthInterceptor): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(coreAuthInterceptor)
+            .addInterceptor(RedactingLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT))
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideCoreService(@Named("core") coreOkHttpClient: OkHttpClient, moshi: Moshi): CoreService =
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.CORE_BASE_URL.trimEnd('/') + "/")
+            .client(coreOkHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(CoreService::class.java)
 
     @Provides
     @Singleton

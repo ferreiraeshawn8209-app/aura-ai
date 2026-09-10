@@ -66,6 +66,37 @@ data class CreateTaskRequest(
     val metadata: Map<String, String>? = null
 )
 
+@JsonClass(generateAdapter = true)
+data class TaskStepRequest(val stepId: String? = null)
+
+@JsonClass(generateAdapter = true)
+data class CoreTaskPlan(
+    val id: String? = null,
+    val taskId: String? = null,
+    val status: String? = null,
+    val steps: List<CoreTaskStep> = emptyList()
+)
+
+@JsonClass(generateAdapter = true)
+data class CoreTaskStep(
+    val id: String? = null,
+    val taskId: String? = null,
+    val status: String? = null,
+    val name: String? = null,
+    val detail: String? = null,
+    val approvalRequired: Boolean? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class CoreTaskEvent(
+    val id: String? = null,
+    val taskId: String? = null,
+    val type: String? = null,
+    val status: String? = null,
+    val detail: String? = null,
+    val createdAt: String? = null
+)
+
 enum class CoreModuleStatus {
     HEALTHY, UNCONFIGURED, UNAVAILABLE, DISCONNECTED, AUTHENTICATION_REQUIRED, ERROR, UNKNOWN;
 

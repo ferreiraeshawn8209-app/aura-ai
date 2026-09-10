@@ -3,7 +3,11 @@ package com.aura.ai.data.repository
 import com.aura.ai.data.remote.core.CoreMasterResponse
 import com.aura.ai.data.remote.core.CoreResult
 import com.aura.ai.data.remote.core.CoreTask
+import com.aura.ai.data.remote.core.CoreTaskEvent
+import com.aura.ai.data.remote.core.CoreTaskPlan
+import com.aura.ai.data.remote.core.CoreTaskStep
 import com.aura.ai.data.remote.core.CreateTaskRequest
+import com.aura.ai.data.remote.core.TaskStepRequest
 import com.aura.ai.data.remote.core.CoreService
 import com.aura.ai.data.remote.core.SafeModeRequest
 import com.aura.ai.data.remote.core.SafeModeResponse
@@ -49,6 +53,38 @@ class CoreRepository @Inject constructor(
         limit: Int? = null
     ): CoreResult<List<CoreTask>> = request {
         service.listTasks(user = user, project = project, status = status, limit = limit)
+    }
+
+    suspend fun getTaskPlan(taskId: String): CoreResult<CoreTaskPlan> = request {
+        service.getTaskPlan(taskId)
+    }
+
+    suspend fun getTaskSteps(taskId: String): CoreResult<List<CoreTaskStep>> = request {
+        service.getTaskSteps(taskId)
+    }
+
+    suspend fun getTaskEvents(taskId: String): CoreResult<List<CoreTaskEvent>> = request {
+        service.getTaskEvents(taskId)
+    }
+
+    suspend fun approveTask(taskId: String, stepId: String? = null): CoreResult<CoreTask> = request {
+        service.approveTask(taskId, TaskStepRequest(stepId))
+    }
+
+    suspend fun rejectTask(taskId: String, stepId: String? = null): CoreResult<CoreTask> = request {
+        service.rejectTask(taskId, TaskStepRequest(stepId))
+    }
+
+    suspend fun pauseTask(taskId: String): CoreResult<CoreTask> = request {
+        service.pauseTask(taskId)
+    }
+
+    suspend fun resumeTask(taskId: String): CoreResult<CoreTask> = request {
+        service.resumeTask(taskId)
+    }
+
+    suspend fun cancelTask(taskId: String): CoreResult<CoreTask> = request {
+        service.cancelTask(taskId)
     }
 
     private suspend fun <T> request(call: suspend () -> retrofit2.Response<T>): CoreResult<T> =

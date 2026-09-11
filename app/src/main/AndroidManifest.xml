@@ -6,9 +6,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- SMS -->
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+  <uses-permission android:name="android.permission.SEND_SMS" />
 
     <!-- Contacts (for resolving names to numbers) -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />

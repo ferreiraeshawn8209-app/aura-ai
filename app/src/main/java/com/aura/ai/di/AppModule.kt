@@ -44,8 +44,13 @@ object AppModule {
 
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val requestBuilder = chain.request().newBuilder()
+                val request = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/json")
+                    .build()
+                chain.proceed(request)
+            }
+            .addNetworkInterceptor { chain ->
+                val requestBuilder = chain.request().newBuilder()
                 if (BuildConfig.OPENAI_API_KEY.isNotBlank()) {
                     requestBuilder.header(
                         "Authorization",

@@ -7,17 +7,12 @@ import okhttp3.Response
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
-import com.aura.ai.BuildConfig
 
 /**
- * Interceptor that scans request and response bodies and masks any occurrence of the
- * OpenAI API key string before it reaches the logging layer or is otherwise observed.
- * This is a defensive layer: it does not attempt to alter encrypted traffic but will
- * sanitize plain-text bodies that contain the key.
+ * Interceptor that sanitizes plain-text request and response bodies before logging.
  */
 class BodySanitizingInterceptor : Interceptor {
-    private val apiKey = BuildConfig.OPENAI_API_KEY
-    private val redaction = "[REDACTED_API_KEY]"
+    private val redaction = "[REDACTED_SENSITIVE_VALUE]"
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()

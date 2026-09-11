@@ -6,7 +6,7 @@ import com.aura.ai.BuildConfig
 import com.aura.ai.data.database.AuraDatabase
 import com.aura.ai.data.database.dao.*
 import com.aura.ai.data.auth.CoreTokenStore
-import com.aura.ai.data.remote.OpenAIService
+import com.aura.ai.data.remote.OllamaService
 import com.aura.ai.data.remote.core.CoreAuthInterceptor
 import com.aura.ai.data.remote.core.CoreService
 import com.aura.ai.network.BodySanitizingInterceptor
@@ -31,29 +31,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val authScheme = "Bearer"
-
-        val logger = HttpLoggingInterceptor.Logger.DEFAULT
-        val redacting = RedactingLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-            // Delegate to default logger but ensure BuildConfig.OPENAI_API_KEY is not present
-            val sanitized = if (BuildConfig.OPENAI_API_KEY.isNotEmpty()) message.replace(BuildConfig.OPENAI_API_KEY, "[REDACTED_API_KEY]") else message
-            HttpLoggingInterceptor.Logger.DEFAULT.log(sanitized)
-        })
-
-        val sanitizer = BodySanitizingInterceptor()
+    @Named("ollama")
+    fun provideOllamaOkHttpClient(): OkHttpClient {
+        val redacting = RedactingLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
 
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "$authScheme ${BuildConfig.OPENAI_API_KEY}")
                     .addHeader("Content-Type", "application/json")
                     .build()
                 chain.proceed(request)
             }
-            // Sanitize bodies before logging
-            .addInterceptor(sanitizer)
-            // Redacting logging interceptor that also masks Authorization header
+            .addInterceptor(BodySanitizingInterceptor())
             .addInterceptor(redacting)
             .build()
     }
@@ -85,13 +74,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOpenAIService(okHttpClient: OkHttpClient, moshi: Moshi): OpenAIService {
+    fun provideOllamaService(@Named("ollama") okHttpClient: OkHttpClient, moshi: Moshi): OllamaService {
         return Retrofit.Builder()
-            .baseUrl("https://api.openai.com/")
+            .baseUrl(BuildConfig.OLLAMA_BASE_URL.trimEnd('/') + "/")
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(OpenAIService::class.java)
+            .create(OllamaService::class.java)
     }
 
     @Provides

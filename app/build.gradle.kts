@@ -1,3 +1,19 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.isFile) {
+        localPropertiesFile.inputStream().use(::load)
+    }
+}
+
+val ollamaBaseUrl = localProperties.getProperty("OLLAMA_BASE_URL")
+    ?: project.findProperty("OLLAMA_BASE_URL")?.toString()
+    ?: "http://10.0.2.2:11434/"
+val ollamaModel = localProperties.getProperty("OLLAMA_MODEL")
+    ?: project.findProperty("OLLAMA_MODEL")?.toString()
+    ?: "llama3.2"
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -20,8 +36,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // OpenAI remains a legacy local provider; Core is the production control boundary.
-        buildConfigField("String", "OPENAI_API_KEY", "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\"")
+        buildConfigField("String", "OLLAMA_BASE_URL", "\"${ollamaBaseUrl.replace("\\\"", "\\\\\\\"")}\"")
+        buildConfigField("String", "OLLAMA_MODEL", "\"${ollamaModel.replace("\\\"", "\\\\\\\"")}\"")
         buildConfigField("String", "CORE_BASE_URL", "\"${project.findProperty("CORE_BASE_URL") ?: "https://core.invalid/"}\"")
     }
 

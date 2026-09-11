@@ -7,7 +7,7 @@ import com.aura.ai.domain.trading.usecase.PaperTradingUseCase
 import com.aura.ai.domain.trading.usecase.RiskGovernorUseCase
 import com.aura.ai.domain.trading.usecase.ScanMarketUseCase
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.encodeToString
+import kotlinx.serialization.encodeToString
 
 /**
  * Trading action system for AURA.

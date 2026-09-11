@@ -7,27 +7,12 @@ val localProperties = Properties().apply {
     }
 }
 
-val openAiApiKey = localProperties.getProperty("OPENAI_API_KEY").orEmpty()
-val escapedOpenAiApiKey = buildString {
-    openAiApiKey.forEach { character ->
-        when (character) {
-            '\\' -> append("\\\\")
-            '"' -> append("\\\"")
-            '\n' -> append("\\n")
-            '\r' -> append("\\r")
-            '\t' -> append("\\t")
-            '\b' -> append("\\b")
-            '\u000C' -> append("\\f")
-            else -> {
-                if (character.code < 0x20) {
-                    append("\\u%04x".format(character.code))
-                } else {
-                    append(character)
-                }
-            }
-        }
-    }
-}
+val ollamaBaseUrl = localProperties.getProperty("OLLAMA_BASE_URL")
+    ?: project.findProperty("OLLAMA_BASE_URL")?.toString()
+    ?: "http://10.0.2.2:11434/"
+val ollamaModel = localProperties.getProperty("OLLAMA_MODEL")
+    ?: project.findProperty("OLLAMA_MODEL")?.toString()
+    ?: "llama3.2"
 
 plugins {
     alias(libs.plugins.android.application)
@@ -51,8 +36,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // OpenAI remains a legacy local provider; Core is the production control boundary.
-        buildConfigField("String", "OPENAI_API_KEY", "\"$escapedOpenAiApiKey\"")
+        buildConfigField("String", "OLLAMA_BASE_URL", "\"${ollamaBaseUrl.replace("\\\"", "\\\\\\\"")}\"")
+        buildConfigField("String", "OLLAMA_MODEL", "\"${ollamaModel.replace("\\\"", "\\\\\\\"")}\"")
         buildConfigField("String", "CORE_BASE_URL", "\"${project.findProperty("CORE_BASE_URL") ?: "https://core.invalid/"}\"")
     }
 

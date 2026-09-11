@@ -11,8 +11,16 @@ import okio.Buffer
 /**
  * Interceptor that sanitizes plain-text request and response bodies before logging.
  */
-class BodySanitizingInterceptor : Interceptor {
+class BodySanitizingInterceptor(
+    private val sensitiveValues: Set<String> = emptySet()
+) : Interceptor {
     private val redaction = "[REDACTED_SENSITIVE_VALUE]"
+
+    private fun sanitize(text: String): String = sensitiveValues
+        .filter { it.isNotEmpty() }
+        .fold(text) { sanitized, sensitiveValue ->
+            sanitized.replace(sensitiveValue, redaction)
+        }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
@@ -27,9 +35,9 @@ class BodySanitizingInterceptor : Interceptor {
         try {
             val buffer = Buffer()
             body.writeTo(buffer)
-            var bodyString = buffer.readUtf8()
-            if (apiKey.isNotEmpty() && bodyString.contains(apiKey)) {
-                bodyString = bodyString.replace(apiKey, redaction)
+            val originalBody = buffer.readUtf8()
+            val bodyString = sanitize(originalBody)
+            if (bodyString != originalBody) {
                 val mediaType: MediaType? = body.contentType()
                 val newBody = bodyString.toRequestBody(mediaType)
                 // Build new request with sanitized body
@@ -48,9 +56,9 @@ class BodySanitizingInterceptor : Interceptor {
             val source = body.source()
             source.request(Long.MAX_VALUE) // Buffer the entire body.
             val buffer = source.buffer.clone()
-            var bodyString = buffer.readUtf8()
-            if (apiKey.isNotEmpty() && bodyString.contains(apiKey)) {
-                bodyString = bodyString.replace(apiKey, redaction)
+            val originalBody = buffer.readUtf8()
+            val bodyString = sanitize(originalBody)
+            if (bodyString != originalBody) {
                 val contentType = body.contentType()
                 val newBody = bodyString.toResponseBody(contentType)
                 return response.newBuilder().body(newBody).build()

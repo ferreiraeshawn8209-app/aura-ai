@@ -8,6 +8,33 @@ val localProperties = Properties().apply {
 }
 
 val openAiApiKey = localProperties.getProperty("OPENAI_API_KEY").orEmpty()
+val escapedOpenAiApiKey = buildString {
+    openAiApiKey.forEach { character ->
+        when (character) {
+            '\\' -> append("\\\\")
+            '"' -> append("\\\"")
+            '\n' -> append("\\n")
+            '\r' -> append("\\r")
+            '\t' -> append("\\t")
+            '\b' -> append("\\b")
+            '\u000C' -> append("\\f")
+            else -> {
+                if (character.code < 0x20) {
+                    append("\\u%04x".format(character.code))
+                } else {
+                    append(character)
+                }
+            }
+        }
+    }
+}
+
+val openAiKeyStatus = if (openAiApiKey.isNotEmpty()) {
+    "found=true length=${openAiApiKey.length}"
+} else {
+    "found=false length=0"
+}
+logger.lifecycle("OpenAI API key status: $openAiKeyStatus")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -32,7 +59,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // OpenAI remains a legacy local provider; Core is the production control boundary.
-        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
+        buildConfigField("String", "OPENAI_API_KEY", "\"$escapedOpenAiApiKey\"")
         buildConfigField("String", "CORE_BASE_URL", "\"${project.findProperty("CORE_BASE_URL") ?: "https://core.invalid/"}\"")
     }
 

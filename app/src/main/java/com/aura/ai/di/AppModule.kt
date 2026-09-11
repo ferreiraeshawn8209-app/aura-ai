@@ -31,29 +31,30 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val authScheme = "Bearer"
-
-        val logger = HttpLoggingInterceptor.Logger.DEFAULT
+    @Named("openai")
+    fun provideOpenAiOkHttpClient(): OkHttpClient {
         val redacting = RedactingLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-            // Delegate to default logger but ensure BuildConfig.OPENAI_API_KEY is not present
-            val sanitized = if (BuildConfig.OPENAI_API_KEY.isNotEmpty()) message.replace(BuildConfig.OPENAI_API_KEY, "[REDACTED_API_KEY]") else message
+            // Delegate to default logger but ensure BuildConfig.OPENAI_API_KEY is not present.
+            val sanitized = BuildConfig.OPENAI_API_KEY
+                .takeIf { it.isNotEmpty() }
+                ?.let { message.replace(it, "[REDACTED_API_KEY]") }
+                ?: message
             HttpLoggingInterceptor.Logger.DEFAULT.log(sanitized)
         })
 
-        val sanitizer = BodySanitizingInterceptor()
-
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "$authScheme ${BuildConfig.OPENAI_API_KEY}")
+                val requestBuilder = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/json")
-                    .build()
-                chain.proceed(request)
+                if (BuildConfig.OPENAI_API_KEY.isNotBlank()) {
+                    requestBuilder.header(
+                        "Authorization",
+                        "Bearer ${BuildConfig.OPENAI_API_KEY}"
+                    )
+                }
+                chain.proceed(requestBuilder.build())
             }
-            // Sanitize bodies before logging
-            .addInterceptor(sanitizer)
-            // Redacting logging interceptor that also masks Authorization header
+            .addInterceptor(BodySanitizingInterceptor())
             .addInterceptor(redacting)
             .build()
     }
@@ -85,7 +86,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOpenAIService(okHttpClient: OkHttpClient, moshi: Moshi): OpenAIService {
+    fun provideOpenAIService(@Named("openai") okHttpClient: OkHttpClient, moshi: Moshi): OpenAIService {
         return Retrofit.Builder()
             .baseUrl("https://api.openai.com/")
             .client(okHttpClient)

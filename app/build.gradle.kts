@@ -29,13 +29,6 @@ val escapedOpenAiApiKey = buildString {
     }
 }
 
-val openAiKeyStatus = if (openAiApiKey.isNotEmpty()) {
-    "found=true length=${openAiApiKey.length}"
-} else {
-    "found=false length=0"
-}
-logger.lifecycle("OpenAI API key status: $openAiKeyStatus")
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)

@@ -4,7 +4,8 @@ import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.ResponseBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import com.aura.ai.BuildConfig
 
@@ -35,7 +36,7 @@ class BodySanitizingInterceptor : Interceptor {
             if (apiKey.isNotEmpty() && bodyString.contains(apiKey)) {
                 bodyString = bodyString.replace(apiKey, redaction)
                 val mediaType: MediaType? = body.contentType()
-                val newBody = ResponseBody.create(mediaType, bodyString)
+                val newBody = bodyString.toRequestBody(mediaType)
                 // Build new request with sanitized body
                 return request.newBuilder().method(request.method, newBody).build()
             }
@@ -56,7 +57,7 @@ class BodySanitizingInterceptor : Interceptor {
             if (apiKey.isNotEmpty() && bodyString.contains(apiKey)) {
                 bodyString = bodyString.replace(apiKey, redaction)
                 val contentType = body.contentType()
-                val newBody = ResponseBody.create(contentType, bodyString)
+                val newBody = bodyString.toResponseBody(contentType)
                 return response.newBuilder().body(newBody).build()
             }
         } catch (e: Exception) {

@@ -44,7 +44,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ChatScreen(
     viewModel: AuraViewModel = hiltViewModel(),
-    voiceHelper: VoiceHelper
+    voiceHelper: VoiceHelper,
+    onRequestMicrophonePermission: () -> Boolean
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
@@ -103,7 +104,7 @@ fun ChatScreen(
                     onVoiceToggle = {
                         if (uiState.isListening) {
                             viewModel.setListening(false)
-                        } else {
+                        } else if (onRequestMicrophonePermission()) {
                             viewModel.setListening(true)
                             if (voiceHelper.isAvailable()) {
                                 scope.launch {

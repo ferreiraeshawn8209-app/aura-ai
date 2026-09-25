@@ -16,3 +16,9 @@ val AuraUserText = Color(0xFFFFFFFF)
 val AuraAssistantText = Color(0xFFE8E6F0)
 val AuraAccent = Color(0xFF00E5CC)
 val AuraError = Color(0xFFCF6679)
+
+// T1000 UI compatibility colors
+val MintAccent = AuraAccent
+val RoseError = AuraError
+val TextFaint = Color(0xFFAAA7B8)
+val AmberWarn = Color(0xFFFFB74D)

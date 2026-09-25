@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aura.ai.data.local.entity.MemoryEntity
+import com.aura.ai.ui.theme.AuraAccent
+import com.aura.ai.ui.theme.TextFaint
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

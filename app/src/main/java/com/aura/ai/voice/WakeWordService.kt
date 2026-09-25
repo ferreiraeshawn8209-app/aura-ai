@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import com.aura.ai.MainActivity
 import com.aura.ai.R
-import com.aura.ai.T1000Application
+import com.aura.ai.AuraApplication
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -48,7 +48,7 @@ class WakeWordService : LifecycleService() {
             Intent(this, MainActivity::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        return NotificationCompat.Builder(this, T1000Application.CHANNEL_WAKE)
+        return NotificationCompat.Builder(this, AuraApplication.CHANNEL_WAKE)
             .setContentTitle("T1000 is listening")
             .setContentText("Say \"${getString(R.string.wake_phrase)}\" to wake me")
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)

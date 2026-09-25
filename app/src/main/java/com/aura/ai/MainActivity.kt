@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.aura.ai.ui.screen.MainScreen
+import com.aura.ai.ui.T1000App
 import com.aura.ai.ui.theme.AuraTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AuraTheme {
-                MainScreen()
+                T1000App()
             }
         }
     }

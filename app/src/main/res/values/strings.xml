@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">AURA AI</string>
-    <string name="chat_hint">Ask AURA anything…</string>
-    <string name="voice_tooltip">Tap to speak</string>
+    <string name="app_name">T1000</string>
+    <string name="chat_hint">Ask T1000 anything…</string>
+    <string name="voice_tooltip">Tap to speak to T1000</string>
     <string name="send_tooltip">Send message</string>
     <string name="permission_rationale_call">AURA needs permission to make phone calls on your behalf.</string>
     <string name="permission_rationale_sms">AURA needs permission to send SMS messages on your behalf.</string>
@@ -12,8 +12,9 @@
     <string name="dismiss">Dismiss</string>
     <string name="error_no_api_key">Ollama is not configured. Start Ollama and verify the configured server URL.</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
-    <string name="aura_greeting">Hi, I\'m AURA! I can make calls, send messages, set reminders, and more. How can I help?</string>
+    <string name="aura_greeting">Hi, I'm T1000. I can understand requests, plan tasks, use tools, and learn from verified results. How can I help?</string>
     <string name="typing_indicator">AURA is thinking…</string>
     <string name="you_label">You</string>
     <string name="aura_label">AURA</string>
+    <string name="wake_phrase">Hey T1000</string>
 </resources>

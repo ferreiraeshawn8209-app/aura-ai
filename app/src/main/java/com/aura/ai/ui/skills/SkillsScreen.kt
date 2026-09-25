@@ -29,11 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aura.ai.data.local.entity.SkillEntity
-import com.aura.ai.data.local.entity.SkillStatus
-import com.aura.ai.ui.theme.AmberWarn
-import com.aura.ai.ui.theme.MintAccent
-import com.aura.ai.ui.theme.RoseError
-import com.aura.ai.ui.theme.TextFaint
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +43,7 @@ fun SkillsScreen(viewModel: SkillsViewModel = hiltViewModel()) {
                     Text(
                         "Procedures T1000 distilled from verified successes",
                         style = MaterialTheme.typography.labelMedium,
-                        color = TextFaint,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             },
@@ -93,18 +88,17 @@ private fun SkillCard(skill: SkillEntity) {
         Spacer(Modifier.height(12.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Metric("v${skill.version}")
-            Metric("${(skill.successRate * 100).toInt()}% success")
-            Metric("used ${skill.timesUsed}×")
+            Metric(skill.status)
         }
     }
 }
 
 @Composable
-private fun StatusChip(status: SkillStatus) {
-    val (label, color) = when (status) {
-        SkillStatus.VERIFIED -> "VERIFIED" to MintAccent
-        SkillStatus.DRAFT -> "DRAFT" to AmberWarn
-        SkillStatus.DEPRECATED -> "DEPRECATED" to RoseError
+private fun StatusChip(status: String) {
+    val (label, color) = when (status.uppercase()) {
+        "STORE", "VERIFIED" -> "VERIFIED" to AuraAccent
+        "DEPRECATED" -> "DEPRECATED" to AuraError
+        else -> status.uppercase() to MaterialTheme.colorScheme.secondary
     }
     Box(
         Modifier

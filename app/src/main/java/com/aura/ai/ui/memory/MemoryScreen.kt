@@ -40,8 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aura.ai.data.local.entity.MemoryEntity
-import com.aura.ai.ui.theme.MintAccent
-import com.aura.ai.ui.theme.TextFaint
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +55,7 @@ fun MemoryScreen(viewModel: MemoryViewModel = hiltViewModel()) {
                     Text(
                         "Facts and preferences T1000 keeps across sessions",
                         style = MaterialTheme.typography.labelMedium,
-                        color = TextFaint,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             },
@@ -132,7 +130,7 @@ private fun MemoryRow(memory: MemoryEntity, onDelete: () -> Unit) {
             Text(memory.content, style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(4.dp))
             Text(
-                "${memory.category} · importance ${"%.1f".format(memory.importance)} · recalled ${memory.accessCount}×",
+                "${memory.type} · importance ${memory.importance}/10",
                 style = MaterialTheme.typography.labelMedium,
                 color = TextFaint,
             )

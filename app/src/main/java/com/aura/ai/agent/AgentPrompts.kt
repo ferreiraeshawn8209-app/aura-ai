@@ -40,7 +40,7 @@ object AgentPrompts {
     ): List<Pair<String, String>> {
         val skillBlock = priorSkill?.let {
             "A previously learned skill may apply (reuse/adapt it if helpful):\n" +
-                "Skill #${it.id} \"${it.name}\": ${it.procedureJson}"
+                "Skill #${it.id} \"${it.name}\": ${it.instructions}"
         } ?: "No prior skill found; plan from scratch."
         val system = """
             $IDENTITY

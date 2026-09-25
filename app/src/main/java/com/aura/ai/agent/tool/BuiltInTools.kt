@@ -1,7 +1,6 @@
 package com.aura.ai.agent.tool
 
-import com.aura.ai.data.local.entity.MemoryCategory
-import com.aura.ai.data.repository.MemoryRepository
+import com.aura.ai.data.repository.T1000T1000MemoryRepository
 import com.aura.ai.data.repository.SkillRepository
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,7 +22,7 @@ class RecallMemoryTool @Inject constructor(
         return if (hits.isEmpty()) {
             ToolResult(true, "No relevant memories found.")
         } else {
-            ToolResult(true, hits.joinToString("\n") { "- (${it.category}) ${it.content}" })
+            ToolResult(true, hits.joinToString("\n") { "- (${it.type}) ${it.content}" })
         }
     }
 }
@@ -43,7 +42,7 @@ class RememberTool @Inject constructor(
         val content = args["content"].orEmpty()
         if (content.isBlank()) return ToolResult(false, "", "content is required")
         val importance = args["importance"]?.toFloatOrNull()?.coerceIn(0f, 1f) ?: 0.6f
-        memory.remember(content, MemoryCategory.FACT, importance, source = "agent")
+        memory.remember(content, "FACT", importance, "agent")
         return ToolResult(true, "Saved to memory.")
     }
 }
@@ -64,7 +63,7 @@ class RecallSkillTool @Inject constructor(
         } else {
             ToolResult(
                 true,
-                found.joinToString("\n") { "#${it.id} ${it.name} (v${it.version}, ${(it.successRate * 100).toInt()}% success): ${it.description}" },
+                found.joinToString("\n") { "#${it.id} ${it.name} (v${it.version}): ${it.description}" },
             )
         }
     }

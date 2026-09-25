@@ -1,14 +1,13 @@
 package com.aura.ai.agent
 
 import com.aura.ai.agent.tool.ToolRegistry
-import com.aura.ai.data.local.entity.MemoryCategory
 import com.aura.ai.data.local.entity.SkillEntity
 import com.aura.ai.data.local.entity.TaskOutcome
 import com.aura.ai.data.remote.ollama.ChatChunk
 import com.aura.ai.data.remote.ollama.OllamaChatMessage
 import com.aura.ai.data.remote.ollama.OllamaError
 import com.aura.ai.data.remote.ollama.OllamaRepository
-import com.aura.ai.data.repository.MemoryRepository
+import com.aura.ai.data.repository.T1000MemoryRepository
 import com.aura.ai.data.repository.SkillRepository
 import com.aura.ai.data.settings.SettingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +30,7 @@ import javax.inject.Singleton
 class AgentOrchestrator @Inject constructor(
     private val ollama: OllamaRepository,
     private val settings: SettingsRepository,
-    private val memory: MemoryRepository,
+    private val memory: T1000MemoryRepository,
     private val skills: SkillRepository,
     private val registry: ToolRegistry,
     private val learning: LearningEngine,
@@ -152,12 +151,7 @@ class AgentOrchestrator @Inject constructor(
                     }
                 }
                 // Persist salient facts from this run for future recall.
-                memory.remember(
-                    content = "Completed: ${understanding.goal}",
-                    category = MemoryCategory.TASK,
-                    importance = 0.4f,
-                    source = "task",
-                )
+                memory.rememberFact("TASK", "Completed: ${understanding.goal}", 4)
             } else {
                 priorSkill?.let {
                     learning.evolveSkill(it, plan.let { p -> runCatching { json.encodeToString(Plan.serializer(), p) }.getOrDefault("{}") })

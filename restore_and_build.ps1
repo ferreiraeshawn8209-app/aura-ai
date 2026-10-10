@@ -1,53 +1,15 @@
 $ErrorActionPreference = 'Stop'
-
-$distUrl = 'https://services.gradle.org/distributions/gradle-8.7-bin.zip'
-$tmp = Join-Path $env:TEMP ("gradle-8.7-" + [System.Guid]::NewGuid().ToString())
-$zip = Join-Path $tmp 'gradle-8.7-bin.zip'
-
-New-Item -ItemType Directory -Path $tmp -Force | Out-Null
-Write-Host "Downloading Gradle 8.7..."
-Invoke-WebRequest -Uri $distUrl -OutFile $zip -UseBasicParsing
-
-Write-Host "Extracting distribution..."
-Expand-Archive -Path $zip -DestinationPath $tmp -Force
-
-Write-Host "Locating gradle-wrapper.jar in the extracted distribution..."
-$found = Get-ChildItem -Path $tmp -Recurse -Filter 'gradle-wrapper.jar' -ErrorAction SilentlyContinue | Select-Object -First 1
-if (-not $found) {
-    Write-Error "Could not find gradle-wrapper.jar in the distribution"
-    Exit 1
-}
-
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$destDir = Join-Path $repoRoot 'gradle\wrapper'
-if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
-$destJar = Join-Path $destDir 'gradle-wrapper.jar'
-
-Write-Host "Copying gradle-wrapper.jar to $destJar"
-Copy-Item -Path $found.FullName -Destination $destJar -Force
-
-# Ensure gradle-wrapper.properties points to Gradle 8.7
-$props = Join-Path $destDir 'gradle-wrapper.properties'
-if (Test-Path $props) {
-    (Get-Content $props) | ForEach-Object {
-        if ($_ -match '^distributionUrl=') {
-            'distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-bin.zip'
-        } else { $_ }
-    } | Set-Content $props -Force
-} else {
-    @"
-distributionBase=GRADLE_USER_HOME
-distributionPath=wrapper/dists
-distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-bin.zip
-networkTimeout=10000
-validateDistributionUrl=true
-zipStoreBase=GRADLE_USER_HOME
-zipStorePath=wrapper/dists
-"@ | Set-Content $props -Force
+$destJar = Join-Path $repoRoot 'gradle\wrapper\gradle-wrapper.jar'
+$expectedHash = 'cb0da6751c2b753a16ac168bb354870ebb1e162e9083f116729cec9c781156b8'
+if (-not (Test-Path $destJar)) {
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/gradle/gradle/v8.7.0/gradle/wrapper/gradle-wrapper.jar' -OutFile $destJar -UseBasicParsing
 }
-
-# Clean up temporary files
-Remove-Item -Path $tmp -Recurse -Force -ErrorAction SilentlyContinue
-
-Write-Host "Running wrapper build: .\gradlew.bat assembleDebug"
-& "$repoRoot\gradlew.bat" assembleDebug
+if ((Get-FileHash $destJar -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expectedHash) {
+    throw 'Gradle wrapper checksum mismatch. Build stopped.'
+}
+Push-Location $repoRoot
+try {
+    & .\gradlew.bat testDebugUnitTest assembleDebug
+    if ($LASTEXITCODE -ne 0) { throw "Gradle failed with exit code $LASTEXITCODE" }
+} finally { Pop-Location }

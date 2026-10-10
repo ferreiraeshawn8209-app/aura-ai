@@ -23,7 +23,7 @@ object DatabaseModule {
             T1000Database::class.java,
             "t1000_database"
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 
@@ -38,4 +38,19 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideAgentActionDao(database: T1000Database) = database.agentActionDao()
+    @Provides
+    fun provideTaskHistoryDao(database: T1000Database) = database.taskHistoryDao()
+
+    val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
+        override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
+            database.execSQL("""
+                CREATE TABLE IF NOT EXISTS task_history (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    request TEXT NOT NULL, planJson TEXT NOT NULL,
+                    outcomeJson TEXT NOT NULL, outcome TEXT NOT NULL,
+                    skillId INTEGER, startedAt INTEGER NOT NULL, finishedAt INTEGER NOT NULL
+                )
+            """.trimIndent())
+        }
+    }
 }

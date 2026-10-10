@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import com.aura.ai.network.LocalHttpPolicy
+import kotlinx.coroutines.flow.first
 
 data class ConnectionUiState(
     val testing: Boolean = false,
@@ -48,12 +51,20 @@ class SettingsViewModel @Inject constructor(
     fun onUrlDraftChange(value: String) = _conn.update { it.copy(urlDraft = value) }
 
     fun saveUrlAndTest() {
+        if (_conn.value.testing || _conn.value.discovering) return
         val url = _conn.value.urlDraft.trim().trimEnd('/')
+        val parsed = url.toHttpUrlOrNull()
+        if (parsed == null || parsed.encodedPath != "/" || parsed.query != null ||
+            parsed.fragment != null || parsed.username.isNotEmpty() || parsed.password.isNotEmpty() ||
+            (parsed.scheme == "http" && !LocalHttpPolicy.isLocalHost(parsed.host))) {
+            _conn.update { it.copy(connected = false, message = "Enter http://YOUR-PC-IP:11434, http://127.0.0.1:11434 for USB, or an HTTPS server URL.") }
+            return
+        }
+        _conn.update { it.copy(testing = true, message = null, connected = null, serverVersion = null, models = emptyList()) }
         viewModelScope.launch {
-            settings.setBaseUrl(url)
-            _conn.update { it.copy(testing = true, message = null, connected = null) }
             when (val result = ollama.testConnection(url)) {
                 is OllamaResult.Success -> {
+                    settings.setBaseUrl(url)
                     _conn.update { it.copy(testing = false, connected = true, serverVersion = result.value, message = "Connected to Ollama ${result.value}") }
                     discoverModels()
                 }
@@ -68,12 +79,19 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             _conn.update { it.copy(discovering = true, message = null) }
             when (val result = ollama.listModels()) {
-                is OllamaResult.Success -> _conn.update {
-                    it.copy(
-                        discovering = false,
-                        models = result.value,
-                        message = if (result.value.isEmpty()) "No models installed. Run `ollama pull llama3.2` on the host." else null,
-                    )
+                is OllamaResult.Success -> {
+                    val selected = settings.settings.first().selectedModel
+                    if (result.value.none { it.name == selected }) {
+                        settings.clearModel()
+                        if (result.value.size == 1) settings.setModel(result.value.single().name)
+                    }
+                    _conn.update {
+                        it.copy(
+                            discovering = false,
+                            models = result.value,
+                            message = if (result.value.isEmpty()) "No models installed. Pull a local model on your PC, then refresh." else null,
+                        )
+                    }
                 }
                 is OllamaResult.Failure -> _conn.update {
                     it.copy(discovering = false, connected = false, message = result.error.message)

@@ -13,7 +13,14 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - name: Build debug APK
+      - name: Restore and verify Gradle wrapper
+        run: sh scripts/restore-wrapper.sh
+      - name: Test and build debug APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew testDebugUnitTest assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aura-t1000-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

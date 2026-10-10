@@ -16,7 +16,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private val json = Json {
+    @Provides
+    @Singleton
+    fun provideJson(): Json = Json {
         ignoreUnknownKeys = true
         isLenient = true
     }
@@ -25,20 +27,21 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = HttpLoggingInterceptor.Level.NONE
         }
 
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addNetworkInterceptor(com.aura.ai.network.LocalHttpInterceptor())
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(600, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl("http://localhost:11434/")
@@ -46,4 +49,13 @@ object NetworkModule {
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
+    @Provides
+    @Singleton
+    fun provideStreamingOllamaApi(retrofit: Retrofit): com.aura.ai.data.remote.ollama.OllamaApi =
+        retrofit.create(com.aura.ai.data.remote.ollama.OllamaApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideLegacyOllamaApi(retrofit: Retrofit): com.aura.ai.data.remote.OllamaApi =
+        retrofit.create(com.aura.ai.data.remote.OllamaApi::class.java)
 }

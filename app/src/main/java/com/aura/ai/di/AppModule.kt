@@ -46,6 +46,7 @@ object AppModule {
                     .build()
                 chain.proceed(request)
             }
+            .addNetworkInterceptor(com.aura.ai.network.LocalHttpInterceptor())
             .addInterceptor(BodySanitizingInterceptor())
             .addInterceptor(redacting)
             .connectTimeout(OllamaConfiguration.connectionTimeoutSeconds, TimeUnit.SECONDS)
@@ -60,6 +61,7 @@ object AppModule {
     fun provideCoreOkHttpClient(coreAuthInterceptor: CoreAuthInterceptor): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(coreAuthInterceptor)
+            .addNetworkInterceptor(com.aura.ai.network.LocalHttpInterceptor())
             .addInterceptor(RedactingLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT))
             .build()
 

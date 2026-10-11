@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -29,6 +31,10 @@ class WakeWordService : LifecycleService() {
 
     private var recognizer: SpeechRecognizer? = null
     private var listening = false
+    private val handler = Handler(Looper.getMainLooper())
+    private var stopping = false
+    private var consecutiveErrors = 0
+    private val restart = Runnable { if (!stopping) startRecognizer() }
 
     override fun onCreate() {
         super.onCreate()
@@ -72,16 +78,20 @@ class WakeWordService : LifecycleService() {
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
     }
 
-    private fun restartSoon() {
+    private fun restartSoon(error: Int? = null) {
+        if (stopping) return
+        // Permission failures cannot be fixed by restarting the microphone.
+        if (error == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+            stopSelf()
+            return
+        }
         recognizer?.destroy()
         recognizer = null
         listening = false
-        // Small backoff to avoid a hot loop when the recognizer errors repeatedly.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mainExecutor.execute { startRecognizer() }
-        } else {
-            startRecognizer()
-        }
+        handler.removeCallbacks(restart)
+        consecutiveErrors = if (error == null) 0 else (consecutiveErrors + 1).coerceAtMost(5)
+        val delayMs = if (error == null) 800L else (1000L * (1 shl (consecutiveErrors - 1))).coerceAtMost(16000L)
+        handler.postDelayed(restart, delayMs)
     }
 
     private fun onPhraseDetected() {
@@ -109,7 +119,7 @@ class WakeWordService : LifecycleService() {
         override fun onEndOfSpeech() {}
         override fun onEvent(eventType: Int, params: Bundle?) {}
 
-        override fun onError(error: Int) = restartSoon()
+        override fun onError(error: Int) = restartSoon(error)
 
         override fun onPartialResults(partialResults: Bundle?) {
             val hit = partialResults
@@ -131,6 +141,8 @@ class WakeWordService : LifecycleService() {
     }
 
     override fun onDestroy() {
+        stopping = true
+        handler.removeCallbacks(restart)
         recognizer?.destroy()
         recognizer = null
         listening = false

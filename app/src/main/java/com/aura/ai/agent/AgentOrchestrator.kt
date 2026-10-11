@@ -223,9 +223,9 @@ class AgentOrchestrator @Inject constructor(
 
     private fun parseVerdict(raw: String): Verdict {
         val obj = JsonExtraction.firstJsonObject(raw)
-            ?: return Verdict(verified = true, reasoning = "No structured verdict; accepted answer.")
+            ?: return Verdict(verified = false, reasoning = "No structured verification verdict returned.", unmetCriteria = listOf("Verification result unavailable"))
         return runCatching { json.decodeFromString(Verdict.serializer(), obj) }
-            .getOrElse { Verdict(verified = true, reasoning = "Unparseable verdict; accepted answer.") }
+            .getOrElse { Verdict(verified = false, reasoning = "Could not parse verification verdict.", unmetCriteria = listOf("Verification result invalid")) }
     }
 
     private fun parseDistilled(raw: String): Triple<String, String, String>? {

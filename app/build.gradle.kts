@@ -1,3 +1,12 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+}
+
 import java.util.Properties
 
 val localProperties = Properties().apply {
@@ -14,14 +23,6 @@ val ollamaModel = localProperties.getProperty("OLLAMA_MODEL")
     ?: project.findProperty("OLLAMA_MODEL")?.toString()
     ?: "gemma3:1b-cloud"
 
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
-}
 
 android {
     namespace = "com.aura.ai"

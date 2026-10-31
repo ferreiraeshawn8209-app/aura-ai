@@ -23,3 +23,10 @@ Continue the existing Aura project, not a rebuild. Main hub: ferreiraeshawn8209-
 
 ## Current verification status
 No APK built. No integration performed by this documentation commit. No passing tests claimed. No credit-cost estimate established.
+
+## Verified development progress (2026-10-31)
+- Isolated development branch: `integration/voice-core-20261031`; main untouched.
+- WakeWordService restart/backoff fix committed: `028ab438a5633543a046da6fcd7f17bfd73c9c3a`.
+- Android CI now runs `testDebugUnitTest`, `assembleDebug`, and uploads `aura-debug-apk` on success: `b5c5ec051a3bb6b54c4c473269a016758e62d313`.
+- These commits are NOT evidence of a passing build, generated APK, or completed two-way voice integration.
+- Next agent action: inspect latest Actions run for integration branch, obtain failing compiler/test logs, fix failures in integration branch, then adapt `Aura-Voice-Subsystem` Kotlin voice module and test interruptions. No merge or release without approval.

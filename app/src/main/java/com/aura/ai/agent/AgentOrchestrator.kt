@@ -150,8 +150,6 @@ class AgentOrchestrator @Inject constructor(
                         send(AgentEvent.Learned("Learned new skill \"${distilled.first}\" (#$id)"))
                     }
                 }
-                // Persist salient facts from this run for future recall.
-                memory.rememberFact("TASK", "Completed: ${understanding.goal}", 4)
             } else {
                 priorSkill?.let {
                     learning.evolveSkill(it, plan.let { p -> runCatching { json.encodeToString(Plan.serializer(), p) }.getOrDefault("{}") })
@@ -221,12 +219,7 @@ class AgentOrchestrator @Inject constructor(
             .getOrElse { Plan(listOf(PlanStep(0, "Respond directly", verify = "Answer addresses the goal"))) }
     }
 
-    private fun parseVerdict(raw: String): Verdict {
-        val obj = JsonExtraction.firstJsonObject(raw)
-            ?: return Verdict(verified = true, reasoning = "No structured verdict; accepted answer.")
-        return runCatching { json.decodeFromString(Verdict.serializer(), obj) }
-            .getOrElse { Verdict(verified = true, reasoning = "Unparseable verdict; accepted answer.") }
-    }
+    private fun parseVerdict(raw: String): Verdict = parseAgentVerdict(raw, json)
 
     private fun parseDistilled(raw: String): Triple<String, String, String>? {
         val obj = JsonExtraction.firstJsonObject(raw) ?: return null
@@ -243,4 +236,19 @@ class AgentOrchestrator @Inject constructor(
     companion object {
         const val MAX_ATTEMPTS = 3
     }
+}
+
+/**
+ * Missing or malformed verification is never evidence of success.
+ * A strict, required Boolean 'verified' field must be present.
+ */
+internal fun parseAgentVerdict(raw: String, json: Json): Verdict {
+    val failure = Verdict(
+        verified = false,
+        reasoning = "Verifier returned missing or malformed JSON.",
+        unmetCriteria = listOf("Verification was not established."),
+    )
+    val obj = JsonExtraction.firstJsonObject(raw) ?: return failure
+    return runCatching { json.decodeFromString(Verdict.serializer(), obj) }
+        .getOrDefault(failure)
 }

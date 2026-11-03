@@ -1,6 +1,6 @@
 # Aura AI / T1000 — Handover
 
-Last reviewed: 2026-11-03
+Last reviewed: 2026-11-04
 Working branch: `copilot/aura-audit-foundation`
 
 ## Repository/runtime
@@ -39,3 +39,13 @@ This is an existing Kotlin Android app (API 26+, Compose, Room, Hilt, Retrofit/O
 - Keep working on `copilot/aura-audit-foundation`; do not merge to `main` without user approval.
 - Never run a data-clearing migration against user data. Never make external calls or send messages automatically.
 - After every meaningful change, update this file with exact tests run/results, known failures, and next step.
+
+## 2026-11-04: CI and compilation stabilization patch
+
+- Confirmed the ChatGPT Personal GitHub connection for `ferreiraeshawn8209-app` has push rights; other connected GitHub accounts are read-only for this repo.
+- Updated Android CI to install Java 17, Gradle 8.7 and Android SDK 34 and run `gradle --no-daemon testDebugUnitTest assembleDebug --stacktrace`. The wrapper JAR is not checked in; CI therefore deliberately invokes Gradle directly.
+- Moved `app/build.gradle.kts` plugins block ahead of ordinary project configuration (Gradle Kotlin DSL).
+- Registered `TaskHistoryEntity` and `TaskHistoryDao` in T1000 Room v2; added explicit v1->v2 additive migration and removed destructive migration fallback; fixed duplicated Room converter annotation.
+- Made verifier parsing reject missing/malformed JSON, added regression tests, and removed automatic task-completed memory capture (only explicit user-requested memory is allowed).
+- The existing `BuiltInTools` memory import and `T1000MemoryRepository` methods match at source level; no speculative rewrite was made.
+- **Verification pending:** this patch has not been compiled locally. Check the next GitHub Actions Android build status and fix errors before claiming success. Previous run #29 failed before publishing usable job logs.

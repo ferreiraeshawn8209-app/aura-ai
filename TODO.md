@@ -38,3 +38,10 @@ Work against the existing Android app; do not rebuild already-working modules.
 - [ ] Resolve duplicate/legacy architecture and database migration coverage without destructive fallbacks.
 - [ ] Add privacy disclosure, data export/deletion controls, and security review.
 - [ ] Configure signed release only after explicit production approval; release workflow is currently a placeholder.
+
+## CI recovery patch, 2026-11-04 (awaiting actual validation)
+
+- [ ] Review new Android build/test GitHub Actions run after the CI toolchain fix, including job annotations/logs if the runner fails to initialize.
+- [ ] Confirm Room v1-to-v2 migration on an actual v1 database and add migration tests.
+- [ ] Confirm new verdict regression tests compile and pass, and inspect all CI Kotlin/KSP/Hilt errors.
+- [ ] Only mark the Android build verified after `testDebugUnitTest` and `assembleDebug` actually pass.

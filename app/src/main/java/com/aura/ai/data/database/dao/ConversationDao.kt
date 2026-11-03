@@ -14,6 +14,9 @@ interface ConversationDao {
     @Query("SELECT * FROM conversations ORDER BY timestamp ASC")
     fun getAllMessages(): Flow<List<ConversationEntity>>
 
+    @Query("SELECT * FROM conversations WHERE content LIKE '%' || :query || '%' ORDER BY timestamp DESC LIMIT :limit")
+    fun searchMessages(query: String, limit: Int = 100): Flow<List<ConversationEntity>>
+
     @Query("SELECT * FROM conversations ORDER BY timestamp DESC LIMIT :limit")
     suspend fun getRecentMessages(limit: Int = 20): List<ConversationEntity>
 

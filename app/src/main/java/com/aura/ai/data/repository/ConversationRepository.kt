@@ -12,35 +12,29 @@ import javax.inject.Singleton
 @Singleton
 class ConversationRepository @Inject constructor(
     private val conversationDao: ConversationDao,
-    private val aiProvider: AiProvider
+    private val aiProvider: AiProvider,
 ) {
-    /** Stream of all stored messages, oldest first. */
+    /** Stream all saved messages in chronological order. */
     val messages: Flow<List<ChatMessage>> = conversationDao.getAllMessages().map { entities ->
-        entities.map { it.toChatMessage() }
+        entities.map(ConversationEntity::toChatMessage)
     }
 
-    /** Persist a user or assistant message. */
-    suspend fun saveMessage(message: ChatMessage): Long {
-        return conversationDao.insert(
-            ConversationEntity(
-                role = message.role.name.lowercase(),
-                content = message.content,
-                timestamp = message.timestamp
-            )
-        )
-    }
+    /** Search saved transcripts by message text (case-insensitive on SQLite's default LIKE collation). */
+    fun searchMessages(query: String, limit: Int = 100): Flow<List<ChatMessage>> =
+        conversationDao.searchMessages(query.trim(), limit.coerceIn(1, 500)).map { entities ->
+            entities.map(ConversationEntity::toChatMessage)
+        }
 
-    /**
-     * Send the conversation history to Ollama and return the assistant reply.
-     * [systemPrompt] is prepended as the system message.
-     * [history] is the list of prior messages to provide context.
-     */
-    suspend fun sendToOllama(
-        systemPrompt: String,
-        history: List<ChatMessage>
-    ): String {
-        return aiProvider.generate(systemPrompt, history).getOrThrow()
-    }
+    suspend fun saveMessage(message: ChatMessage): Long = conversationDao.insert(
+        ConversationEntity(
+            role = message.role.name.lowercase(),
+            content = message.content,
+            timestamp = message.timestamp,
+        ),
+    )
+
+    suspend fun sendToOllama(systemPrompt: String, history: List<ChatMessage>): String =
+        aiProvider.generate(systemPrompt, history).getOrThrow()
 
     suspend fun clearHistory() = conversationDao.clearAll()
 
@@ -52,6 +46,6 @@ class ConversationRepository @Inject constructor(
             else -> ChatMessage.Role.SYSTEM
         },
         content = content,
-        timestamp = timestamp
+        timestamp = timestamp,
     )
 }

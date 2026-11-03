@@ -89,103 +89,40 @@ Success metrics
 
 ```
 app/src/main/java/com/aura/ai/
-├── AuraApplication.kt          # Hilt application entry point
+├── AuraApplication.kt
 ├── MainActivity.kt
-├── data/
-│   ├── database/               # Room DB (conversations + memory)
-│   ├── model/                  # ChatMessage, AuraAction
-│   ├── remote/                 # Ollama Retrofit service + DTOs
-│   └── repository/             # ConversationRepository, MemoryRepository
-├── di/
-│   └── AppModule.kt            # Hilt dependency graph
-├── domain/
-│   ├── action/
-│   │   └── ActionParser.kt     # Parses AI responses into actions
-│   └── usecase/                # MakeCall, SendSms, SetReminder, LaunchApp, …
-├── ui/
-│   ├── components/             # MessageBubble, InputBar, TypingIndicator
-│   ├── screen/                 # MainScreen, ChatScreen
-│   ├── theme/                  # Color, Type, Theme
-│   └── viewmodel/
-│       └── AuraViewModel.kt
-└── util/
-    ├── ReminderReceiver.kt     # BroadcastReceiver for alarm notifications
-    └── VoiceHelper.kt          # SpeechRecognizer Flow wrapper
+├── agent/                 # T1000 understand/plan/execute/verify loop and tools
+├── data/                  # Room persistence, Ollama networking, repositories/settings
+├── di/                    # Hilt modules
+├── domain/                # Android actions, models and use cases
+├── ui/                    # Compose chat, memory, skills, settings and trading screens
+├── util/                  # Reminder and voice utilities
+└── voice/                 # Android recognition, TTS, and wake-word service
 ```
 
 ---
 
 ## Setup
 
-### 1. Clone the repository
+1. Clone the repository and open it in Android Studio (Java 17).
+2. Run an Ollama-compatible server reachable from the device. Configure `OLLAMA_BASE_URL` and `OLLAMA_MODEL` in ignored `local.properties` or Gradle properties. The emulator default URL is `http://10.0.2.2:11434`; a physical device needs a reachable host address.
+3. Build and install on an Android API 26+ device/emulator:
 
 ```bash
-git clone https://github.com/ferreiraeshawn8209-app/aura-ai.git
-cd aura-ai
+./gradlew testDebugUnitTest assembleDebug
 ```
 
-### 2. Configure Ollama
-
-AURA connects to an Ollama-compatible server. Create (or edit) `local.properties` in the project root when you need to override the defaults:
-
-```properties
-OLLAMA_BASE_URL=http://10.0.2.2:11434/
-OLLAMA_MODEL=gemma3:1b-cloud
-```
-
-The default base URL targets Ollama running on the host from an Android emulator. Use your machine's reachable address when running on a physical device.
-
-> ⚠️ **Never commit `local.properties`** — it is already in `.gitignore`.
-
-### 3. Build and run
-
-Open the project in Android Studio (Hedgehog or newer) and run on a device or emulator with API 26+.
-
-```bash
-./gradlew assembleDebug
-```
+Never commit `local.properties` or API credentials.
 
 ---
 
-## How AURA Performs Actions
+## Current limitations
 
-AURA uses a structured JSON convention to signal device actions.  
-When the AI decides an action is needed it returns a response like:
-
-```json
-{
-  "action": "make_call",
-  "contact": "Mom",
-  "reply": "Calling Mom now!"
-}
-```
-
-Supported actions:
-
-| `action` | Required fields | Description |
-|---|---|---|
-| `make_call` | `contact` | Dial a contact |
-| `send_sms` | `contact`, `message` | Send a text message |
-| `set_reminder` | `title`, `datetime` (yyyy-MM-dd HH:mm) | Schedule a notification |
-| `launch_app` | `app_name` | Open an installed app |
-
----
-
-## Permissions
-
-AURA requests the following permissions at runtime:
-
-| Permission | Purpose |
-|---|---|
-| `CALL_PHONE` | Make phone calls |
-| `SEND_SMS` | Send text messages |
-| `READ_CONTACTS` | Resolve contact names to numbers |
-| `READ/WRITE_CALENDAR` | Create calendar events |
-| `RECORD_AUDIO` | Voice input |
-| `POST_NOTIFICATIONS` | Reminder notifications |
-| `SCHEDULE_EXACT_ALARM` | Precise reminder timing |
-
-All permissions are optional — AURA degrades gracefully when denied.
+- The active T1000 agent talks to Ollama; cloud provider fallback is not implemented.
+- Wake-word service and voice processing require device-level testing and permissions; continuous listening is not guaranteed by Android.
+- Direct device action tools are not currently wired into the T1000 agent. The existing action use cases are separate and must not be assumed to have run.
+- No Windows desktop/companion implementation exists yet.
+- For verified status, current test/build results and next steps, see [AI_HANDOVER.md](AI_HANDOVER.md) and [TODO.md](TODO.md).
 
 ---
 

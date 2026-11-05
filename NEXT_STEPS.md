@@ -2,6 +2,14 @@
 
 **Owner unavailable for phone/PC testing. Do not block software development on device access.** Work on `integration/aura-voice-consolidation`; do not merge `main` without approval. Preserve app data, recordings, models, voice choice, and checkpoints.
 
+## Mandatory execution order: AUDIT AND INTEGRATION FIRST
+
+1. Audit all eight named repositories and the current Aura integration branch, documenting reusable components, dependencies, duplicates, incompatibilities, and missing features.
+2. Integrate suitable code into the protected integration branch, retaining the existing architecture and avoiding wholesale merges of unrelated applications.
+3. Build and run automated tests; fix regressions and document evidence.
+4. Only after the audit and integration, proceed with additional cloud routing, TTS, and voice refinements below.
+5. Defer physical-device tests until the owner is available. Do not block other work on device access.
+
 ## Work that can proceed without the phone
 
 1. Implement a provider-neutral inference router with cloud-first routing, local Ollama fallback, timeouts, circuit breaker/retry limits, health checks, and recovery to cloud. No invented credentials; provider adapters should be configurable and fail safely if unconfigured.

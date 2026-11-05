@@ -48,6 +48,7 @@ import com.aura.ai.ui.theme.TextFaint
 fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
     val settings by viewModel.settingsState.collectAsStateWithLifecycle()
     val conn by viewModel.conn.collectAsStateWithLifecycle()
+    val voiceSelection by viewModel.voiceSelection.collectAsStateWithLifecycle()
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(
@@ -156,7 +157,56 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                     ToggleRow("\"Hey T1000\" wake phrase", "Keep a foreground listener running for the wake phrase.", settings.wakeWordEnabled, viewModel::setWakeWord)
                 }
             }
+
+            item {
+                Section("Voice") {
+                    Text(
+                        "Choose an installed Android voice. Aura saves the exact voice ID and will report if it is missing instead of switching voices. An Austrian-accented English voice must be installed by the device's speech engine; Android cannot create that accent from a pitch setting.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick = viewModel::refreshVoices, enabled = !voiceSelection.loading) {
+                            Text(if (voiceSelection.loading) "Loading…" else "Load voices")
+                        }
+                        OutlinedButton(onClick = viewModel::previewVoice) { Text("Preview") }
+                    }
+                    voiceSelection.message?.let {
+                        Spacer(Modifier.height(8.dp))
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    voiceSelection.voices.forEach { voice ->
+                        VoiceRow(
+                            title = "${voice.metadata["gender"] ?: "Voice"} · ${voice.name}",
+                            subtitle = voice.languageTag,
+                            selected = voice.id == voiceSelection.selectedVoiceId,
+                            onClick = { viewModel.selectVoice(voice.id) },
+                        )
+                    }
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun VoiceRow(title: String, subtitle: String, selected: Boolean, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = onClick)
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(subtitle, style = MaterialTheme.typography.labelMedium, color = TextFaint)
+        }
+        if (selected) Icon(Icons.Filled.CheckCircle, contentDescription = "Selected voice", tint = MintAccent)
     }
 }
 

@@ -1,6 +1,11 @@
 package com.aura.ai.di
 
 import android.content.Context
+import com.aura.voice.AuraVoiceSubsystem
+import com.aura.voice.DefaultAuraVoiceSubsystem
+import com.aura.voice.android.AndroidSpeechRecognizerProvider
+import com.aura.voice.android.AndroidTextToSpeechProvider
+import com.aura.voice.android.SharedPreferencesVoiceSettingsStore
 import com.aura.ai.voice.recognition.SpeechRecognitionManager
 import com.aura.ai.voice.tts.TextToSpeechManager
 import com.aura.ai.voice.wake.WakeWordDetector
@@ -15,6 +20,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object VoiceModule {
+    @Singleton
+    @Provides
+    fun provideAuraVoiceSubsystem(
+        @ApplicationContext context: Context,
+    ): AuraVoiceSubsystem = DefaultAuraVoiceSubsystem(
+        speechProviders = listOf(AndroidSpeechRecognizerProvider(context)),
+        textToSpeechProviders = listOf(AndroidTextToSpeechProvider(context)),
+        settingsStore = SharedPreferencesVoiceSettingsStore(context),
+    )
+
     @Singleton
     @Provides
     fun provideSpeechRecognitionManager(

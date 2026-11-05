@@ -27,6 +27,7 @@ data class ChatUiState(
     val listening: Boolean = false,
     val partialSpeech: String = "",
     val speaking: Boolean = false,
+    val handsFreeSession: Boolean = false,
     val modelReady: Boolean = false,
     val modelName: String? = null,
     val banner: String? = null,

@@ -2,10 +2,12 @@ package com.aura.ai.voice.tts
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class TextToSpeechManager @Inject constructor(
@@ -25,6 +27,12 @@ class TextToSpeechManager @Inject constructor(
         tts = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 tts?.language = Locale.getDefault()
+                tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+                    override fun onStart(utteranceId: String?) { _isSpeaking.value = true }
+                    override fun onDone(utteranceId: String?) { _isSpeaking.value = false }
+                    @Deprecated("Deprecated in Java")
+                    override fun onError(utteranceId: String?) { _isSpeaking.value = false }
+                })
                 _isInitialized.value = true
                 onInitComplete(true)
             } else {
@@ -43,7 +51,7 @@ class TextToSpeechManager @Inject constructor(
         if (text.isEmpty()) return
 
         _isSpeaking.value = true
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null) { _isSpeaking.value = false }
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString())
     }
 
     fun stop() {

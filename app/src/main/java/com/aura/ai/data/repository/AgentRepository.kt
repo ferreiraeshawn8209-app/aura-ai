@@ -31,7 +31,6 @@ class AgentRepository @Inject constructor(
         agentActionDao.updateAction(
             action.copy(
                 status = newStatus,
-                updatedTimestamp = System.currentTimeMillis()
             )
         )
     }
@@ -47,8 +46,7 @@ class AgentRepository @Inject constructor(
                 result = result,
                 status = "SUCCEEDED",
                 executionTimeMs = executionTimeMs,
-                completedTimestamp = System.currentTimeMillis(),
-                updatedTimestamp = System.currentTimeMillis()
+                completedTimestamp = System.currentTimeMillis()
             )
         )
     }
@@ -64,8 +62,7 @@ class AgentRepository @Inject constructor(
                 errorMessage = errorMessage,
                 status = "FAILED",
                 executionTimeMs = executionTimeMs,
-                completedTimestamp = System.currentTimeMillis(),
-                updatedTimestamp = System.currentTimeMillis()
+                completedTimestamp = System.currentTimeMillis()
             )
         )
     }

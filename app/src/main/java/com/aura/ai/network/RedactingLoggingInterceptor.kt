@@ -16,7 +16,8 @@ class RedactingLoggingInterceptor(private val logger: HttpLoggingInterceptor.Log
     private val delegate = HttpLoggingInterceptor(logger).apply {
         // Ensure the Authorization header is redacted by HttpLoggingInterceptor
         redactHeader("Authorization")
-        level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+        // Keep credentials and user prompts out of debug logs by not logging bodies.
+        level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.HEADERS else HttpLoggingInterceptor.Level.NONE
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {

@@ -1,6 +1,6 @@
 package com.aura.ai.agent.tool
 
-import com.aura.ai.data.repository.T1000T1000MemoryRepository
+import com.aura.ai.data.repository.T1000MemoryRepository
 import com.aura.ai.data.repository.SkillRepository
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 /** Reads relevant long-term memories for the current request. */
 class RecallMemoryTool @Inject constructor(
-    private val memory: MemoryRepository,
+    private val memory: T1000MemoryRepository,
 ) : Tool {
     override val name = "recall_memory"
     override val description = "Search the agent's long-term memory for facts, preferences, or prior context."
@@ -29,7 +29,7 @@ class RecallMemoryTool @Inject constructor(
 
 /** Persists a durable fact/preference the user shared. */
 class RememberTool @Inject constructor(
-    private val memory: MemoryRepository,
+    private val memory: T1000MemoryRepository,
 ) : Tool {
     override val name = "remember"
     override val description = "Save a fact or preference to long-term memory for future sessions."

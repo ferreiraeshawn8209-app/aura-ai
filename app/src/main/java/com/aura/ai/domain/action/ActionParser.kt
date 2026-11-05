@@ -1,7 +1,10 @@
 package com.aura.ai.domain.action
 
 import com.aura.ai.data.model.AuraAction
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -35,31 +38,32 @@ object ActionParser {
     fun parse(response: String): Pair<AuraAction, String?> {
         val jsonBlock = extractJsonBlock(response) ?: return AuraAction.Reply(response) to null
         return try {
-            val json = JSONObject(jsonBlock)
-            val replyText = json.optString("reply", "").ifBlank { null }
-            val action = when (json.optString("action")) {
+            val json = Json.parseToJsonElement(jsonBlock).jsonObject
+            fun field(name: String): String? = json[name]?.jsonPrimitive?.contentOrNull
+            val replyText = field("reply").orEmpty().ifBlank { null }
+            val action = when (field("action")) {
                 "make_call" -> AuraAction.MakeCall(
-                    contact = json.getString("contact"),
-                    number = json.optString("number").ifBlank { null }
+                    contact = field("contact") ?: error("Missing contact"),
+                    number = field("number").ifBlankToNull()
                 )
                 "send_sms" -> AuraAction.SendSms(
-                    contact = json.getString("contact"),
-                    number = json.optString("number").ifBlank { null },
-                    message = json.getString("message")
+                    contact = field("contact") ?: error("Missing contact"),
+                    number = field("number").ifBlankToNull(),
+                    message = field("message") ?: error("Missing message")
                 )
                 "set_reminder" -> {
-                    val datetime = json.getString("datetime")
+                    val datetime = field("datetime") ?: error("Missing datetime")
                     val epochMillis = runCatching { dateFormat.parse(datetime)?.time }
                         .getOrNull() ?: (System.currentTimeMillis() + 60_000)
                     AuraAction.SetReminder(
-                        title = json.getString("title"),
-                        description = json.optString("description"),
+                        title = field("title") ?: error("Missing title"),
+                        description = field("description").orEmpty(),
                         epochMillis = epochMillis
                     )
                 }
                 "launch_app" -> AuraAction.LaunchApp(
-                    appName = json.getString("app_name"),
-                    packageName = json.optString("package_name").ifBlank { null }
+                    appName = field("app_name") ?: error("Missing app name"),
+                    packageName = field("package_name").ifBlankToNull()
                 )
                 else -> AuraAction.Reply(replyText ?: response)
             }
@@ -70,13 +74,18 @@ object ActionParser {
     }
 
     private fun extractJsonBlock(text: String): String? {
-        val startMarker = "```json"
-        val endMarker = "```"
-        val start = text.indexOf(startMarker)
-        if (start == -1) return null
-        val contentStart = start + startMarker.length
-        val end = text.indexOf(endMarker, contentStart)
-        if (end == -1) return null
-        return text.substring(contentStart, end).trim()
+        val fencedJson = Regex("```(?:json)?\\s*([\\s\\S]*?)\\s*```", RegexOption.IGNORE_CASE)
+            .find(text)
+            ?.groupValues
+            ?.getOrNull(1)
+            ?.trim()
+            ?.takeIf { it.startsWith("{") && it.endsWith("}") }
+        if (fencedJson != null) return fencedJson
+
+        val start = text.indexOf('{')
+        val end = text.lastIndexOf('}')
+        return if (start >= 0 && end > start) text.substring(start, end + 1).trim() else null
     }
+
+    private fun String?.ifBlankToNull(): String? = this?.takeIf { it.isNotBlank() }
 }

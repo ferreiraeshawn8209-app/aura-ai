@@ -7,6 +7,10 @@ import com.aura.ai.data.remote.ollama.OllamaRepository
 import com.aura.ai.data.remote.ollama.OllamaResult
 import com.aura.ai.data.settings.SettingsRepository
 import com.aura.ai.data.settings.T1000Settings
+import com.aura.voice.AuraVoiceSubsystem
+import com.aura.voice.SpeechSynthesisListener
+import com.aura.voice.VoiceDescriptor
+import com.aura.voice.VoiceError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,10 +31,18 @@ data class ConnectionUiState(
     val urlDraft: String = T1000Settings.DEFAULT_OLLAMA_URL,
 )
 
+data class VoiceSelectionUiState(
+    val voices: List<VoiceDescriptor> = emptyList(),
+    val selectedVoiceId: String? = null,
+    val loading: Boolean = false,
+    val message: String? = null,
+)
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settings: SettingsRepository,
     private val ollama: OllamaRepository,
+    private val voice: AuraVoiceSubsystem,
 ) : ViewModel() {
 
     val settingsState: StateFlow<T1000Settings> =
@@ -39,6 +51,11 @@ class SettingsViewModel @Inject constructor(
     private val _conn = MutableStateFlow(ConnectionUiState())
     val conn: StateFlow<ConnectionUiState> = _conn.asStateFlow()
 
+    private val _voiceSelection = MutableStateFlow(
+        VoiceSelectionUiState(selectedVoiceId = voice.voiceSettings().voiceId),
+    )
+    val voiceSelection: StateFlow<VoiceSelectionUiState> = _voiceSelection.asStateFlow()
+
     init {
         viewModelScope.launch {
             settings.settings.collect { s -> _conn.update { it.copy(urlDraft = s.ollamaBaseUrl) } }
@@ -46,6 +63,47 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun onUrlDraftChange(value: String) = _conn.update { it.copy(urlDraft = value) }
+
+    fun refreshVoices() {
+        _voiceSelection.update { it.copy(loading = true, message = null) }
+        voice.getVoices { voices ->
+            _voiceSelection.update {
+                it.copy(
+                    voices = voices.sortedWith(compareBy({ it.languageTag }, { it.name })),
+                    selectedVoiceId = voice.voiceSettings().voiceId,
+                    loading = false,
+                    message = if (voices.isEmpty()) "No Android voices are ready. Check the phone's Text-to-speech settings, then refresh." else null,
+                )
+            }
+        }
+    }
+
+    fun selectVoice(voiceId: String) {
+        voice.selectVoice(voiceId) { result ->
+            if (result.accepted) {
+                _voiceSelection.update { it.copy(selectedVoiceId = voiceId, message = "Voice selection saved on this device.") }
+            } else {
+                _voiceSelection.update { it.copy(message = result.error?.message ?: "Could not save the selected voice.") }
+            }
+        }
+    }
+
+    fun previewVoice() {
+        val result = voice.speak(
+            "All systems operational. Ready for your command.",
+            object : SpeechSynthesisListener {
+                override fun onStarted() = Unit
+                override fun onCompleted() = Unit
+                override fun onStopped() = Unit
+                override fun onError(error: VoiceError) {
+                    _voiceSelection.update { it.copy(message = error.message) }
+                }
+            },
+        )
+        if (!result.accepted) {
+            _voiceSelection.update { it.copy(message = result.error?.message ?: "Voice preview failed.") }
+        }
+    }
 
     fun saveUrlAndTest() {
         val url = _conn.value.urlDraft.trim().trimEnd('/')

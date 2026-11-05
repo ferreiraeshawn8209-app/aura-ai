@@ -30,7 +30,7 @@ data class TransactionCategory(
     val color: String? = null
 )
 
-data class FinanceState {
+class FinanceState {
     val totalBalance: Double? = null
     val accounts: List<Account> = emptyList()
     val transactions: List<Transaction> = emptyList()

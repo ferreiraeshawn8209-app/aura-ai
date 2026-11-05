@@ -14,4 +14,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "aura-ai"
-include(":app")
+include(":app", ":aura-voice")
+project(":aura-voice").projectDir = file("lib/aura-voice")

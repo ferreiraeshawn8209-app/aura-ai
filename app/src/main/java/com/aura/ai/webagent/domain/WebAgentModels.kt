@@ -33,7 +33,7 @@ data class BrowserAutomationResult(
     val authenticationRequired: Boolean = false
 )
 
-data class WebAgentState {
+class WebAgentState {
     val currentUrl: String? = null
     val isAuthenticated: Boolean = false
     val requiresMfa: Boolean = false

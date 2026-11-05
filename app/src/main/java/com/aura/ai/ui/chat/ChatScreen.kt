@@ -106,6 +106,7 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
             busy = state.busy,
             listening = state.listening,
             speaking = state.speaking,
+            handsFreeSession = state.handsFreeSession,
             partial = state.partialSpeech,
             enabled = state.modelReady,
             onInput = viewModel::onInputChange,
@@ -176,6 +177,7 @@ private fun Composer(
     busy: Boolean,
     listening: Boolean,
     speaking: Boolean,
+    handsFreeSession: Boolean,
     partial: String,
     enabled: Boolean,
     onInput: (String) -> Unit,
@@ -214,10 +216,18 @@ private fun Composer(
                 IconButton(onClick = if (speaking) onStopSpeak else onMic, enabled = enabled) {
                     val icon = when {
                         speaking -> Icons.Filled.GraphicEq
-                        listening -> Icons.Filled.Stop
+                        handsFreeSession -> Icons.Filled.Stop
                         else -> Icons.Filled.Mic
                     }
-                    Icon(icon, contentDescription = if (listening) "Stop listening" else "Speak", tint = micTint)
+                    Icon(
+                        icon,
+                        contentDescription = when {
+                            speaking -> "Interrupt Aura and listen"
+                            handsFreeSession -> "Stop hands-free conversation"
+                            else -> "Start hands-free conversation"
+                        },
+                        tint = micTint,
+                    )
                 }
 
                 IconButton(

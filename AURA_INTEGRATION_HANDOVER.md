@@ -106,9 +106,9 @@ This is a debug APK suitable for sideloading/testing. It has **not** been instal
 2. Add a configurable cloud provider with encrypted credential storage and a tested cloud-first/local fallback router; include failure/recovery/offline tests.
 3. Run hands-free acceptance tests on the Honor: wake phrase, transcript, final response spoken once, multi-turn, interruption, permission denial/recovery, and app restart. Record actual results.
 4. Confirm which installed/licensed TTS provider supplies the Austrian English voice; test persistence and previews on the phone.
-5. Publish the verified source changes and handover to the integration branch. Do not merge to `main` without approval.
+5. Complete the final APK installation and real-device voice tests after the Honor reconnects. Do not merge to `main` without approval.
 
 ## Commit record
 
 Implementation commit: `1ecfc0d` (`Integrate Aura voice subsystem and repair Android build`).
-The implementation and handover are published on GitHub branch `integration/aura-voice-consolidation`; `main` is untouched.
+Latest implementation and test/handover update: `46f84a0` (`Fix Aura voice flow and phone Ollama defaults`), pushed to GitHub branch `integration/aura-voice-consolidation`; `main` is untouched.

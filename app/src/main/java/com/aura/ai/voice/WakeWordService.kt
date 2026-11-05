@@ -2,8 +2,10 @@ package com.aura.ai.voice
 
 import android.app.Notification
 import android.app.PendingIntent
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,10 +14,12 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import com.aura.ai.MainActivity
 import com.aura.ai.R
 import com.aura.ai.AuraApplication
+import com.aura.ai.voice.wake.WakePhraseMatcher
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,6 +42,10 @@ class WakeWordService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            stopSelf()
+            return
+        }
         startForeground(NOTIFICATION_ID, buildNotification())
         startRecognizer()
     }
@@ -74,7 +82,8 @@ class WakeWordService : LifecycleService() {
 
     private fun recognizerIntent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-ZA")
+        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, false)
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
     }
 
@@ -93,18 +102,13 @@ class WakeWordService : LifecycleService() {
         handler.postDelayed(restart, delayMs)
     }
 
-    private fun onPhraseDetected() {
+    private fun onPhraseDetected(transcript: String) {
         val launch = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(EXTRA_WOKEN, true)
+            putExtra(EXTRA_WAKE_TRANSCRIPT, transcript)
         }
         startActivity(launch)
-    }
-
-    private fun matches(text: String): Boolean {
-        val phrase = getString(R.string.wake_phrase).lowercase().filter(Char::isLetterOrDigit)
-        val normalized = text.lowercase().filter(Char::isLetterOrDigit)
-        return normalized.contains(phrase)
     }
 
     private inner class WakeListener : RecognitionListener {
@@ -118,22 +122,16 @@ class WakeWordService : LifecycleService() {
         override fun onError(error: Int) = restartSoon(error)
 
         override fun onPartialResults(partialResults: Bundle?) {
-            val hit = partialResults
-                ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.any { matches(it) } == true
-            if (hit) {
-                onPhraseDetected()
-                stopSelf()
-                return
-            }
+            // Wait for a final utterance: triggering on the partial wake phrase
+            // used to cut off the question spoken immediately after it.
         }
 
         override fun onResults(results: Bundle?) {
-            val hit = results
+            val transcript = results
                 ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.any { matches(it) } == true
-            if (hit) {
-                onPhraseDetected()
+                ?.firstOrNull(WakePhraseMatcher::matches)
+            if (transcript != null) {
+                onPhraseDetected(transcript)
                 stopSelf()
             } else {
                 restartSoon()
@@ -153,6 +151,7 @@ class WakeWordService : LifecycleService() {
     companion object {
         const val NOTIFICATION_ID = 4242
         const val EXTRA_WOKEN = "woken"
+        const val EXTRA_WAKE_TRANSCRIPT = "wake_transcript"
 
         fun start(context: Context) {
             val intent = Intent(context, WakeWordService::class.java)

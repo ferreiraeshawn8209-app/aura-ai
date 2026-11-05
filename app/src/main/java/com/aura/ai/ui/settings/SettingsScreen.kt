@@ -62,8 +62,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
             item {
                 Section("Ollama connection") {
                     Text(
-                        "T1000 runs entirely on your own Ollama server — no cloud. Point it at the host running `ollama serve`. " +
-                            "Use 10.0.2.2 for an emulator reaching your computer, or the LAN IP of the machine on a real device.",
+                            "Aura uses your Ollama server. This phone is configured to reach your PC at 192.168.8.18. " +
+                            "If your PC's network address changes, update the Base URL here.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -114,7 +114,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                     Spacer(Modifier.height(8.dp))
                     if (conn.models.isEmpty()) {
                         Text(
-                            "No models discovered yet. Connect above, then pull one on the host, e.g. `ollama pull llama3.2`.",
+                            "No models discovered yet. Connect above and refresh the list of models installed on your PC.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = TextFaint,
                         )
@@ -154,7 +154,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 Section("Behavior") {
                     ToggleRow("Autonomous mode", "Let T1000 plan and act without step-by-step confirmation.", settings.autonomyEnabled, viewModel::setAutonomy)
                     ToggleRow("Spoken replies", "Read answers aloud with text-to-speech.", settings.voiceRepliesEnabled, viewModel::setVoiceReplies)
-                    ToggleRow("\"Hey T1000\" wake phrase", "Keep a foreground listener running for the wake phrase.", settings.wakeWordEnabled, viewModel::setWakeWord)
+                    ToggleRow("\"Yo, yo, yo\" wake phrase", "Keep Aura listening quietly for its wake phrase.", settings.wakeWordEnabled, viewModel::setWakeWord)
                 }
             }
 

@@ -23,7 +23,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
  */
 data class T1000Settings(
     val ollamaBaseUrl: String = DEFAULT_OLLAMA_URL,
-    val selectedModel: String? = null,
+    val selectedModel: String? = DEFAULT_MODEL,
     val requestTimeoutSeconds: Int = 120,
     val temperature: Int = 70, // stored as 0..100, divided by 100 at call time
     val autonomyEnabled: Boolean = true,
@@ -31,7 +31,8 @@ data class T1000Settings(
     val voiceRepliesEnabled: Boolean = true,
 ) {
     companion object {
-        const val DEFAULT_OLLAMA_URL = "http://10.0.2.2:11434"
+        const val DEFAULT_OLLAMA_URL = "http://192.168.8.18:11434"
+        const val DEFAULT_MODEL = "qwen3:1.7b"
     }
 }
 
@@ -50,9 +51,24 @@ class SettingsRepository @Inject constructor(
     }
 
     val settings: Flow<T1000Settings> = context.dataStore.data.map { p ->
+        // Older builds saved the Android-emulator-only host and a cloud-tagged
+        // Gemma default. Those values cannot work from a physical phone. Map
+        // only those known legacy defaults; keep any user-entered endpoint/model.
+        val storedUrl = p[Keys.BASE_URL]
+        val normalizedUrl = when (storedUrl?.trim()?.trimEnd('/')?.lowercase()) {
+            "http://10.0.2.2:11434", "http://0.0.0.0:11434", "http://localhost:11434" ->
+                T1000Settings.DEFAULT_OLLAMA_URL
+            else -> storedUrl ?: T1000Settings.DEFAULT_OLLAMA_URL
+        }
+        val storedModel = p[Keys.MODEL]
+        val normalizedModel = if (storedModel == "gemma3:1b-cloud") {
+            T1000Settings.DEFAULT_MODEL
+        } else {
+            storedModel ?: T1000Settings.DEFAULT_MODEL
+        }
         T1000Settings(
-            ollamaBaseUrl = p[Keys.BASE_URL] ?: T1000Settings.DEFAULT_OLLAMA_URL,
-            selectedModel = p[Keys.MODEL],
+            ollamaBaseUrl = normalizedUrl,
+            selectedModel = normalizedModel,
             requestTimeoutSeconds = p[Keys.TIMEOUT] ?: 120,
             temperature = p[Keys.TEMPERATURE] ?: 70,
             autonomyEnabled = p[Keys.AUTONOMY] ?: true,

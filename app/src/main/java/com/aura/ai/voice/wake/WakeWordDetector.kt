@@ -11,10 +11,8 @@ class WakeWordDetector @Inject constructor(
     private val context: Context
 ) {
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    private val wakePhrase = "Hey T1000"
-
     fun detectWakeWord(text: String): Boolean {
-        return text.contains(wakePhrase, ignoreCase = true)
+        return WakePhraseMatcher.matches(text)
     }
 
     fun requestAudioFocus(): Boolean {

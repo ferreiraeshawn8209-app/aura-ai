@@ -108,6 +108,7 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
             speaking = state.speaking,
             handsFreeSession = state.handsFreeSession,
             partial = state.partialSpeech,
+            speechDiagnostic = state.speechDiagnostic,
             enabled = state.modelReady,
             onInput = viewModel::onInputChange,
             onSend = { viewModel.send() },
@@ -179,6 +180,7 @@ private fun Composer(
     speaking: Boolean,
     handsFreeSession: Boolean,
     partial: String,
+    speechDiagnostic: String,
     enabled: Boolean,
     onInput: (String) -> Unit,
     onSend: () -> Unit,
@@ -193,6 +195,14 @@ private fun Composer(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MintAccent,
                     modifier = Modifier.padding(bottom = 8.dp, start = 4.dp),
+                )
+            }
+            if (!listening && speechDiagnostic.isNotBlank()) {
+                Text(
+                    speechDiagnostic,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 6.dp, start = 4.dp),
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {

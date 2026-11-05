@@ -1,7 +1,10 @@
 package com.aura.ai.ui.settings
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aura.ai.voice.WakeWordService
+import dagger.hilt.android.qualifiers.ApplicationContext
 import com.aura.ai.data.remote.ollama.OllamaModel
 import com.aura.ai.data.remote.ollama.OllamaRepository
 import com.aura.ai.data.remote.ollama.OllamaResult
@@ -43,6 +46,7 @@ class SettingsViewModel @Inject constructor(
     private val settings: SettingsRepository,
     private val ollama: OllamaRepository,
     private val voice: AuraVoiceSubsystem,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     val settingsState: StateFlow<T1000Settings> =
@@ -144,6 +148,9 @@ class SettingsViewModel @Inject constructor(
     fun setTimeout(seconds: Int) = viewModelScope.launch { settings.setTimeout(seconds) }
     fun setTemperature(value: Int) = viewModelScope.launch { settings.setTemperature(value) }
     fun setAutonomy(enabled: Boolean) = viewModelScope.launch { settings.setAutonomy(enabled) }
-    fun setWakeWord(enabled: Boolean) = viewModelScope.launch { settings.setWakeWord(enabled) }
+    fun setWakeWord(enabled: Boolean) = viewModelScope.launch {
+        settings.setWakeWord(enabled)
+        if (enabled) WakeWordService.start(context) else WakeWordService.stop(context)
+    }
     fun setVoiceReplies(enabled: Boolean) = viewModelScope.launch { settings.setVoiceReplies(enabled) }
 }

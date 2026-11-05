@@ -36,7 +36,7 @@ class AgentOrchestrator @Inject constructor(
     private val learning: LearningEngine,
     private val json: Json,
 ) {
-    fun run(request: String): Flow<AgentEvent> = channelFlow {
+    fun run(request: String, conversationContext: List<Pair<String, String>> = emptyList()): Flow<AgentEvent> = channelFlow {
         val cfg = settings.settings.first()
         val model = cfg.selectedModel
         if (model.isNullOrBlank()) {
@@ -68,6 +68,35 @@ class AgentOrchestrator @Inject constructor(
         }
 
         try {
+            SimpleMathIntent.answer(request)?.let { answer ->
+                send(AgentEvent.Phase(AgentPhase.EXECUTE, "Answering your question"))
+                send(AgentEvent.Token(answer))
+                send(AgentEvent.Answer(answer))
+                return@channelFlow
+            }
+            if (!ConversationIntent.needsAgentPlan(request)) {
+                send(AgentEvent.Phase(AgentPhase.EXECUTE, "Answering your question"))
+                val memories = memory.recall(request)
+                val memoryContext = memories.joinToString("\n") { "${it.type}: ${it.content}" }
+                val system = buildString {
+                    append("You are Aura, a disciplined, intelligent command assistant. Speak in clear, natural, everyday English with a calm, precise, authoritative manner. ")
+                    append("Answer simple questions immediately, without an acknowledgement. For an actionable request, acknowledge once only when useful, then perform the task and report the verified result. Never use a filler such as ‘I'm on it’ as the answer. Never claim an action succeeded without evidence. ")
+                    append("Keep wording consistent and avoid repeated military catchphrases. ")
+                    if (memoryContext.isNotBlank()) append("Relevant remembered context:\n$memoryContext")
+                }
+                val messages = buildList {
+                    add("system" to system)
+                    addAll(conversationContext.takeLast(12))
+                    add("user" to request)
+                }
+                // Hold ordinary chat tokens until the response is complete. A
+                // failed stream must not leave a partial filler reply on screen.
+                val answer = complete(messages, streamTokens = false).trim()
+                if (answer.isBlank()) throw AgentException("The selected AI model returned an empty answer.")
+                send(AgentEvent.Answer(answer))
+                return@channelFlow
+            }
+
             // ---- PHASE 1: UNDERSTAND ---------------------------------------
             send(AgentEvent.Phase(AgentPhase.UNDERSTAND, "Interpreting your request"))
             val memories = memory.recall(request)

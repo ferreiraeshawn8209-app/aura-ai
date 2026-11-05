@@ -26,6 +26,8 @@ data class ChatUiState(
     val busy: Boolean = false,
     val listening: Boolean = false,
     val partialSpeech: String = "",
+    /** Private on-screen diagnostic of the last ASR result; never sent to analytics. */
+    val speechDiagnostic: String = "",
     val speaking: Boolean = false,
     val handsFreeSession: Boolean = false,
     val modelReady: Boolean = false,

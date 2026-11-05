@@ -21,6 +21,7 @@ import com.aura.voice.VoiceErrorCode
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,6 +45,7 @@ class ChatViewModel @Inject constructor(
 
     private var runJob: Job? = null
     private var listenJob: Job? = null
+    private var recoverableListenFailures = 0
     private val voiceStateSubscription = voice.observeState(object : ConversationStateObserver {
         override fun onStateChanged(snapshot: com.aura.voice.ConversationStateSnapshot) {
             _state.update {
@@ -69,7 +71,7 @@ class ChatViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            wakeWordEvents.events.collect { activateFromWakeWord() }
+            wakeWordEvents.events.collect { activateFromWakeWord(it) }
         }
     }
 
@@ -83,6 +85,9 @@ class ChatViewModel @Inject constructor(
         val userTurn = ChatTurn(id = System.nanoTime(), isUser = true, text = prompt)
         val assistantId = System.nanoTime() + 1
         val assistantTurn = ChatTurn(id = assistantId, isUser = false, text = "", streaming = true)
+        val conversationContext = _state.value.turns.takeLast(12).map { turn ->
+            (if (turn.isUser) "user" else "assistant") to turn.text
+        }
 
         _state.update {
             it.copy(
@@ -95,16 +100,33 @@ class ChatViewModel @Inject constructor(
         runJob?.cancel()
         runJob = viewModelScope.launch {
             voice.markProcessing()
-            orchestrator.run(prompt).collect { event ->
-                applyEvent(assistantId, event)
+            try {
+                orchestrator.run(prompt, conversationContext).collect { event ->
+                    applyEvent(assistantId, event)
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (failure: Exception) {
+                val message = failure.message?.takeIf(String::isNotBlank)
+                    ?: "Aura couldn't reach the selected AI model. Check the connection in Settings."
+                _state.update { st ->
+                    st.copy(
+                        banner = message,
+                        turns = st.turns.map {
+                            if (it.id == assistantId && it.text.isBlank()) it.copy(text = message, error = true)
+                            else it
+                        },
+                    )
+                }
+            } finally {
+                _state.update { st ->
+                    st.copy(
+                        busy = false,
+                        turns = st.turns.map { if (it.id == assistantId) it.copy(streaming = false) else it },
+                    )
+                }
             }
             val finalText = _state.value.turns.firstOrNull { it.id == assistantId }?.text.orEmpty()
-            _state.update { st ->
-                st.copy(
-                    busy = false,
-                    turns = st.turns.map { if (it.id == assistantId) it.copy(streaming = false) else it },
-                )
-            }
             val voiceOn = settings.settings.first().voiceRepliesEnabled
             if (voiceOn && finalText.isNotBlank()) {
                 val result = voice.speak(finalText, object : SpeechSynthesisListener {
@@ -195,32 +217,27 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun activateFromWakeWord() {
-        startHandsFreeSession(announce = true)
+    private fun activateFromWakeWord(transcript: String?) {
+        startHandsFreeSession(command = transcript?.let(com.aura.ai.voice.wake.WakePhraseMatcher::commandAfterWake))
     }
 
-    private fun startHandsFreeSession(announce: Boolean = false) {
+    private fun startHandsFreeSession(command: String? = null) {
         WakeWordService.stop(context)
-        _state.update { it.copy(handsFreeSession = true, banner = null) }
+        _state.update {
+            it.copy(
+                handsFreeSession = true,
+                listening = command.isNullOrBlank(),
+                partialSpeech = "",
+                speechDiagnostic = "",
+                banner = null,
+            )
+        }
         listenJob?.cancel()
         listenJob = viewModelScope.launch {
-            delay(350)
-            if (announce && settings.settings.first().voiceRepliesEnabled) {
-                val result = voice.speak("I'm listening.", object : SpeechSynthesisListener {
-                    override fun onStarted() = Unit
-                    override fun onCompleted() = startListeningTurn()
-                    override fun onStopped() = Unit
-                    override fun onError(error: VoiceError) {
-                        _state.update { it.copy(banner = error.message) }
-                        startListeningTurn()
-                    }
-                })
-                if (!result.accepted) {
-                    _state.update { it.copy(banner = result.error?.message ?: "Voice output failed.") }
-                    startListeningTurn()
-                }
-            } else {
+            if (command.isNullOrBlank()) {
                 startListeningTurn()
+            } else {
+                send(command)
             }
         }
     }
@@ -230,21 +247,47 @@ class ChatViewModel @Inject constructor(
         listenJob?.cancel()
         _state.update { it.copy(listening = true, partialSpeech = "") }
         val startResult = voice.startListening(
-            config = SpeechInputConfig(languageTag = "en-US", partialResults = true, preferOffline = false),
+            // Aura's owner speaks South African English. Asking Android for en-US
+            // caused avoidable transcript substitutions on this device.
+            config = SpeechInputConfig(languageTag = "en-ZA", partialResults = true, preferOffline = false),
             listener = object : SpeechRecognitionListener {
                 override fun onResult(result: SpeechRecognitionResult) {
                     val error = result.error
                     if (error != null) {
                         _state.update {
-                            it.copy(listening = false, partialSpeech = "", banner = error.message)
+                            val heard = it.partialSpeech.trim()
+                            it.copy(
+                                listening = false,
+                                partialSpeech = "",
+                                speechDiagnostic = if (heard.isNotEmpty()) "Recognition failed after hearing: ‘$heard’" else "Recognition failed before a transcript was captured.",
+                                banner = error.message,
+                            )
                         }
-                        if (error.code == VoiceErrorCode.NO_MATCH) resumeHandsFreeAfterReply()
+                        if (error.code == VoiceErrorCode.AUDIO_PERMISSION_DENIED) {
+                            stopHandsFreeSession()
+                        } else if (error.recoverable) {
+                            recoverableListenFailures = (recoverableListenFailures + 1).coerceAtMost(5)
+                            val delayMs = (500L shl (recoverableListenFailures - 1)).coerceAtMost(8_000L)
+                            resumeHandsFreeAfterReply(delayMs)
+                        }
                     } else if (result.isFinal) {
-                        _state.update { it.copy(listening = false, partialSpeech = "") }
+                        recoverableListenFailures = 0
+                        _state.update {
+                            it.copy(
+                                listening = false,
+                                partialSpeech = "",
+                                speechDiagnostic = "Recognized (${result.languageTag ?: "en-ZA"}, confidence ${result.confidence?.let { c -> "${(c * 100).toInt()}%" } ?: "not provided"}): ${result.transcript}",
+                            )
+                        }
                         if (result.transcript.isNotBlank()) send(result.transcript)
                         else resumeHandsFreeAfterReply()
                     } else {
-                        _state.update { it.copy(partialSpeech = result.transcript) }
+                        _state.update {
+                            it.copy(
+                                partialSpeech = result.transcript,
+                                speechDiagnostic = "Live transcript: ${result.transcript}",
+                            )
+                        }
                     }
                 }
             },
@@ -254,6 +297,7 @@ class ChatViewModel @Inject constructor(
                 it.copy(
                     listening = false,
                     banner = startResult.error?.message ?: "Could not start speech recognition.",
+                    speechDiagnostic = "Microphone start failed: ${startResult.error?.code ?: "unknown"}",
                 )
             }
         }
@@ -267,15 +311,15 @@ class ChatViewModel @Inject constructor(
                 handsFreeSession = false,
                 listening = false,
                 speaking = false,
-                partialSpeech = "",
+                    partialSpeech = "",
             )
         }
     }
 
-    private fun resumeHandsFreeAfterReply() {
+    private fun resumeHandsFreeAfterReply(delayMs: Long = 350L) {
         listenJob?.cancel()
         listenJob = viewModelScope.launch {
-            delay(350)
+            delay(delayMs)
             startListeningTurn()
         }
     }

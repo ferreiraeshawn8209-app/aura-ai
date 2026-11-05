@@ -1,9 +1,8 @@
 # Next steps
 
-1. Finish the current unit test and APK build; fix any remaining errors, then record the APK hash.
-2. Inspect the latest supplied eight-repository audit when it arrives and reconcile it with the existing handover inventory.
-3. Implement a real provider router in the agent path: configured cloud-first reasoning, local Ollama fallback and recovery, bounded timeouts, diagnostics, idempotent generation-only failover, and secure key storage. Add deterministic tests for cloud success, cloud failure to local, recovery, and offline failure. Do not ship a fake endpoint or embedded secret.
-4. Keep the user-selected voice ID stable. The original Austrian English voice requires an installed/authorized TTS voice provider; this build cannot synthesize the specific accent by choosing a label or changing pitch.
+1. Reconnect/unlock the Honor and complete the spoken acceptance test: tap mic, transcript, speak “Yo, yo, yo, what's five plus five?”, hear `10`, continue another turn, interrupt TTS, and verify wake activation.
+2. On the phone's Settings screen, test the saved PC endpoint `http://192.168.8.18:11434`, discover the two Qwen models, and confirm one responds. The PC endpoint itself returned HTTP 200 during this build.
+3. Configure and implement a real cloud provider only after an endpoint and credential are available to this app. Add encrypted key storage, usage limits, failover/recovery/offline tests; current code has no cloud chat transport.
+4. Resolve the voice mismatch: preserved settings currently select Android voice ID `ar-language`; the selected Austrian T-800 voice/provider is not configured in this checkout. Do not silently switch voices or label a different voice as Austrian.
 5. Replace platform standby recognition with a maintained on-device wake-word/VAD engine and test battery, echo suppression, false activations, interruption, and five-minute conversation on the Honor.
-6. Review compatible functionality from the other repositories one capability at a time. Do not copy web-only systems or singing voice conversion into the Android app without an explicit integration boundary.
-7. Update the GitHub handover on `integration/aura-voice-consolidation` with verified results and commit identifiers. Keep the main branch untouched; request deployment approval before installing over the owner's app.
+6. Publish verified changes and handover to `integration/aura-voice-consolidation`; keep `main` untouched.

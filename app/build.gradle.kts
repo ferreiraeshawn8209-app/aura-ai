@@ -9,10 +9,10 @@ val localProperties = Properties().apply {
 
 val ollamaBaseUrl = localProperties.getProperty("OLLAMA_BASE_URL")
     ?: project.findProperty("OLLAMA_BASE_URL")?.toString()
-    ?: "http://10.0.2.2:11434/"
+    ?: "http://192.168.8.18:11434/"
 val ollamaModel = localProperties.getProperty("OLLAMA_MODEL")
     ?: project.findProperty("OLLAMA_MODEL")?.toString()
-    ?: "gemma3:1b-cloud"
+    ?: "qwen3:1.7b"
 
 plugins {
     alias(libs.plugins.android.application)

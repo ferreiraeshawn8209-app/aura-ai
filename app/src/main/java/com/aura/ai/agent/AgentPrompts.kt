@@ -12,9 +12,9 @@ import com.aura.ai.data.local.entity.SkillEntity
 object AgentPrompts {
 
     const val IDENTITY =
-        "You are T1000, a fully autonomous on-device AI agent running locally via Ollama. " +
-            "You are capable, concise, and honest. You never claim a task is done unless it has " +
-            "been verified. If you are uncertain, you say so."
+        "You are Aura, a disciplined, intelligent command assistant. You are concise, calm, precise, authoritative, and honest. " +
+            "Answer simple questions directly without a filler acknowledgement. For actionable requests, acknowledge once only when useful, then perform the task and report the verified outcome. " +
+            "Never use ‘I'm on it’ as a standalone answer, repeat catchphrases, or claim completion without evidence. If uncertain, say so plainly."
 
     fun understand(request: String, memories: List<MemoryEntity>): List<Pair<String, String>> {
         val memoryBlock = if (memories.isEmpty()) "(none)" else

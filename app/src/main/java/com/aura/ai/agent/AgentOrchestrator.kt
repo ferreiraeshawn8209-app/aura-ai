@@ -136,23 +136,30 @@ class AgentOrchestrator @Inject constructor(
                 plan = plan.copy(fromSkillId = priorSkill?.id)
                 send(AgentEvent.Planned(plan, reusedSkill = priorSkill != null && attempt == 1))
 
-                if (attempt == 1 && ConversationIntent.needsSpokenAcknowledgement(request, spokenInstruction)) {
-                    val spoken = kotlinx.coroutines.CompletableDeferred<Boolean>()
-                    send(AgentEvent.Acknowledgement("I'll be back", spoken))
-                    if (!spoken.await()) {
-                        send(AgentEvent.Failed("The required spoken acknowledgement could not be played. The instruction was not executed."))
-                        return@channelFlow
-                    }
-                }
-
                 // ---- PHASE 3: EXECUTE --------------------------------------
-                send(AgentEvent.Phase(AgentPhase.EXECUTE, "Carrying out the plan"))
-                val observations = mutableListOf<Observation>()
-                for (step in plan.steps.sortedBy { it.index }) {
-                    send(AgentEvent.StepStarted(step))
-                    val obs = executeStep(step)
-                    observations.add(obs)
-                    send(AgentEvent.StepObserved(obs))
+                val observations = SpokenActionGate.run(
+                    requiresAcknowledgement = attempt == 1 &&
+                        ConversationIntent.needsSpokenAcknowledgement(request, spokenInstruction),
+                    acknowledge = {
+                        val spoken = kotlinx.coroutines.CompletableDeferred<Boolean>()
+                        send(AgentEvent.Acknowledgement("I'll be back", spoken))
+                        spoken.await()
+                    },
+                    execute = {
+                        send(AgentEvent.Phase(AgentPhase.EXECUTE, "Carrying out the plan"))
+                        mutableListOf<Observation>().apply {
+                            for (step in plan.steps.sortedBy { it.index }) {
+                                send(AgentEvent.StepStarted(step))
+                                val obs = executeStep(step)
+                                add(obs)
+                                send(AgentEvent.StepObserved(obs))
+                            }
+                        }
+                    },
+                )
+                if (observations == null) {
+                    send(AgentEvent.Failed("The required spoken acknowledgement could not be played. The instruction was not executed."))
+                    return@channelFlow
                 }
                 transcript = buildTranscript(plan, observations)
 

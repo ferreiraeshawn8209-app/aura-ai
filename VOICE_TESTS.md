@@ -31,3 +31,14 @@ Still pending on the physical phone (ADB is currently disconnected):
 - Exact single “I'll be back” spoken before an actionable voice command, followed by the task executing once.
 
 Do not mark pending checks as passing until tested on the actual phone. The user previously reported “I'm on it” followed by a misunderstanding. The direct chat path no longer exposes partial model output as a completed answer, but the real-phone voice flow still needs acceptance testing.
+
+
+## 2026-11-05 — Spoken-action gate (automated only)
+
+- Added tests for acknowledgement-before-execution, fail-closed execution if speech acknowledgement fails, and bypass for ordinary questions. Combined app and voice-library JVM reports: 22 passed, 0 failed/errors/skipped across 8 suites.
+- No physical-phone speech test or APK install occurred. The exact selected voice remains unverified on the disconnected Honor; this test checks orchestration ordering only.
+
+
+## 2026-11-05 — Fresh rerun
+
+- Forced the app and `aura-voice` JVM unit suites (`--rerun-tasks`): 22 passed, 0 failed/errors/skips, 8 suites; Gradle completed in 10m02s with 50 tasks executed. This verifies JVM policy/order tests only, not live recognition, barge-in, or Austrian voice playback.

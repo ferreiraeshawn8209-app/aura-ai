@@ -36,3 +36,15 @@ The eight-repository inventory and compatibility review is recorded in `AURA_INT
 ## Guardrails
 
 This work is confined to the integration branch. The user approved and received an in-place phone update after data backup and package/signature verification. No merge, production deployment, or replacement of the main checkout has occurred.
+
+
+## Spoken-action gate continuation — 2026-11-05
+
+- Added a tested gate to the existing agent execution flow: one `I'll be back` acknowledgement must finish before actions execute; if the selected voice cannot complete it, the action is not run. Ordinary questions bypass the acknowledgement.
+- `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` succeeded (75 tasks up-to-date). Current XML reports: 22 tests, 0 failures/errors/skips, 8 suites. Existing APK package/version/signer verified by metadata and signature check; SHA-256 `5FAF6738A7DA194EF3274813552D6E557D7F723D8EB51AD8CCC48ECEB3123B89`. No install.
+- Phone remains disconnected; no device voice/Ollama/cloud/WhatsApp test. Cloud fallback remains missing; Austrian voice is not configured. Personal `device-backups/` is excluded from source control.
+
+
+## Fresh automated rerun — 2026-11-05
+
+- Forced `:app:testDebugUnitTest :aura-voice:testDebugUnitTest --rerun-tasks`: passed in 10m02s; 50 tasks executed. Reports: 22 tests passed, 0 failures/errors/skips across 8 suites. The separate app assemble task succeeded earlier but was up-to-date. No phone install or device acceptance.

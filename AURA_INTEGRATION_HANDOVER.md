@@ -132,3 +132,14 @@ Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment f
 - Keep outstanding gates open: cloud-first/local fallback, authorized Austrian TTS identity, physical Honor install and speech acceptance, acoustic barge-in, and complete eight-repository integration decisions.
 - This checkpoint involved GitHub metadata review only. No APK build, PC connectivity check, physical-device test, or new feature integration was performed. Do not count earlier test results as newly rerun.
 - Next implementation should occur on the integration branch, preserve user data and voice selections, test failure/recovery cases, and append exact commits, test output, and device results before seeking approval to merge.
+
+## Spoken-action gate continuation — 2026-11-05
+
+- Added `SpokenActionGate` around the existing executor so spoken actions wait for the selected TTS voice to finish the one required “I'll be back” acknowledgement. The gate aborts the task if the voice reports failure; ordinary questions bypass acknowledgement. Files: `AgentOrchestrator.kt`, new `SpokenActionGate.kt`, new `SpokenActionGateTest.kt`.
+- Automated verification on BEATK: `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` succeeded, tasks up-to-date; XML reports contain 22 tests, 0 failures/errors/skips across 8 suites. APK metadata confirms `com.aura.ai` v1.0.0/code 1; signature certificate SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`; APK SHA-256 `5FAF6738A7DA194EF3274813552D6E557D7F723D8EB51AD8CCC48ECEB3123B89`. It was not installed.
+- Current branch pre-task HEAD was `448b96002d32e7474e43bf57002f6009e562d3a1`. Existing untracked `device-backups/` was preserved and not staged. Phone tests remain pending; cloud fallback and requested Austrian voice are not implemented.
+
+
+## Fresh test rerun — 2026-11-05
+
+- `:app:testDebugUnitTest :aura-voice:testDebugUnitTest --rerun-tasks` was forced and completed `BUILD SUCCESSFUL` in 10m02s, 50 actionable tasks executed. JUnit reports: 22 passed, 0 failures/errors/skips across 8 suites. Existing debug APK assembly task had succeeded as up-to-date; APK was not installed.

@@ -123,3 +123,12 @@ This is a debug APK suitable for sideloading/testing. It has **not** been instal
 Implementation commit: `1ecfc0d` (`Integrate Aura voice subsystem and repair Android build`).
 Latest implementation and test/handover update: `46f84a0` (`Fix Aura voice flow and phone Ollama defaults`), pushed to GitHub branch `integration/aura-voice-consolidation`; `main` is untouched.
 Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment for voice commands`). APK build/test results are recorded above; physical-device acceptance remains pending.
+
+## GitHub audit checkpoint — 2026-11-05 (read-only verification)
+
+- Re-read this handover directly from the integration branch.
+- GitHub compare `main...integration/aura-voice-consolidation` reports branch **ahead by 8 commits, behind by 0**. Base `main` commit: `4b48185e9f110764938f10548f80a29acda674f7`. No merge was performed in this audit.
+- Changed-file inventory includes the Android voice library, orchestrator, wake service, chat view model, voice settings, unit tests, and documentation. This confirms files are present on the branch, not that device behavior passes.
+- Keep outstanding gates open: cloud-first/local fallback, authorized Austrian TTS identity, physical Honor install and speech acceptance, acoustic barge-in, and complete eight-repository integration decisions.
+- This checkpoint involved GitHub metadata review only. No APK build, PC connectivity check, physical-device test, or new feature integration was performed. Do not count earlier test results as newly rerun.
+- Next implementation should occur on the integration branch, preserve user data and voice selections, test failure/recovery cases, and append exact commits, test output, and device results before seeking approval to merge.

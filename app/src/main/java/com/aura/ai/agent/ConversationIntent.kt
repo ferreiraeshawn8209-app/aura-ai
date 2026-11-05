@@ -8,4 +8,7 @@ internal object ConversationIntent {
     )
 
     fun needsAgentPlan(request: String): Boolean = taskLanguage.containsMatchIn(request)
+
+    fun needsSpokenAcknowledgement(request: String, spokenInstruction: Boolean): Boolean =
+        spokenInstruction && needsAgentPlan(request)
 }

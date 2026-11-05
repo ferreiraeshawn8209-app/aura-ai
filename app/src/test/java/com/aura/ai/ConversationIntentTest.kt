@@ -18,4 +18,11 @@ class ConversationIntentTest {
         assertTrue(ConversationIntent.needsAgentPlan("Search the web for my business"))
         assertTrue(ConversationIntent.needsAgentPlan("Make a call to John"))
     }
+
+    @Test
+    fun spokenActionGetsPreActionAcknowledgementButQuestionsAndTypedRequestsDoNot() {
+        assertTrue(ConversationIntent.needsSpokenAcknowledgement("Open WhatsApp", spokenInstruction = true))
+        assertFalse(ConversationIntent.needsSpokenAcknowledgement("What is five plus five?", spokenInstruction = true))
+        assertFalse(ConversationIntent.needsSpokenAcknowledgement("Open WhatsApp", spokenInstruction = false))
+    }
 }

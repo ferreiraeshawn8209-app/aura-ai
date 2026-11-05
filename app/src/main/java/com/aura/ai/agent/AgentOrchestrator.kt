@@ -36,7 +36,11 @@ class AgentOrchestrator @Inject constructor(
     private val learning: LearningEngine,
     private val json: Json,
 ) {
-    fun run(request: String, conversationContext: List<Pair<String, String>> = emptyList()): Flow<AgentEvent> = channelFlow {
+    fun run(
+        request: String,
+        conversationContext: List<Pair<String, String>> = emptyList(),
+        spokenInstruction: Boolean = false,
+    ): Flow<AgentEvent> = channelFlow {
         val cfg = settings.settings.first()
         val model = cfg.selectedModel
         if (model.isNullOrBlank()) {
@@ -80,7 +84,7 @@ class AgentOrchestrator @Inject constructor(
                 val memoryContext = memories.joinToString("\n") { "${it.type}: ${it.content}" }
                 val system = buildString {
                     append("You are Aura, a disciplined, intelligent command assistant. Speak in clear, natural, everyday English with a calm, precise, authoritative manner. ")
-                    append("Answer simple questions immediately, without an acknowledgement. For an actionable request, acknowledge once only when useful, then perform the task and report the verified result. Never use a filler such as ‘I'm on it’ as the answer. Never claim an action succeeded without evidence. ")
+                    append("Answer immediately without an acknowledgement. Action requests are handled by the task executor, which speaks its one pre-action line. Never use a filler such as ‘I'm on it’ as the answer. Never claim an action succeeded without evidence. ")
                     append("Keep wording consistent and avoid repeated military catchphrases. ")
                     if (memoryContext.isNotBlank()) append("Relevant remembered context:\n$memoryContext")
                 }
@@ -91,7 +95,9 @@ class AgentOrchestrator @Inject constructor(
                 }
                 // Hold ordinary chat tokens until the response is complete. A
                 // failed stream must not leave a partial filler reply on screen.
-                val answer = complete(messages, streamTokens = false).trim()
+                val answer = ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement(
+                    complete(messages, streamTokens = false),
+                )
                 if (answer.isBlank()) throw AgentException("The selected AI model returned an empty answer.")
                 send(AgentEvent.Answer(answer))
                 return@channelFlow
@@ -130,6 +136,15 @@ class AgentOrchestrator @Inject constructor(
                 plan = plan.copy(fromSkillId = priorSkill?.id)
                 send(AgentEvent.Planned(plan, reusedSkill = priorSkill != null && attempt == 1))
 
+                if (attempt == 1 && ConversationIntent.needsSpokenAcknowledgement(request, spokenInstruction)) {
+                    val spoken = kotlinx.coroutines.CompletableDeferred<Boolean>()
+                    send(AgentEvent.Acknowledgement("I'll be back", spoken))
+                    if (!spoken.await()) {
+                        send(AgentEvent.Failed("The required spoken acknowledgement could not be played. The instruction was not executed."))
+                        return@channelFlow
+                    }
+                }
+
                 // ---- PHASE 3: EXECUTE --------------------------------------
                 send(AgentEvent.Phase(AgentPhase.EXECUTE, "Carrying out the plan"))
                 val observations = mutableListOf<Observation>()
@@ -143,7 +158,9 @@ class AgentOrchestrator @Inject constructor(
 
                 // Synthesize the user-facing answer from real observations.
                 send(AgentEvent.Phase(AgentPhase.EXECUTE, "Composing the answer"))
-                answer = complete(AgentPrompts.synthesize(understanding, transcript), streamTokens = true)
+                answer = ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement(
+                    complete(AgentPrompts.synthesize(understanding, transcript), streamTokens = true),
+                )
 
                 // ---- PHASE 4: VERIFY ---------------------------------------
                 send(AgentEvent.Phase(AgentPhase.VERIFY, "Checking the work against success criteria"))

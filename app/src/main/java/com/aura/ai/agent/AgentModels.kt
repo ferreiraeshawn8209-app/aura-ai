@@ -1,6 +1,7 @@
 package com.aura.ai.agent
 
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.CompletableDeferred
 
 /** The agent's structured understanding of what the user actually wants. */
 @Serializable
@@ -51,6 +52,11 @@ data class Verdict(
  * own work in real time rather than staring at a spinner.
  */
 sealed interface AgentEvent {
+    /** Spoken action acknowledgement; execution waits for the TTS result. */
+    data class Acknowledgement(
+        val text: String,
+        val spoken: CompletableDeferred<Boolean>,
+    ) : AgentEvent
     data class Phase(val phase: AgentPhase, val detail: String) : AgentEvent
     data class Understood(val understanding: Understanding) : AgentEvent
     data class Planned(val plan: Plan, val reusedSkill: Boolean) : AgentEvent

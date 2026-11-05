@@ -22,6 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,7 +79,7 @@ class ChatViewModel @Inject constructor(
 
     fun onInputChange(value: String) = _state.update { it.copy(input = value) }
 
-    fun send(text: String = _state.value.input) {
+    fun send(text: String = _state.value.input, spokenInstruction: Boolean = false) {
         val prompt = text.trim()
         if (prompt.isEmpty() || _state.value.busy) return
         if (!_state.value.modelReady) return
@@ -101,8 +103,12 @@ class ChatViewModel @Inject constructor(
         runJob = viewModelScope.launch {
             voice.markProcessing()
             try {
-                orchestrator.run(prompt, conversationContext).collect { event ->
-                    applyEvent(assistantId, event)
+                orchestrator.run(prompt, conversationContext, spokenInstruction).collect { event ->
+                    if (event is AgentEvent.Acknowledgement) {
+                        event.spoken.complete(speakAcknowledgement(event.text))
+                    } else {
+                        applyEvent(assistantId, event)
+                    }
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled
@@ -146,6 +152,25 @@ class ChatViewModel @Inject constructor(
                 resumeHandsFreeAfterReply()
             }
         }
+    }
+
+    /** Speak exactly once on the currently selected TTS provider, before tools run. */
+    private suspend fun speakAcknowledgement(text: String): Boolean {
+        val completion = CompletableDeferred<Boolean>()
+        val result = voice.speak(text, object : SpeechSynthesisListener {
+            override fun onStarted() = Unit
+            override fun onCompleted() { completion.complete(true) }
+            override fun onStopped() { completion.complete(false) }
+            override fun onError(error: VoiceError) {
+                _state.update { it.copy(banner = error.message) }
+                completion.complete(false)
+            }
+        })
+        if (!result.accepted) {
+            _state.update { it.copy(banner = result.error?.message ?: "Could not play the action acknowledgement.") }
+            return false
+        }
+        return withTimeoutOrNull(15_000L) { completion.await() } ?: false
     }
 
     private fun applyEvent(assistantId: Long, event: AgentEvent) {
@@ -192,7 +217,10 @@ class ChatViewModel @Inject constructor(
                 )
                 is AgentEvent.Replan -> addTrace(AgentPhase.PLAN, "Re-planning (attempt ${event.attempt + 1})", TraceStatus.INFO)
                 is AgentEvent.Learned -> addTrace(AgentPhase.LEARN, event.note, TraceStatus.INFO)
-                is AgentEvent.Answer -> if (turn.text.isBlank()) turn = turn.copy(text = event.text)
+                is AgentEvent.Acknowledgement -> Unit // handled by the suspending voice path
+                is AgentEvent.Answer -> turn = turn.copy(
+                    text = com.aura.ai.agent.ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement(event.text),
+                )
                 is AgentEvent.Failed -> turn = turn.copy(
                     text = if (turn.text.isBlank()) event.message else turn.text,
                     error = true,
@@ -237,7 +265,7 @@ class ChatViewModel @Inject constructor(
             if (command.isNullOrBlank()) {
                 startListeningTurn()
             } else {
-                send(command)
+                send(command, spokenInstruction = true)
             }
         }
     }
@@ -279,7 +307,7 @@ class ChatViewModel @Inject constructor(
                                 speechDiagnostic = "Recognized (${result.languageTag ?: "en-ZA"}, confidence ${result.confidence?.let { c -> "${(c * 100).toInt()}%" } ?: "not provided"}): ${result.transcript}",
                             )
                         }
-                        if (result.transcript.isNotBlank()) send(result.transcript)
+                        if (result.transcript.isNotBlank()) send(result.transcript, spokenInstruction = true)
                         else resumeHandsFreeAfterReply()
                     } else {
                         _state.update {

@@ -13,8 +13,8 @@ object AgentPrompts {
 
     const val IDENTITY =
         "You are Aura, a disciplined, intelligent command assistant. You are concise, calm, precise, authoritative, and honest. " +
-            "Answer simple questions directly without a filler acknowledgement. For actionable requests, acknowledge once only when useful, then perform the task and report the verified outcome. " +
-            "Never use ‘I'm on it’ as a standalone answer, repeat catchphrases, or claim completion without evidence. If uncertain, say so plainly."
+            "Answer simple questions directly without a filler acknowledgement. For actionable requests, do not write an acknowledgement in the final result; the app speaks its pre-action acknowledgement separately. Report only the verified outcome. " +
+            "Never use ‘I'm on it’ or ‘I'll be back’ in the final result, repeat catchphrases, or claim completion without evidence. If uncertain, say so plainly."
 
     fun understand(request: String, memories: List<MemoryEntity>): List<Pair<String, String>> {
         val memoryBlock = if (memories.isEmpty()) "(none)" else
@@ -72,7 +72,7 @@ object AgentPrompts {
             $IDENTITY
 
             PHASE 3 — EXECUTE/RESPOND. Using the observations below, write the final answer for the user.
-            Be direct. Reference real tool outputs; do not invent facts. Use plain text (light Markdown ok).
+            Be direct. Reference real tool outputs; do not invent facts. Do not include an opening acknowledgement because Aura has already spoken one. Use plain text (light Markdown ok).
         """.trimIndent()
         val user = """
             Goal: ${understanding.goal}

@@ -122,3 +122,4 @@ This is a debug APK suitable for sideloading/testing. It has **not** been instal
 
 Implementation commit: `1ecfc0d` (`Integrate Aura voice subsystem and repair Android build`).
 Latest implementation and test/handover update: `46f84a0` (`Fix Aura voice flow and phone Ollama defaults`), pushed to GitHub branch `integration/aura-voice-consolidation`; `main` is untouched.
+Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment for voice commands`). APK build/test results are recorded above; physical-device acceptance remains pending.

@@ -81,5 +81,5 @@ This is a debug APK suitable for sideloading/testing. It has **not** been instal
 
 ## Commit record
 
-Implementation commit: pending final local commit after documentation and diff review.
+Implementation commit: `1ecfc0d` (`Integrate Aura voice subsystem and repair Android build`).
 Shared handover update commit: pending GitHub update on `integration/aura-voice-consolidation`.

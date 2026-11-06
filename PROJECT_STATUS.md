@@ -275,3 +275,12 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 
 - Commit `abf83a815d7311d153fbf3eb4e347e7394f0585c` was published on `origin/integration/aura-voice-consolidation`; `main` unchanged.
 - 90 app/voice test reports passed, APK built and signature verified but not installed. Real-device wake and microphone checks remain pending.
+
+## Conversation intent routing repair — 2026-11-06
+
+- Ordinary questions mentioning words such as WhatsApp, message, queue, code, calendar, or file now stay on the direct conversation path. Explicit command-at-start requests, common polite command forms, wake-prefixed commands, calls, and reminders continue to use the action planner. Three regression tests cover both sides.
+- App unit tests passed: 78 tests / 27 suites, zero failures/errors/skips. The unchanged voice module's existing reports show 12 tests / 4 suites passing; a redundant rerun was blocked by access denied on the Gradle wrapper lock before task execution.
+- Single-worker offline debug APK assembly passed after the first combined run hit a disk-space error at dex merge. APK: `com.aura.ai` v1.0.0/code 1, 20,877,242 bytes, SHA-256 `1348A0BC74D1B83C6BF1D013C2500AC105443BB00793946319CAA473A07ED012`; signature verified with the established debug signer. Not installed.
+- Honor is disconnected: no device voice/wake/interruption/Ollama/cloud/WhatsApp acceptance. Cloud/live Ollama not exercised. The APK build and JVM tests are not device proof.
+- Changed files: `app/src/main/java/com/aura/ai/agent/ConversationIntent.kt`, `app/src/test/java/com/aura/ai/ConversationIntentTest.kt`, `AI_HANDOVER.md`, `PROJECT_STATUS.md`, and `NEXT_STEPS.md`. Starting commit `f7107c36ab7bcb4a3fabbb05fe0ad5e4b05a2b00`; implementation/docs commit and publication confirmation follow. `integration/aura-voice-consolidation` only; main and user backups untouched.
+- Next: publish the current code/docs on the integration branch; after reconnection and exact-build approval, confirm question/action routing on the Honor, then verify live voice and configured cloud/Ollama behavior. Keep all device checks pending until run.

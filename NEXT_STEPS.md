@@ -223,3 +223,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. Normal speech timeouts and no-match now retry the wake listener after 800 ms; real recognizer failures use the existing capped exponential backoff. Unit tests/build pass (90 total reports, no failures); APK is not installed. Exact hash in `AI_HANDOVER.md`.
 2. After Honor reconnection and approval of this exact build, test wake activation after quiet periods, repeat several times, and record whether audio indicators/sounds come from Android's recognizer. Then check wake-to-conversation, transcript, spoken answer and interruption.
 3. Source and publication commit details follow; continue only on `integration/aura-voice-consolidation`. Do not stage `device-backups/` or merge `main`.
+
+## Conversation routing repair — 2026-11-06
+
+- The app classifier now routes only explicit command-at-start phrases (including polite and wake-prefixed commands) to the agent planner, preventing ordinary questions that mention task vocabulary from receiving action handling. App tests: 78 pass; unchanged voice-library report: 12 pass. A separate voice-task rerun was blocked by Gradle wrapper lock access before test execution.
+- Offline one-worker APK assembly passed after the parallel dex merge ran out of disk space. It is verified and remains uninstalled; exact hash/package/signature are in `AI_HANDOVER.md`.
+- Next: commit and publish source/tests/docs on the integration branch. On Honor reconnection and owner approval, verify question-vs-action routing, then repeated wake/voice turns, interruption, Ollama/cloud fallback/recovery, and WhatsApp draft. No real-device or live-provider result is currently verified.

@@ -7,22 +7,34 @@ import org.junit.Test
 
 class ConversationIntentTest {
     @Test
-    fun ordinaryConversationUsesSingleReplyPath() {
-        assertFalse(ConversationIntent.needsAgentPlan("What is five plus five?"))
-        assertFalse(ConversationIntent.needsAgentPlan("Tell me something interesting"))
+    fun routesDirectAndPoliteActionRequestsToTheAgent() {
+        listOf(
+            "Yo, yo, yo, open WhatsApp",
+            "Could you please call Alice?",
+            "I need you to send a message to Alice",
+            "Please, search the web for current business hours",
+            "Check my phone for spyware",
+            "Set a reminder for tomorrow",
+            "Make a phone call to Alice",
+        ).forEach { assertTrue("Expected action request: $it", ConversationIntent.needsAgentPlan(it)) }
     }
 
     @Test
-    fun deviceAndWorkActionsUseAgentPlan() {
-        assertTrue(ConversationIntent.needsAgentPlan("Open WhatsApp"))
-        assertTrue(ConversationIntent.needsAgentPlan("Search the web for my business"))
-        assertTrue(ConversationIntent.needsAgentPlan("Make a call to John"))
+    fun keepsQuestionsThatMentionTaskWordsInOrdinaryConversation() {
+        listOf(
+            "What does this WhatsApp message mean?",
+            "How do I open WhatsApp?",
+            "What is a message queue?",
+            "What does this code do?",
+            "Can you explain what a calendar is?",
+            "How do I find a file on Windows?",
+        ).forEach { assertFalse("Expected ordinary question: $it", ConversationIntent.needsAgentPlan(it)) }
     }
 
     @Test
-    fun spokenActionGetsPreActionAcknowledgementButQuestionsAndTypedRequestsDoNot() {
-        assertTrue(ConversationIntent.needsSpokenAcknowledgement("Open WhatsApp", spokenInstruction = true))
-        assertFalse(ConversationIntent.needsSpokenAcknowledgement("What is five plus five?", spokenInstruction = true))
-        assertFalse(ConversationIntent.needsSpokenAcknowledgement("Open WhatsApp", spokenInstruction = false))
+    fun onlySpokenActionsNeedThePreActionAcknowledgement() {
+        assertTrue(ConversationIntent.needsSpokenAcknowledgement("open WhatsApp", spokenInstruction = true))
+        assertFalse(ConversationIntent.needsSpokenAcknowledgement("open WhatsApp", spokenInstruction = false))
+        assertFalse(ConversationIntent.needsSpokenAcknowledgement("What does a WhatsApp message mean?", spokenInstruction = true))
     }
 }

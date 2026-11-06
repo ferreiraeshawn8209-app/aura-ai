@@ -187,3 +187,4 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Full Android unit/build verification: 60 tests, 0 failures/errors/skips, 20 suites; APK assembled and v2 signature verified. Fresh APK SHA-256 `9CF7CD5B965D36E964D124877165362C11514B180A8DE957E607E586454B0CB6`, package `com.aura.ai` v1.0.0/code 1. Not installed.
 - No ADB/live voice/provider/WhatsApp test was run. Honor is disconnected. Main unchanged; exclude `device-backups/`.
 - Wake-to-chat handoff source/tests `cb04a22` and records `25e9af6` are pushed on the integration branch; `main` unchanged.
+- The publication confirmation `d95ec2a` is pushed. The newly built APK remains uninstalled; real-device/provider checks remain pending.

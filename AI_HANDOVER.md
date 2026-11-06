@@ -217,3 +217,5 @@ Implementation `1eb7027` and handover update `86e2f72` were pushed successfully 
 ## Wake handoff publication — 2026-11-06
 
 Implementation `cb04a22` and test-record commit `25e9af6` were pushed successfully to `origin/integration/aura-voice-consolidation` (`1adad3f..25e9af6`). `main` was not changed. APK is uninstalled; personal `device-backups/` remains excluded.
+
+The publication confirmation is recorded as commit `d95ec2a` and was also pushed to the integration branch. It confirms source `cb04a22`, handover `25e9af6`, no `main` merge, and no APK install.

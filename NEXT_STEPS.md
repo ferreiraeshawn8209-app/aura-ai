@@ -204,3 +204,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. Bounded lexical memory recall and older transcript exchange recall are implemented and pass 81 app/voice tests; APK SHA-256 and details are in `AI_HANDOVER.md`. No database migration; APK remains uninstalled.
 2. After Honor reconnection and approval of the exact build, restart Aura and test retrieval of a saved user preference/project fact and a follow-up referring to an older exchange. Check that unrelated exchanges are not inserted.
 3. Treat this as word-overlap retrieval, not semantic learning. Consider a locally evaluated synonym or embedding index only if device tests show paraphrase misses; preserve current Room data/schema.
+
+## Offline quick-answer follow-up — 2026-11-06
+
+1. Current-time and arithmetic quick replies now work without a selected model by design; all remaining requests still need a ready cloud or Ollama backend. Automated reports: 86 tests, 0 failures/errors/skips; APK hash in `AI_HANDOVER.md`. Not installed.
+2. On Honor reconnection and separately approved exact APK, verify both wake phrase and tap-to-speak with backend unavailable: say “Yo, yo, yo, what time is it?” and “Yo, yo, yo, what is five plus five?” Confirm transcript and spoken result, then reconnect backend and continue voice/fallback/action tests.
+3. Source/handover commit and push status follow in `AI_HANDOVER.md`; `main` unchanged; exclude `device-backups/`.

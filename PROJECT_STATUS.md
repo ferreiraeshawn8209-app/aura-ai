@@ -242,3 +242,9 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Source and tests are committed as `13b64ed0d788be2881e8375f798fc999b715e45b` and published to `origin/integration/aura-voice-consolidation`; `main` is unchanged.
 - Build/test: offline app + voice unit tests and debug APK assemble passed; 81 tests, no failures/errors/skips. APK SHA-256 `9D46DEB9542FE2F200BDA0DDE98B7875B0F1106834D565FBE8808D0F699F56E5`; not installed.
 - Honor remains disconnected; no real-device acceptance. See `AI_HANDOVER.md` and `NEXT_STEPS.md` for exact remaining checks.
+
+## Offline quick-answer path — 2026-11-06
+
+- Common current-local-time questions and existing arithmetic questions now bypass the model router; the Android UI permits only these deterministic answers when no model is ready. Other requests still require configured cloud/Ollama. No database, permission, or package identity changes.
+- Full app/voice test reports show 86 tests (76 app, 10 voice library), zero failures/errors/skips. Fresh debug APK built and signature verified; SHA-256 `D9F08E1338CE993E75F6A7014F5DFA0F1D978DF88595985CEC9A4A320FAF0713`; not installed. Device and live backend tests remain pending.
+- Source commit and remote publication state will be recorded in `AI_HANDOVER.md` after commit/push. `main` remains untouched.

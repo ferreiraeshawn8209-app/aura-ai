@@ -12,6 +12,7 @@ import com.aura.ai.voice.wake.WakeWordResumePolicy
 import com.aura.ai.agent.AgentEvent
 import com.aura.ai.agent.AgentOrchestrator
 import com.aura.ai.agent.AgentPhase
+import com.aura.ai.agent.LocalAnswerIntent
 import com.aura.ai.core.security.SecureStorage
 import com.aura.ai.data.settings.SettingsRepository
 import com.aura.ai.data.model.ChatMessage
@@ -121,7 +122,7 @@ class ChatViewModel @Inject constructor(
     fun send(text: String = _state.value.input, spokenInstruction: Boolean = false) {
         val prompt = text.trim()
         if (prompt.isEmpty() || _state.value.busy || !_state.value.historyLoaded) return
-        if (!_state.value.modelReady) return
+        if (!_state.value.modelReady && LocalAnswerIntent.answer(prompt) == null) return
 
         val userTurn = ChatTurn(id = System.nanoTime(), isUser = true, text = prompt)
         val assistantId = System.nanoTime() + 1

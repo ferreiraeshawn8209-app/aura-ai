@@ -175,3 +175,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 
 - Added a policy case that uses the system recognizer only when an active on-device recognizer reports an unsupported/unavailable language. The updated app/voice reports contain 74 passing tests; APK build and signature verification passed.
 - No handset test. Honor's on-device service and en-ZA pack are not checked, the APK remains uninstalled, and system recognition may use a network service.
+
+## Offline quick-answer path — 2026-11-06
+
+- `SimpleTimeIntent` answers supported local-time questions from the device zone, and `LocalAnswerIntent` keeps arithmetic available. The chat can route those deterministic queries without a selected model; other requests are unchanged.
+- Automated checks: 76 app + 10 voice-library reports, 86 tests with no failures/errors/skips; debug APK built and signed. APK SHA-256 is in `AI_HANDOVER.md`; it is not installed.
+- On reconnection, test time/arithmetic in hands-free mode while backends are disconnected; then test backend recovery, voice turns, interruption, Austrian voice selection and WhatsApp draft. Do not treat unit tests as phone acceptance.

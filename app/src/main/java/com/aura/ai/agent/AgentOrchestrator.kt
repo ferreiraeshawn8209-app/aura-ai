@@ -43,6 +43,13 @@ class AgentOrchestrator @Inject constructor(
         conversationContext: List<Pair<String, String>> = emptyList(),
         spokenInstruction: Boolean = false,
     ): Flow<AgentEvent> = channelFlow {
+        LocalAnswerIntent.answer(request)?.let { answer ->
+            send(AgentEvent.Phase(AgentPhase.EXECUTE, "Answering locally"))
+            send(AgentEvent.Token(answer))
+            send(AgentEvent.Answer(answer))
+            return@channelFlow
+        }
+
         val cfg = settings.settings.first()
         val model = cfg.selectedModel.orEmpty()
         val cloudCanRunWithoutLocal = cfg.cloudEnabled &&
@@ -97,12 +104,6 @@ class AgentOrchestrator @Inject constructor(
         }
 
         try {
-            SimpleMathIntent.answer(request)?.let { answer ->
-                send(AgentEvent.Phase(AgentPhase.EXECUTE, "Answering your question"))
-                send(AgentEvent.Token(answer))
-                send(AgentEvent.Answer(answer))
-                return@channelFlow
-            }
             if (!ConversationIntent.needsAgentPlan(request)) {
                 send(AgentEvent.Phase(AgentPhase.EXECUTE, "Answering your question"))
                 val memories = memory.recall(request)

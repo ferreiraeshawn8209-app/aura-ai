@@ -390,3 +390,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 
 - Source, regression tests, and initial records committed on `integration/aura-voice-consolidation` as `a487a29` (`Keep ordinary questions out of action planner`). `main` unchanged. The existing untracked `device-backups/` directory was excluded.
 - Branch publication is the remaining repository step; record the remote result below after pushing. APK remains uninstalled and phone/live-service checks remain pending.
+
+## Conversation routing publication — 2026-11-06
+
+- GitHub accepted the implementation commit `a487a29` and handover commit `035ee0f`; remote `origin/integration/aura-voice-consolidation` now resolves to `035ee0f`. Production `main` remains unchanged. APK remains uninstalled; device and live-provider checks are pending.

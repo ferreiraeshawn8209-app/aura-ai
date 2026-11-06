@@ -288,3 +288,7 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## Conversation routing commit — 2026-11-06
 
 - Code/tests and baseline handover committed as `a487a29` (`Keep ordinary questions out of action planner`) on `integration/aura-voice-consolidation`. `main` unchanged. Publication confirmation follows; APK remains uninstalled.
+
+## Conversation routing publication — 2026-11-06
+
+- Implementation `a487a29` and handover record `035ee0f` are published to `origin/integration/aura-voice-consolidation`; production `main` is unchanged. No phone install or real-device test was performed.

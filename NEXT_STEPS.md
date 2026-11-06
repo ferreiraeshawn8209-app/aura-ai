@@ -233,3 +233,7 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 ## Routing commit checkpoint — 2026-11-06
 
 - Source and regression tests are committed as `a487a29` on `integration/aura-voice-consolidation`; `device-backups/` was excluded and `main` was not changed. Push and record remote confirmation next.
+
+## Routing publication confirmation — 2026-11-06
+
+- GitHub accepted implementation `a487a29` and handover `035ee0f` on the integration branch. Do not install until the Honor reconnects and the owner approves this exact build.

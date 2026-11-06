@@ -8,6 +8,7 @@ enum class ConversationState {
     LISTENING,
     PROCESSING,
     SPEAKING,
+    LISTENING_AND_SPEAKING,
     ERROR,
     INTERRUPTED,
 }
@@ -42,6 +43,8 @@ data class SpeechInputConfig(
     val languageTag: String = Locale.getDefault().toLanguageTag(),
     val partialResults: Boolean = true,
     val preferOffline: Boolean = false,
+    /** Keep current TTS running while listening for a user interruption. */
+    val monitorSpeechOutput: Boolean = false,
 )
 
 data class SpeechRecognitionResult(

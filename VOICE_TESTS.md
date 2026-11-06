@@ -134,3 +134,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Honor reconnected. Existing `com.aura.ai` app data archive created before update (997,376 bytes; SHA-256 `B7604B79A17CDFA52937361F7C9DD0E081AC7B6A350C70887C4A458A388F043A`). Existing and new APK package/version are both `com.aura.ai` 1.0.0/code 1; signer SHA-256 matched `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
 - Installed the new APK in place with `adb install -r` (Success); did not uninstall or clear app data. MainActivity started and resumed. No fatal AndroidRuntime error matched in recent logcat.
 - Launch is verified, not voice acceptance. User's spoken test is pending; no live mic, wake, interruption, model inference, or WhatsApp action has been verified.
+
+## Hands-free overlap and build verification — 2026-11-06
+
+- Automated: focused voice-library tests passed. Full `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` passed: 56 tests, 19 suites, zero failures/errors/skips.
+- Added tests: a stable distinct partial interrupts after confirmation; likely TTS echo is ignored; a new user phrase after echo is accepted; contractions and similar phrases are normalized; simultaneous listen/speak publishes the combined state; ordinary listen still interrupts TTS.
+- APK assembled and v2 signature verified: `com.aura.ai` v1.0.0/code 1, SHA-256 `D9607C66F0835DFD73E1F77FA813BA1463A8E5405C46603A8411426E704048FE`, signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed.
+- Real device: no ADB performed per instruction. Wake capture, actual ASR transcript, full-duplex audio, TTS echo, interruption latency, local/cloud network calls, and WhatsApp launch remain untested on Honor.

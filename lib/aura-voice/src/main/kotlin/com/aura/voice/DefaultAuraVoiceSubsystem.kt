@@ -14,6 +14,9 @@ class DefaultAuraVoiceSubsystem(
     private var snapshot = ConversationStateSnapshot(ConversationState.IDLE)
     private var speechGeneration = 0L
     private var synthesisGeneration = 0L
+    private var recognitionActive = false
+    private var synthesisActive = false
+    private var processingActive = false
     private var closed = false
 
     override fun startListening(
@@ -28,13 +31,16 @@ class DefaultAuraVoiceSubsystem(
                 "No available speech recognition provider is selected.",
             )
 
-        if (snapshot.state == ConversationState.SPEAKING) {
+        val monitorCurrentSpeech = config.monitorSpeechOutput && synthesisActive
+        if (synthesisActive && !monitorCurrentSpeech) {
             interruptLocked()
         }
 
-        synthesisGeneration++
+        if (!monitorCurrentSpeech) synthesisGeneration++
+        processingActive = false
+        recognitionActive = true
         val generation = ++speechGeneration
-        transitionLocked(ConversationState.LISTENING)
+        transitionForActivityLocked()
         val result = provider.startListening(
             config.copy(languageTag = config.languageTag.ifBlank { settings.languageTag }),
             object : SpeechRecognitionListener {
@@ -42,11 +48,15 @@ class DefaultAuraVoiceSubsystem(
                     synchronized(this@DefaultAuraVoiceSubsystem) {
                         if (closed || generation != speechGeneration) return
                         if (result.error != null) {
-                            transitionLocked(ConversationState.ERROR, result.error)
+                            recognitionActive = false
+                            processingActive = false
+                            transitionForActivityLocked(result.error)
                         } else if (result.isFinal) {
-                            transitionLocked(ConversationState.PROCESSING)
+                            recognitionActive = false
+                            processingActive = true
+                            transitionForActivityLocked()
                         } else {
-                            transitionLocked(ConversationState.LISTENING)
+                            transitionForActivityLocked()
                         }
                         listener.onResult(result)
                     }
@@ -54,7 +64,9 @@ class DefaultAuraVoiceSubsystem(
             },
         )
         if (!result.accepted) {
-            transitionLocked(ConversationState.ERROR, result.error)
+            recognitionActive = false
+            processingActive = false
+            transitionForActivityLocked(result.error)
         }
         result
     }
@@ -63,11 +75,9 @@ class DefaultAuraVoiceSubsystem(
         if (closed) return rejected(VoiceErrorCode.UNKNOWN, "Voice subsystem is closed", false)
         speechGeneration++
         speechProvider()?.stopListening()
-        if (snapshot.state == ConversationState.LISTENING ||
-            snapshot.state == ConversationState.PROCESSING
-        ) {
-            transitionLocked(ConversationState.IDLE)
-        }
+        recognitionActive = false
+        processingActive = false
+        transitionForActivityLocked()
         VoiceOperationResult.accepted()
     }
 
@@ -88,7 +98,10 @@ class DefaultAuraVoiceSubsystem(
 
         speechGeneration++
         speechProvider()?.stopListening()
+        recognitionActive = false
+        processingActive = false
         synthesisGeneration++
+        synthesisActive = true
         val generation = synthesisGeneration
         transitionLocked(ConversationState.SPEAKING)
         val result = provider.speak(
@@ -104,7 +117,8 @@ class DefaultAuraVoiceSubsystem(
                 override fun onCompleted() {
                     synchronized(this@DefaultAuraVoiceSubsystem) {
                         if (closed || generation != synthesisGeneration) return
-                        transitionLocked(ConversationState.IDLE)
+                        synthesisActive = false
+                        transitionForActivityLocked()
                         listener.onCompleted()
                     }
                 }
@@ -112,8 +126,9 @@ class DefaultAuraVoiceSubsystem(
                 override fun onStopped() {
                     synchronized(this@DefaultAuraVoiceSubsystem) {
                         if (closed || generation != synthesisGeneration) return
+                        synthesisActive = false
                         transitionLocked(ConversationState.INTERRUPTED)
-                        transitionLocked(ConversationState.IDLE)
+                        transitionForActivityLocked()
                         listener.onStopped()
                     }
                 }
@@ -121,27 +136,30 @@ class DefaultAuraVoiceSubsystem(
                 override fun onError(error: VoiceError) {
                     synchronized(this@DefaultAuraVoiceSubsystem) {
                         if (closed || generation != synthesisGeneration) return
-                        transitionLocked(ConversationState.ERROR, error)
+                        synthesisActive = false
+                        transitionForActivityLocked(error)
                         listener.onError(error)
                     }
                 }
             },
         )
         if (!result.accepted) {
-            transitionLocked(ConversationState.ERROR, result.error)
+            synthesisActive = false
+            transitionForActivityLocked(result.error)
         }
         result
     }
 
     override fun stopSpeaking(): VoiceOperationResult = synchronized(this) {
         if (closed) return rejected(VoiceErrorCode.UNKNOWN, "Voice subsystem is closed", false)
-        if (snapshot.state != ConversationState.SPEAKING) {
+        if (!synthesisActive) {
             return VoiceOperationResult.accepted()
         }
         synthesisGeneration++
         ttsProvider()?.stopSpeaking()
+        synthesisActive = false
         transitionLocked(ConversationState.INTERRUPTED)
-        transitionLocked(ConversationState.IDLE)
+        transitionForActivityLocked()
         VoiceOperationResult.accepted()
     }
 
@@ -241,6 +259,7 @@ class DefaultAuraVoiceSubsystem(
 
     override fun markProcessing(): VoiceOperationResult = synchronized(this) {
         if (closed) return rejected(VoiceErrorCode.UNKNOWN, "Voice subsystem is closed", false)
+        processingActive = true
         transitionLocked(ConversationState.PROCESSING)
         VoiceOperationResult.accepted()
     }
@@ -257,6 +276,9 @@ class DefaultAuraVoiceSubsystem(
             closed = true
             speechGeneration++
             synthesisGeneration++
+            recognitionActive = false
+            synthesisActive = false
+            processingActive = false
             speechProvidersById.values.forEach { it.close() }
             ttsProvidersById.values.forEach { it.close() }
             observers.clear()
@@ -288,8 +310,23 @@ class DefaultAuraVoiceSubsystem(
         synthesisGeneration++
         speechProvider()?.stopListening()
         ttsProvider()?.stopSpeaking()
+        recognitionActive = false
+        synthesisActive = false
+        processingActive = false
         transitionLocked(ConversationState.INTERRUPTED)
         transitionLocked(ConversationState.IDLE)
+    }
+
+    private fun transitionForActivityLocked(error: VoiceError? = null) {
+        val state = when {
+            recognitionActive && synthesisActive -> ConversationState.LISTENING_AND_SPEAKING
+            synthesisActive -> ConversationState.SPEAKING
+            recognitionActive -> ConversationState.LISTENING
+            processingActive -> ConversationState.PROCESSING
+            error != null -> ConversationState.ERROR
+            else -> ConversationState.IDLE
+        }
+        transitionLocked(state, error)
     }
 
     private fun transitionLocked(

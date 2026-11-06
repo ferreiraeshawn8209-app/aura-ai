@@ -272,6 +272,38 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Spacer(Modifier.height(10.dp))
+                    if (voiceSelection.androidVoiceSelected) {
+                        LabeledFloatSlider(
+                            label = "Voice pitch",
+                            value = voiceSelection.pitch,
+                            valueLabel = "%.2f".format(java.util.Locale.US, voiceSelection.pitch),
+                            range = com.aura.voice.VoiceTuningPolicy.PITCH_MIN..com.aura.voice.VoiceTuningPolicy.PITCH_MAX,
+                            steps = 11,
+                            onChange = viewModel::onVoicePitchChange,
+                            onFinished = viewModel::saveVoiceTuning,
+                        )
+                        LabeledFloatSlider(
+                            label = "Speaking speed",
+                            value = voiceSelection.speakingRate,
+                            valueLabel = "%.2fx".format(java.util.Locale.US, voiceSelection.speakingRate),
+                            range = com.aura.voice.VoiceTuningPolicy.RATE_MIN..com.aura.voice.VoiceTuningPolicy.RATE_MAX,
+                            steps = 11,
+                            onChange = viewModel::onVoiceRateChange,
+                            onFinished = viewModel::saveVoiceTuning,
+                        )
+                        Text(
+                            "Tuning is limited to a natural range and saved on this device. Preview the selected voice after adjusting it.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    } else {
+                        Text(
+                            "This cloud voice controls its own pitch and speaking style. Aura keeps the selected voice ID and will not switch voices if it becomes unavailable.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
                     Text(
                         "ElevenLabs key is stored encrypted on this device and is never included in the APK source. For a shared or public app, use a server-side proxy and a restricted key; do not distribute an APK containing your personal credentials.",
                         style = MaterialTheme.typography.bodySmall,
@@ -407,6 +439,31 @@ private fun LabeledSlider(label: String, value: Int, valueLabel: String, range: 
             value = value.toFloat(),
             onValueChange = { onChange(it.toInt()) },
             valueRange = range.first.toFloat()..range.last.toFloat(),
+        )
+    }
+}
+
+@Composable
+private fun LabeledFloatSlider(
+    label: String,
+    value: Float,
+    valueLabel: String,
+    range: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    onChange: (Float) -> Unit,
+    onFinished: () -> Unit,
+) {
+    Column {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(label, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+            Text(valueLabel, style = MaterialTheme.typography.labelLarge, color = MintAccent)
+        }
+        Slider(
+            value = value.coerceIn(range),
+            onValueChange = onChange,
+            valueRange = range,
+            steps = steps,
+            onValueChangeFinished = onFinished,
         )
     }
 }

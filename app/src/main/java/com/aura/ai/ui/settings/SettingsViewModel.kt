@@ -15,6 +15,7 @@ import com.aura.voice.AuraVoiceSubsystem
 import com.aura.voice.SpeechSynthesisListener
 import com.aura.voice.VoiceDescriptor
 import com.aura.voice.VoiceError
+import com.aura.voice.VoiceProviderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,6 +39,9 @@ data class ConnectionUiState(
 data class VoiceSelectionUiState(
     val voices: List<VoiceDescriptor> = emptyList(),
     val selectedVoiceId: String? = null,
+    val androidVoiceSelected: Boolean = true,
+    val pitch: Float = 1.0f,
+    val speakingRate: Float = 1.0f,
     val loading: Boolean = false,
     val message: String? = null,
     val elevenLabsApiKeyDraft: String = "",
@@ -71,6 +75,9 @@ class SettingsViewModel @Inject constructor(
     private val _voiceSelection = MutableStateFlow(
         VoiceSelectionUiState(
             selectedVoiceId = voice.voiceSettings().voiceId,
+            androidVoiceSelected = voice.voiceSettings().provider == VoiceProviderType.ANDROID,
+            pitch = voice.voiceSettings().pitch,
+            speakingRate = voice.voiceSettings().speakingRate,
             elevenLabsApiKeyConfigured = secureStorage.hasSecret(
                 com.aura.ai.voice.tts.ElevenLabsSpeechTransport.API_KEY_SECRET,
             ),
@@ -102,10 +109,14 @@ class SettingsViewModel @Inject constructor(
     fun refreshVoices() {
         _voiceSelection.update { it.copy(loading = true, message = null) }
         voice.getVoices { voices ->
+            val current = voice.voiceSettings()
             _voiceSelection.update {
                 it.copy(
                     voices = voices.sortedWith(compareBy({ it.languageTag }, { it.name })),
-                    selectedVoiceId = voice.voiceSettings().voiceId,
+                    selectedVoiceId = current.voiceId,
+                    androidVoiceSelected = current.provider == VoiceProviderType.ANDROID,
+                    pitch = current.pitch,
+                    speakingRate = current.speakingRate,
                     loading = false,
                     message = if (voices.isEmpty()) {
                         if (it.elevenLabsApiKeyConfigured) {
@@ -156,10 +167,41 @@ class SettingsViewModel @Inject constructor(
     fun selectVoice(voiceId: String) {
         voice.selectVoice(voiceId) { result ->
             if (result.accepted) {
-                _voiceSelection.update { it.copy(selectedVoiceId = voiceId, message = "Voice selection saved on this device.") }
+                val selected = voice.voiceSettings()
+                _voiceSelection.update {
+                    it.copy(
+                        selectedVoiceId = voiceId,
+                        androidVoiceSelected = selected.provider == VoiceProviderType.ANDROID,
+                        pitch = selected.pitch,
+                        speakingRate = selected.speakingRate,
+                        message = "Voice selection saved on this device.",
+                    )
+                }
             } else {
                 _voiceSelection.update { it.copy(message = result.error?.message ?: "Could not save the selected voice.") }
             }
+        }
+    }
+
+    fun onVoicePitchChange(value: Float) = _voiceSelection.update { it.copy(pitch = value) }
+
+    fun onVoiceRateChange(value: Float) = _voiceSelection.update { it.copy(speakingRate = value) }
+
+    fun saveVoiceTuning() {
+        val draft = _voiceSelection.value
+        val tuned = com.aura.voice.VoiceTuningPolicy.apply(
+            voice.voiceSettings(),
+            pitch = draft.pitch,
+            speakingRate = draft.speakingRate,
+        )
+        val result = voice.updateVoiceSettings(tuned)
+        _voiceSelection.update {
+            it.copy(
+                pitch = tuned.pitch,
+                speakingRate = tuned.speakingRate,
+                message = if (result.accepted) "Voice tuning saved on this device." else
+                    result.error?.message ?: "Could not save voice tuning.",
+            )
         }
     }
 

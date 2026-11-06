@@ -181,3 +181,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - `SimpleTimeIntent` answers supported local-time questions from the device zone, and `LocalAnswerIntent` keeps arithmetic available. The chat can route those deterministic queries without a selected model; other requests are unchanged.
 - Automated checks: 76 app + 10 voice-library reports, 86 tests with no failures/errors/skips; debug APK built and signed. APK SHA-256 is in `AI_HANDOVER.md`; it is not installed.
 - On reconnection, test time/arithmetic in hands-free mode while backends are disconnected; then test backend recovery, voice turns, interruption, Austrian voice selection and WhatsApp draft. Do not treat unit tests as phone acceptance.
+
+## Voice tuning verification — 2026-11-06
+
+- Added persistent Android-only pitch and pace controls in a bounded, natural range. Cloud voice providers retain control of their own voice settings. New unit tests verify that tuning preserves the exact selected voice ID and clamps the range.
+- Automated verification: full app/voice suite reports 88 tests passed, 0 failures/errors/skips; a signed debug APK was built. Its hash is in `AI_HANDOVER.md`; it is not installed.
+- On Honor reconnect, test slider persistence across reopening settings and preview the selected voice. Confirm the accent audibly; the code cannot produce an Austrian accent if the installed/authorized voice does not have one.

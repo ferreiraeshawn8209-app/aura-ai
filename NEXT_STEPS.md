@@ -210,3 +210,10 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. Current-time and arithmetic quick replies now work without a selected model by design; all remaining requests still need a ready cloud or Ollama backend. Automated reports: 86 tests, 0 failures/errors/skips; APK hash in `AI_HANDOVER.md`. Not installed.
 2. On Honor reconnection and separately approved exact APK, verify both wake phrase and tap-to-speak with backend unavailable: say “Yo, yo, yo, what time is it?” and “Yo, yo, yo, what is five plus five?” Confirm transcript and spoken result, then reconnect backend and continue voice/fallback/action tests.
 3. Source/handover commit and push status follow in `AI_HANDOVER.md`; `main` unchanged; exclude `device-backups/`.
+
+## Voice tuning follow-up — 2026-11-06
+
+1. Android voice pitch and speaking speed can be adjusted and persisted in Settings. Both are limited to a natural range; cloud voice tuning is provider-controlled. No accent is promised by pitch adjustment.
+2. Automated reports: 88 tests, no failures/errors/skips; fresh signed APK hash is recorded in `AI_HANDOVER.md`. Not installed.
+3. After Honor reconnects and exact-build approval, verify controls persist after reopening Settings, preview the selected voice, and check voice identity across several spoken turns. Continue all other live voice/backend/action acceptance checks.
+4. Source/handover publication state follows. Keep work on `integration/aura-voice-consolidation`; `main` untouched; exclude `device-backups/`.

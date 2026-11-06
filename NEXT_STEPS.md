@@ -113,3 +113,11 @@ The transcript feature and test records are committed as `d0e8e9c`; publication 
 ## Local Ollama check — 2026-11-06
 
 PC-to-Ollama GET `/api/tags` works when bypassing the configured proxy and lists both Qwen models. Do not change the user's proxy/firewall. After the phone reconnects, test model discovery from Aura on Honor; separately test cloud only after credentials are configured.
+
+## Continue cloud TTS and phone acceptance — 2026-11-06
+
+1. Keep the existing Android voice selected until the owner configures a key, loads voices and selects a specific ElevenLabs voice in Aura settings. Then verify the preview on the Honor; do not claim an Austrian accent before listening.
+2. When the Honor reconnects, verify package/version/signature and back up current app data before requesting approval to install this exact debug APK.
+3. Test Tap to Speak, Yo, yo, yo wake, transcript capture, repeated turns, interruption, voice output and recognizer recovery on the physical phone.
+4. Separately configure provider credentials and validate cloud TTS/reasoning and local Ollama fallback/recovery. Review the WhatsApp draft tool on device; sending remains a user action.
+5. Never install while disconnected, claim device acceptance from JVM tests, merge to main, or stage device-backups/.

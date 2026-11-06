@@ -122,3 +122,11 @@ The recognizer lifecycle repair is pushed. At verification, origin/integration/a
 - Direct no-proxy GET to `http://192.168.8.18:11434/api/tags` from the PC succeeded; Ollama advertised `qwen3:1.7b` and `qwen3:4b-q4_K_M`. The app default endpoint is `http://192.168.8.18:11434`.
 - The default proxy route was refused at `127.0.0.1:9`; bypassing it for this read-only check succeeded. No system proxy/firewall/server settings were changed and no model generation was run.
 - Phone-to-PC access remains unverified until Honor reconnects. Cloud fallback remains unit/mock verified only without configured user credentials.
+
+## Optional cloud TTS provider — 2026-11-06
+
+- The existing Aura voice subsystem now registers ElevenLabs as an optional cloud TTS provider alongside Android TTS. Voice settings can save the key in existing encrypted storage, list provider voices with gender/accent labels, preserve the selected provider voice ID, and preview it through the established voice path.
+- The integration does not set a default or automatically change the saved voice. No ElevenLabs key was configured, no provider request was made, and no Austrian accent or audio quality has been verified. Existing saved Android voice remains selected.
+- Verification: focused transport tests passed; full app and voice-library unit suites plus debug APK assemble passed. Result: 41 tests, 0 failures/errors/skips, 14 suites; BUILD SUCCESSFUL in 5m21s. APK SHA-256 95EC076E0F424A8C76CB30BAB3BC067F630C6217524F32624366573390B70DE2; package com.aura.ai v1.0.0/code 1; signer unchanged. Details in AI_HANDOVER.md.
+- No install or real-device test. The Honor remains disconnected by request. Existing chat routing/WhatsApp draft behavior was not changed or newly live-tested.
+- Main remains unchanged. Continue on integration/aura-voice-consolidation; device-backups/ stays untracked and excluded.

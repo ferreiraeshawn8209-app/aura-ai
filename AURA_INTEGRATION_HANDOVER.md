@@ -212,3 +212,11 @@ Implementation commit: `d0e8e9c` on `integration/aura-voice-consolidation`; bran
 ## Ollama reachability — PC only — 2026-11-06
 
 A direct request from BEATK to the configured PC LAN host `http://192.168.8.18:11434/api/tags` succeeded and returned `qwen3:1.7b` and `qwen3:4b-q4_K_M`. The proxy route failed at local proxy address `127.0.0.1:9`; the no-proxy request worked. No configuration was changed. This does not verify phone-to-PC connectivity or model inference on Honor.
+
+## Optional ElevenLabs voice provider — 2026-11-06
+
+The existing voice subsystem now has an optional ElevenLabs cloud TTS provider and private-cache audio player, registered alongside Android TTS. Aura settings support a masked key saved through existing encrypted storage, provider voice discovery with gender/accent labels, exact voice selection and preview. The saved voice was not changed. No API key, live provider call, audio preview or Austrian voice confirmation was available in this code-only session.
+
+Regression history: initial test run exposed three Android JSONObject stub failures; changed request and response JSON handling to the project's kotlinx.serialization implementation. Corrected a missing typed put import after a compile failure. A subsequent KSP run hit low C: disk space; cleared only verified repo-local generated intermediates/cache/temp directories while preserving outputs, source, backups and user data. Focused tests then passed. Final app+voice tests and debug assembly passed in 5m21s: 41 tests, zero failures/errors/skips across 14 suites. APK verification and hash are recorded in AI_HANDOVER.md.
+
+Not installed; Honor disconnected by instruction. No real-device audio, wake, interruption, transcript, Ollama/cloud, or WhatsApp acceptance is claimed. Continue on integration/aura-voice-consolidation; do not merge main. device-backups/ excluded.

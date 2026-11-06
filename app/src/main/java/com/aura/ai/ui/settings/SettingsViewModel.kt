@@ -40,6 +40,8 @@ data class VoiceSelectionUiState(
     val selectedVoiceId: String? = null,
     val loading: Boolean = false,
     val message: String? = null,
+    val elevenLabsApiKeyDraft: String = "",
+    val elevenLabsApiKeyConfigured: Boolean = false,
 )
 
 data class CloudSettingsUiState(
@@ -67,7 +69,12 @@ class SettingsViewModel @Inject constructor(
     val conn: StateFlow<ConnectionUiState> = _conn.asStateFlow()
 
     private val _voiceSelection = MutableStateFlow(
-        VoiceSelectionUiState(selectedVoiceId = voice.voiceSettings().voiceId),
+        VoiceSelectionUiState(
+            selectedVoiceId = voice.voiceSettings().voiceId,
+            elevenLabsApiKeyConfigured = secureStorage.hasSecret(
+                com.aura.ai.voice.tts.ElevenLabsSpeechTransport.API_KEY_SECRET,
+            ),
+        ),
     )
     val voiceSelection: StateFlow<VoiceSelectionUiState> = _voiceSelection.asStateFlow()
 
@@ -100,9 +107,49 @@ class SettingsViewModel @Inject constructor(
                     voices = voices.sortedWith(compareBy({ it.languageTag }, { it.name })),
                     selectedVoiceId = voice.voiceSettings().voiceId,
                     loading = false,
-                    message = if (voices.isEmpty()) "No Android voices are ready. Check the phone's Text-to-speech settings, then refresh." else null,
+                    message = if (voices.isEmpty()) {
+                        if (it.elevenLabsApiKeyConfigured) {
+                            "No voices loaded. Check the ElevenLabs key and connection, or check Android Text-to-speech settings."
+                        } else {
+                            "No voices loaded. Install Android voices or add an ElevenLabs key below."
+                        }
+                    } else null,
                 )
             }
+        }
+    }
+
+    fun onElevenLabsApiKeyChange(value: String) = _voiceSelection.update {
+        it.copy(elevenLabsApiKeyDraft = value, message = null)
+    }
+
+    fun saveElevenLabsApiKey() {
+        val key = _voiceSelection.value.elevenLabsApiKeyDraft.trim()
+        if (key.isBlank()) {
+            _voiceSelection.update {
+                it.copy(message = if (it.elevenLabsApiKeyConfigured) "Saved key kept unchanged." else "Enter an ElevenLabs API key first.")
+            }
+            return
+        }
+        secureStorage.saveSecret(com.aura.ai.voice.tts.ElevenLabsSpeechTransport.API_KEY_SECRET, key)
+        _voiceSelection.update {
+            it.copy(
+                elevenLabsApiKeyDraft = "",
+                elevenLabsApiKeyConfigured = true,
+                message = "ElevenLabs key saved in encrypted device storage. Load voices to choose and preview one.",
+            )
+        }
+    }
+
+    fun removeElevenLabsApiKey() {
+        secureStorage.deleteSecret(com.aura.ai.voice.tts.ElevenLabsSpeechTransport.API_KEY_SECRET)
+        _voiceSelection.update {
+            it.copy(
+                elevenLabsApiKeyDraft = "",
+                elevenLabsApiKeyConfigured = false,
+                voices = it.voices.filterNot { voice -> voice.providerId == com.aura.ai.voice.tts.ElevenLabsSpeechTransport.PROVIDER_ID },
+                message = "ElevenLabs key removed. If that voice was selected, Aura will report it as unavailable rather than switching voices.",
+            )
         }
     }
 

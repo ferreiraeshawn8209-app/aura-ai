@@ -213,10 +213,33 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
             item {
                 Section("Voice") {
                     Text(
-                        "Choose an installed Android voice. Aura saves the exact voice ID and will report if it is missing instead of switching voices. An Austrian-accented English voice must be installed by the device's speech engine; Android cannot create that accent from a pitch setting.",
+                        "Choose an Android voice or load voices from ElevenLabs. Aura saves one exact voice ID and reports if it becomes unavailable instead of switching voices. A deep Austrian English accent depends on the voice you select; pitch alone cannot create an accent.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    Spacer(Modifier.height(10.dp))
+                    Text(
+                        "ElevenLabs key is stored encrypted on this device and is never included in the APK source. For a shared or public app, use a server-side proxy and a restricted key; do not distribute an APK containing your personal credentials.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextFaint,
+                    )
+                    OutlinedTextField(
+                        value = voiceSelection.elevenLabsApiKeyDraft,
+                        onValueChange = viewModel::onElevenLabsApiKeyChange,
+                        label = { Text("ElevenLabs API key") },
+                        placeholder = {
+                            if (voiceSelection.elevenLabsApiKeyConfigured) Text("Saved securely; blank keeps it")
+                        },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(onClick = viewModel::saveElevenLabsApiKey) { Text("Save key") }
+                        if (voiceSelection.elevenLabsApiKeyConfigured) {
+                            OutlinedButton(onClick = viewModel::removeElevenLabsApiKey) { Text("Remove key") }
+                        }
+                    }
                     Spacer(Modifier.height(10.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedButton(onClick = viewModel::refreshVoices, enabled = !voiceSelection.loading) {
@@ -231,7 +254,11 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                     voiceSelection.voices.forEach { voice ->
                         VoiceRow(
                             title = "${voice.metadata["gender"] ?: "Voice"} · ${voice.name}",
-                            subtitle = voice.languageTag,
+                            subtitle = listOfNotNull(
+                                voice.languageTag,
+                                voice.metadata["accent"],
+                                if (voice.providerId == "elevenlabs") "ElevenLabs" else "Android",
+                            ).joinToString(" · "),
                             selected = voice.id == voiceSelection.selectedVoiceId,
                             onClick = { viewModel.selectVoice(voice.id) },
                         )

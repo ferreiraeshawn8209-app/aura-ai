@@ -3,9 +3,13 @@ package com.aura.ai.di
 import android.content.Context
 import com.aura.voice.AuraVoiceSubsystem
 import com.aura.voice.DefaultAuraVoiceSubsystem
+import com.aura.voice.CloudTextToSpeechProvider
 import com.aura.voice.android.AndroidSpeechRecognizerProvider
 import com.aura.voice.android.AndroidTextToSpeechProvider
 import com.aura.voice.android.SharedPreferencesVoiceSettingsStore
+import com.aura.ai.core.security.SecureStorage
+import com.aura.ai.voice.tts.AndroidCloudAudioPlayer
+import com.aura.ai.voice.tts.ElevenLabsSpeechTransport
 import com.aura.ai.voice.recognition.SpeechRecognitionManager
 import com.aura.ai.voice.tts.TextToSpeechManager
 import com.aura.ai.voice.wake.WakeWordDetector
@@ -24,9 +28,21 @@ object VoiceModule {
     @Provides
     fun provideAuraVoiceSubsystem(
         @ApplicationContext context: Context,
+        secureStorage: SecureStorage,
     ): AuraVoiceSubsystem = DefaultAuraVoiceSubsystem(
         speechProviders = listOf(AndroidSpeechRecognizerProvider(context)),
-        textToSpeechProviders = listOf(AndroidTextToSpeechProvider(context)),
+        textToSpeechProviders = listOf(
+            AndroidTextToSpeechProvider(context),
+            CloudTextToSpeechProvider(
+                id = ElevenLabsSpeechTransport.PROVIDER_ID,
+                transport = ElevenLabsSpeechTransport(
+                    apiKey = {
+                        secureStorage.getSecret(ElevenLabsSpeechTransport.API_KEY_SECRET)
+                    },
+                ),
+                audioPlayer = AndroidCloudAudioPlayer(context),
+            ),
+        ),
         settingsStore = SharedPreferencesVoiceSettingsStore(context),
     )
 

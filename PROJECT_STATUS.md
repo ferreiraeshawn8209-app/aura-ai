@@ -168,6 +168,6 @@ Commit `a0a4606` records the cloud-only chat-readiness fix and automated verific
 - Focused voice tests passed. Full app + voice library tests and APK assembly passed: 56 tests, 0 failures/errors/skips across 19 XML suites; Gradle `BUILD SUCCESSFUL` in 19m13s. `git diff --check` passed before docs were appended.
 - Fresh APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,862,524 bytes; `com.aura.ai` v1.0.0/code 1; SHA-256 `D9607C66F0835DFD73E1F77FA813BA1463A8E5405C46603A8411426E704048FE`; APK v2 signature verified; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed.
 - Honor disconnected by instruction; no ADB used. Live speech, interruption, wake, backend network calls, and WhatsApp remain pending. Ollama was not started; no cloud credentials were used.
-- Integration branch remains `integration/aura-voice-consolidation`; main unchanged. Exclude `device-backups/`. Commit/push details to follow.
+- Integration branch remains `integration/aura-voice-consolidation`; code/tests/records committed as `6e2a221`; main unchanged. Exclude `device-backups/`. Publication status to follow.
 
 The Honor install/startup record is committed as `1a40245` and was pushed successfully to `origin/integration/aura-voice-consolidation`; `main` remains unchanged.

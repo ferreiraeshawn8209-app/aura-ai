@@ -155,7 +155,7 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 
 ## Continue without phone access — 2026-11-06
 
-1. Commit voice monitor/barge-in source and tests with the updated handover/status records on `integration/aura-voice-consolidation`; exclude `device-backups/`.
+1. Voice monitor/barge-in source, tests and records are committed as `6e2a221` on `integration/aura-voice-consolidation`; publish this branch only and exclude `device-backups/`.
 2. Keep the fresh APK at `app/build/outputs/apk/debug/app-debug.apk` uninstalled (SHA-256 `D9607C66F0835DFD73E1F77FA813BA1463A8E5405C46603A8411426E704048FE`). Do not use ADB while the phone is disconnected.
 3. Once Honor reconnects, back up accessible Aura data and confirm package/version/signer before obtaining approval to install this exact APK. Then test continuous turns and barge-in while a longer reply is speaking.
 4. Verify cloud-first operation, Ollama fallback/recovery, and WhatsApp draft opening with actual configured services/device. None was live-tested during this build.

@@ -170,3 +170,8 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added policy coverage for selecting the dedicated on-device recognizer only on API 31+ when available; policy tests passed as part of the 73-test app/voice suite. The wake request also asks Android to prefer offline processing.
 - Build and debug APK assembly passed. This does not confirm the Honor has an on-device en-ZA model, and Android permits the generic recognizer to ignore the offline hint.
 - No real-device test: Honor disconnected; no microphone capture, wake phrase, speech answer, interruption or live backend check. Keep the APK uninstalled until reconnect and explicit install authorization.
+
+## On-device language error recovery — 2026-11-06
+
+- Added a policy case that uses the system recognizer only when an active on-device recognizer reports an unsupported/unavailable language. The updated app/voice reports contain 74 passing tests; APK build and signature verification passed.
+- No handset test. Honor's on-device service and en-ZA pack are not checked, the APK remains uninstalled, and system recognition may use a network service.

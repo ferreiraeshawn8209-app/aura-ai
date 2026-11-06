@@ -39,6 +39,8 @@ class WakeWordService : LifecycleService() {
     private var listening = false
     private val handler = Handler(Looper.getMainLooper())
     private var stopping = false
+    private var forceSystemRecognizer = false
+    private var activeRecognizerOnDevice = false
     private var consecutiveErrors = 0
     private val requestGate = WakeWordRequestGate()
     private val restart = Runnable { if (!stopping) startRecognizer() }
@@ -121,14 +123,16 @@ class WakeWordService : LifecycleService() {
     private fun createWakeRecognizer(): SpeechRecognizer {
         val onDeviceAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             SpeechRecognizer.isOnDeviceRecognitionAvailable(this)
-        if (WakeRecognizerPolicy.useOnDeviceRecognizer(Build.VERSION.SDK_INT, onDeviceAvailable)) {
+        if (!forceSystemRecognizer && WakeRecognizerPolicy.useOnDeviceRecognizer(Build.VERSION.SDK_INT, onDeviceAvailable)) {
             try {
+                activeRecognizerOnDevice = true
                 return SpeechRecognizer.createOnDeviceSpeechRecognizer(this)
             } catch (_: RuntimeException) {
                 // Some platform providers can report availability and still
                 // fail creation. Preserve wake availability via system fallback.
             }
         }
+        activeRecognizerOnDevice = false
         return SpeechRecognizer.createSpeechRecognizer(this)
     }
 
@@ -169,7 +173,15 @@ class WakeWordService : LifecycleService() {
         override fun onEndOfSpeech() {}
         override fun onEvent(eventType: Int, params: Bundle?) {}
 
-        override fun onError(error: Int) = restartSoon(requestId, error)
+        override fun onError(error: Int) {
+            val languageUnsupported = error == SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED ||
+                error == SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE
+            if (WakeRecognizerPolicy.shouldFallbackAfterLanguageError(activeRecognizerOnDevice, languageUnsupported)) {
+                forceSystemRecognizer = true
+                activeRecognizerOnDevice = false
+            }
+            restartSoon(requestId, error)
+        }
 
         override fun onPartialResults(partialResults: Bundle?) {
             // Wait for a final utterance: triggering on the partial wake phrase

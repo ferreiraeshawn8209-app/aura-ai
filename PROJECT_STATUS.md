@@ -15,6 +15,12 @@ Branch: `integration/aura-voice-consolidation`
 - Added two policy tests. Full offline app + voice test/build completed successfully: 73 reports / 24 suites, 0 failures/errors/skips; 14 of 75 Gradle tasks executed, other tasks up-to-date. Debug APK SHA-256 `A88BF09A91C596752669D3D274065B81F66E2D32511D19F10C96685CD45D4363`, package `com.aura.ai` v1.0.0/code 1; signature verified with the established debug signer. Not installed.
 - Phone and live-provider acceptance remain pending. No ADB/install was used. Code and record are on the integration branch; `main` and `device-backups/` remain untouched.
 
+## Wake language recovery — 2026-11-06
+
+- On-device wake recognition now falls back to the Android system recognizer if the local provider reports the requested language is unsupported/unavailable, avoiding endless retries of an unusable local language pack. This fallback policy is unit-tested; actual Honor `en-ZA` support is unknown.
+- Offline Gradle app/voice tests and debug APK assembly succeeded: 74 tests / 24 suites, 0 failures/errors/skips. APK SHA-256 `4930072AF2184041BD9482DFC67E8B9012347D5B92538DB46F0631C31BB8E3B6`, package `com.aura.ai` v1.0.0/code 1, signer verified. Not installed; no phone test.
+- Source/tests/docs are being committed to the existing integration branch; main is unchanged and personal backup data is excluded.
+
 ## Current verified status — 2026-11-06
 
 - The existing Aura app now exposes `open_app`, HTTP(S)-only `open_website`, user-reviewed `prepare_phone_call`, and user-reviewed `prepare_sms` tools to its active agent registry. Existing WhatsApp draft action is retained. Calls and messages are not placed/sent automatically.

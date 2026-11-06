@@ -192,3 +192,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. Wake standby prefers Android's dedicated on-device recognizer when available on API 31+, requests offline mode, and keeps the existing system recognizer fallback. Unit policy tests and the APK build passed; Honor support and en-ZA model availability remain unknown.
 2. On reconnection, inspect OS on-device recognition availability and language resources, then test repeated “Yo, yo, yo” plus a multi-turn exchange. Keep the APK uninstalled until its exact update has separate approval.
 3. If offline recognition is unavailable or inaccurate, evaluate a dedicated wake-word engine and its model/license; do not claim local wake recognition is verified yet.
+
+## Wake language recovery — 2026-11-06
+
+1. The updated wake service now switches to the system recognizer after on-device `en-ZA` support errors; policy/build checks pass. The new APK is uninstalled and Honor acceptance is pending.
+2. After phone reconnection, back up accessible app data and verify package/signer before getting approval for this exact build. Test on-device language availability and behavior without network, then enable network and verify system fallback; record actual device output.
+3. Continue cloud/Ollama live failover, TTS identity, interruption, and WhatsApp checks only when their real provider/phone is available. Automated mocks are not acceptance evidence.

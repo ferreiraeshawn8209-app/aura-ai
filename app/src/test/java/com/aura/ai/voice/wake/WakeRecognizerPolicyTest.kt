@@ -16,4 +16,11 @@ class WakeRecognizerPolicyTest {
         assertFalse(WakeRecognizerPolicy.useOnDeviceRecognizer(apiLevel = 30, onDeviceRecognitionAvailable = true))
         assertFalse(WakeRecognizerPolicy.useOnDeviceRecognizer(apiLevel = 34, onDeviceRecognitionAvailable = false))
     }
+
+    @Test
+    fun fallsBackAfterLanguageErrorOnlyWhenOnDeviceRecognizerWasActive() {
+        assertTrue(WakeRecognizerPolicy.shouldFallbackAfterLanguageError(onDeviceRecognizerActive = true, languageUnsupported = true))
+        assertFalse(WakeRecognizerPolicy.shouldFallbackAfterLanguageError(onDeviceRecognizerActive = true, languageUnsupported = false))
+        assertFalse(WakeRecognizerPolicy.shouldFallbackAfterLanguageError(onDeviceRecognizerActive = false, languageUnsupported = true))
+    }
 }

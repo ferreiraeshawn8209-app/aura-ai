@@ -4,4 +4,7 @@ package com.aura.ai.voice.wake
 internal object WakeRecognizerPolicy {
     fun useOnDeviceRecognizer(apiLevel: Int, onDeviceRecognitionAvailable: Boolean): Boolean =
         apiLevel >= 31 && onDeviceRecognitionAvailable
+
+    fun shouldFallbackAfterLanguageError(onDeviceRecognizerActive: Boolean, languageUnsupported: Boolean): Boolean =
+        onDeviceRecognizerActive && languageUnsupported
 }

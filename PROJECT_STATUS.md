@@ -248,3 +248,8 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Common current-local-time questions and existing arithmetic questions now bypass the model router; the Android UI permits only these deterministic answers when no model is ready. Other requests still require configured cloud/Ollama. No database, permission, or package identity changes.
 - Full app/voice test reports show 86 tests (76 app, 10 voice library), zero failures/errors/skips. Fresh debug APK built and signature verified; SHA-256 `D9F08E1338CE993E75F6A7014F5DFA0F1D978DF88595985CEC9A4A320FAF0713`; not installed. Device and live backend tests remain pending.
 - Source commit and remote publication state will be recorded in `AI_HANDOVER.md` after commit/push. `main` remains untouched.
+
+## Offline quick-answer publication — 2026-11-06
+
+- Commit `bfe0f2ef81da6205f706e487684f9fd2a38730b2` is published on `origin/integration/aura-voice-consolidation`; `main` unchanged.
+- The 86 automated reports pass and a fresh signed APK was built, but it is not installed. Honor and live provider acceptance remains pending.

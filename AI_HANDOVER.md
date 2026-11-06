@@ -339,3 +339,9 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Fresh APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,821,779 bytes; package `com.aura.ai`, version `1.0.0` / code `1`; SHA-256 `D9F08E1338CE993E75F6A7014F5DFA0F1D978DF88595985CEC9A4A320FAF0713`. `apksigner verify --print-certs` passed; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. APK was not installed.
 - No ADB or real device/provider tests were run: Honor is disconnected. Wake activation, continuous multi-turn voice, transcripts on phone, interruption, TTS voice/accent, Ollama connection, cloud failover/recovery, and WhatsApp draft remain pending actual device/service verification. Starting HEAD: `b396baf3df81a92d9194b82b6013a8fdfdd924ad`; source and initial documentation commit follows. `main` unchanged; pre-existing `device-backups/` excluded.
 - Next: on phone reconnection, after exact-build approval and package/signature/data checks, test spoken time and arithmetic with cloud/Ollama unavailable, then restore backend and verify multi-turn voice, barge-in, selected TTS and WhatsApp draft. Basic local quick answers do not replace those checks.
+
+## Offline quick-answer publication — 2026-11-06
+
+- Source and initial test/build records committed as `bfe0f2ef81da6205f706e487684f9fd2a38730b2` (`Answer basic time questions offline`) on `integration/aura-voice-consolidation` and accepted by `origin`.
+- Production `main` is unchanged. APK is local and uninstalled; pre-existing `device-backups/` is excluded. APK hash/signature and the 86-test result are in the implementation record above.
+- Phone wake, speech recognition, TTS, interruption, Ollama/cloud, and WhatsApp remain unverified until Honor reconnects. Continue code-only work meanwhile.

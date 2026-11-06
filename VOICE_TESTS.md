@@ -89,4 +89,8 @@ The speech provider lifecycle fix and test record were published to integration/
 
 ## Commit — 2026-11-06
 
-Transcript feature and the 42-test/build record are committed locally as `d0e8e9c`. No device installation or physical voice test was performed.
+Transcript feature and the 42-test/build record are committed as `d0e8e9c` and published with the handover commit `1ae7c1c`. No device installation or physical voice test was performed.
+
+## Publication verification — 2026-11-06
+
+The transcript feature commit `d0e8e9c` and its handover commit `1ae7c1c` are published on `integration/aura-voice-consolidation`; the post-push remote head was verified as `1ae7c1c99562b4c00ca767e2f57ade323202bf68`. No phone installation or physical voice test was performed.

@@ -104,4 +104,8 @@ The speech adapter fix and test/handover commits are on the integration branch; 
 4. With user-configured cloud endpoint/model/key, test cloud success/failure/recovery; with Ollama available, test phone-to-PC model discovery and fallback. Verify WhatsApp draft opens and requires manual review/send.
 5. Keep limitations explicit: Austrian TTS is not configured; saved `ar-language` remains; a dedicated wake detector and acoustic barge-in remain unverified; no production merge/install without approval.
 
-The transcript feature and test records are committed locally as `d0e8e9c`; publish and verify the integration branch head next.
+The transcript feature and test records are committed as `d0e8e9c`; publication to the integration branch was verified.
+
+## Publication verification — 2026-11-06
+
+- The integration branch was verified at `1ae7c1c99562b4c00ca767e2f57ade323202bf68` immediately after the code and first handover commits were pushed; `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. The code and handover pushes are complete; continue with the listed Honor/provider checks when available.

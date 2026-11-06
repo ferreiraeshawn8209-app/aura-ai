@@ -203,4 +203,8 @@ The speech lifecycle code commit e3d86b3215ca67a88f595a77e01dc8946255a1f3 and ha
 - APK package/version/signer verified; SHA-256 `1614E230F6663E00D86D975B5CFE21F9BF84E7F998EADB24C98F3E356F8CB3F1`. Not installed. The Honor remains disconnected by request.
 - No live device voice, Ollama/cloud routing, or WhatsApp run is claimed. Provider credentials are not configured; Austrian voice remains unavailable and the existing `ar-language` preference is preserved.
 
-Implementation commit: `d0e8e9c` on `integration/aura-voice-consolidation`; branch push remains pending, main unchanged.
+Implementation commit: `d0e8e9c` on `integration/aura-voice-consolidation`; branch push was verified in the following entry; main unchanged.
+
+## Publication verification — 2026-11-06
+
+- Immediately after publishing the code and first handover commits, GitHub `origin/integration/aura-voice-consolidation` resolved to `1ae7c1c99562b4c00ca767e2f57ade323202bf68`; `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. No merge. The publication step in the prior entry is complete.

@@ -111,4 +111,8 @@ The recognizer lifecycle repair is pushed. At verification, origin/integration/a
 
 ## Commit state — 2026-11-06
 
-- Transcript feature and its verification records are committed as `d0e8e9c` on `integration/aura-voice-consolidation`; branch publication is pending. `main` unchanged; personal `device-backups/` remains untracked and excluded.
+- Transcript feature and its verification records are committed as `d0e8e9c` on `integration/aura-voice-consolidation`; branch publication was verified in the following entry. `main` unchanged; personal `device-backups/` remains untracked and excluded.
+
+## Publication verification — 2026-11-06
+
+- Immediately after publishing the code and first handover commits, GitHub remote `origin/integration/aura-voice-consolidation` resolved to `1ae7c1c99562b4c00ca767e2f57ade323202bf68`. `main` remains `4b48185e9f110764938f10548f80a29acda674f7`; no merge. This supersedes the earlier pending-publication note.

@@ -270,3 +270,8 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - The wake listener now resumes after normal Android speech timeout/no-match in 800 ms, rather than treating silence as a repeated provider failure and eventually leaving 16-second listening gaps. Actual recognizer failures keep capped exponential backoff.
 - 90 app/voice tests passed (31 suites, no failures/errors/skips); fresh signed debug APK built. SHA-256 is in `AI_HANDOVER.md`; not installed. No Honor acoustic/wake test was possible.
 - Implementation and publication commit details follow. `main` remains unchanged.
+
+## Wake recovery publication — 2026-11-06
+
+- Commit `abf83a815d7311d153fbf3eb4e347e7394f0585c` was published on `origin/integration/aura-voice-consolidation`; `main` unchanged.
+- 90 app/voice test reports passed, APK built and signature verified but not installed. Real-device wake and microphone checks remain pending.

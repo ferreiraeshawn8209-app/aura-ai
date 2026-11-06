@@ -369,3 +369,9 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Fresh APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,877,242 bytes; `com.aura.ai`, v1.0.0/code 1; SHA-256 `C1BD74A4DAC4C51814409C1D16D3206DDE35310AE8EF90B4D742CE229F4EDBB6`. `apksigner verify --print-certs` passed; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. APK is not installed.
 - Honor remains disconnected; no ADB or real-device wake, mic, speech, TTS, interruption, Ollama/cloud or WhatsApp test was run. This code test does not prove acoustic wake reliability on the phone. Starting HEAD `be455a66ccaa5b24b972a88b8ec4423ccf792028`; source and record commit follows. `main` unchanged; `device-backups/` excluded.
 - Next: when the Honor reconnects and the exact APK has separate install approval, test “Yo, yo, yo” after repeated silence, then multi-turn speech and interruption. Observe whether Android's recognizer itself emits microphone sounds; this restart policy cannot suppress OEM/platform sounds.
+
+## Wake retry recovery publication — 2026-11-06
+
+- Wake idle recovery source/tests and initial records are committed as `abf83a815d7311d153fbf3eb4e347e7394f0585c` (`Keep wake listening responsive after silence`) on `integration/aura-voice-consolidation` and accepted by `origin`.
+- Production `main` is unchanged. The APK remains uninstalled; `device-backups/` remains excluded. APK and 90-test details are recorded above.
+- Phone wake/acoustic, continuous voice, interruption, TTS identity/accent, local/cloud inference and WhatsApp remain unverified. Continue code-only work while disconnected.

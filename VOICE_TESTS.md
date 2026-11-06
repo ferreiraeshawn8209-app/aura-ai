@@ -86,3 +86,7 @@ The speech provider lifecycle fix and test record were published to integration/
 - Combined app + `aura-voice` JUnit reports: 42 tests, 0 failed, 0 errors, 0 skipped, 15 suites.
 - Debug APK assemble passed in the same Gradle invocation. APK is uninstalled. Build evidence does not verify Android microphone/audio behavior; phone remains disconnected.
 - `git diff --check` passed.
+
+## Commit — 2026-11-06
+
+Transcript feature and the 42-test/build record are committed locally as `d0e8e9c`. No device installation or physical voice test was performed.

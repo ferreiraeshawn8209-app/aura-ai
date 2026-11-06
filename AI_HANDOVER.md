@@ -86,3 +86,7 @@ GitHub accepted the speech lifecycle implementation commit e3d86b3215ca67a88f595
 - Not installed. Phone is disconnected by request. No real-device microphone, transcript display, continuous conversation, wake, interruption, speech output, Ollama, cloud, WhatsApp launch/send, or app-data compatibility result is claimed. Cloud needs configured provider credentials; no live provider request was made. The saved TTS voice remains `ar-language`, not Austrian. WhatsApp remains a user-reviewed draft action.
 - Current branch: `integration/aura-voice-consolidation`; production `main` unchanged. Record implementation commit after committing; exclude pre-existing untracked `device-backups/`.
 - Next: publish the code+handover commit to the integration branch; when Honor reconnects, verify package/signature and backup before asking to install this exact build, then check transcript load/search/copy and run the real-device voice/Ollama/cloud/WhatsApp scenarios. Do not merge to main.
+
+## Transcript implementation commit — 2026-11-06
+
+- Transcript persistence/search/copy source, 3 tests, and required project records are committed as `d0e8e9c` (`Persist and search Aura chat transcripts`) on `integration/aura-voice-consolidation`. Build/test/APK evidence is above. Commit is local pending publication; `main` unchanged. `device-backups/` was excluded.

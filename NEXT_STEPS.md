@@ -103,3 +103,5 @@ The speech adapter fix and test/handover commits are on the integration branch; 
 3. On the phone, repeat wake phrase, tap-to-speak, multi-turn recognition/TTS, interruption, and recovery checks. Record actual outcomes in `VOICE_TESTS.md`.
 4. With user-configured cloud endpoint/model/key, test cloud success/failure/recovery; with Ollama available, test phone-to-PC model discovery and fallback. Verify WhatsApp draft opens and requires manual review/send.
 5. Keep limitations explicit: Austrian TTS is not configured; saved `ar-language` remains; a dedicated wake detector and acoustic barge-in remain unverified; no production merge/install without approval.
+
+The transcript feature and test records are committed locally as `d0e8e9c`; publish and verify the integration branch head next.

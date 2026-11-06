@@ -108,3 +108,7 @@ The recognizer lifecycle repair is pushed. At verification, origin/integration/a
 - Debug APK: `com.aura.ai` v1.0.0/code 1, 20,621,965 bytes, SHA-256 `1614E230F6663E00D86D975B5CFE21F9BF84E7F998EADB24C98F3E356F8CB3F1`; signature verified, signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed; Honor disconnected.
 - Initial build was blocked by a full C: drive; only generated Gradle intermediates/cache/temp folders inside the repo were cleared, preserving source, backups, APK outputs and personal data. The rerun completed successfully.
 - Remaining: device acceptance pending (mic, wake, transcript, voice, interruption, Ollama/cloud fallback and WhatsApp draft review); no live provider credentials used. Austrian TTS is not configured; `ar-language` remains saved. Continue on integration branch, do not merge to main.
+
+## Commit state — 2026-11-06
+
+- Transcript feature and its verification records are committed as `d0e8e9c` on `integration/aura-voice-consolidation`; branch publication is pending. `main` unchanged; personal `device-backups/` remains untracked and excluded.

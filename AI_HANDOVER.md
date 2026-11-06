@@ -234,3 +234,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 ## Commit record — 2026-11-06
 
 - Action tools, tests and initial records are committed as `f5655fa` (`Add-safe-Android-action-tools-to-agent`) on `integration/aura-voice-consolidation`. The follow-up documentation commit records that commit's complete hash and push status. `main` is unchanged; `device-backups/` was excluded.
+
+## Branch publication — 2026-11-06
+
+- GitHub accepted both commits. `f5655fa` contains the new action tools/tests and `eaeba65c9d484846c8c1f6c3dc116b483ff5b61b` contains the commit-status handover update. Local HEAD and `origin/integration/aura-voice-consolidation` both resolve to `eaeba65c9d484846c8c1f6c3dc116b483ff5b61b`. Production `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. The only untracked path is personal `device-backups/`, excluded from both commits.

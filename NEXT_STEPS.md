@@ -130,3 +130,10 @@ Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional El
 ## Branch publication — 2026-11-06
 
 GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50bb1ed4d404a42454f57355931779b12e413bd0. This includes implementation commit 3eb89d5cdb1b8c634797c971dcc43527188b317e and documentation commit 50bb1ed4d404a42454f57355931779b12e413bd0. Main was not updated. The existing device-backups/ folder remains untracked and excluded.
+
+## After wake-listener lifecycle repair — 2026-11-06
+
+1. Commit the wake resume policy, unit test, and updated handover/status records together on `integration/aura-voice-consolidation`; exclude `device-backups/`.
+2. When Honor reconnects, verify APK package, version, signer and backup requirements before installing the approved build. Test standby wake restart after session stop with wake enabled/disabled and microphone permission granted/denied.
+3. Run physical tests for repeated “Yo, yo, yo” wake, tap-to-speak, transcript accuracy, multi-turn speech, barge-in, audio output, Ollama from phone, cloud fallback/recovery, and WhatsApp draft review. Record only observed results.
+4. Continue without ADB while disconnected; do not install, merge to `main`, or claim device acceptance.

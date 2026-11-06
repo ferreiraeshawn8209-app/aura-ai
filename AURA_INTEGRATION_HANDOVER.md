@@ -229,3 +229,11 @@ Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional El
 ## Branch publication — 2026-11-06
 
 GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50bb1ed4d404a42454f57355931779b12e413bd0. This includes implementation commit 3eb89d5cdb1b8c634797c971dcc43527188b317e and documentation commit 50bb1ed4d404a42454f57355931779b12e413bd0. Main was not updated. The existing device-backups/ folder remains untracked and excluded.
+
+## Wake-listener restart lifecycle — 2026-11-06
+
+- `ChatViewModel.stopHandsFreeSession()` now restarts standby wake listening when the saved wake-word setting is enabled and microphone permission is granted. Start failures surface in the chat banner. Added a pure policy helper and a unit test spanning the enabled/disabled and granted/denied conditions.
+- Files changed: `app/src/main/java/com/aura/ai/ui/chat/ChatViewModel.kt`; added `app/src/main/java/com/aura/ai/voice/wake/WakeWordResumePolicy.kt`, `app/src/test/java/com/aura/ai/voice/wake/WakeWordResumePolicyTest.kt`.
+- BEATK verification: `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` succeeded in 9m08s. App XML: 42 passed, 0 failed/error/skipped, 15 suites. No aura-voice test XML was found. APK signature verified; package `com.aura.ai` v1.0.0/code 1, signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`, APK SHA-256 `C3659671B0E42BB488E8CFC3E87075CB74D1106C4B1ABD1E5A84C4EB6F317DA4`.
+- Honor disconnected; APK not installed; all hardware/audio and phone-backend tests remain pending. Branch `integration/aura-voice-consolidation`; starting HEAD `cfdf931`. Main untouched; `device-backups/` excluded.
+- Next: commit code+records on the integration branch; later verify the fresh APK and backed-up app data before installing once the phone reconnects, then run the physical voice/Ollama/cloud/WhatsApp checks.

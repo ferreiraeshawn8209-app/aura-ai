@@ -1,10 +1,14 @@
 package com.aura.ai.ui.chat
 
 import android.content.Context
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.core.content.ContextCompat
 import com.aura.ai.voice.WakeWordService
 import com.aura.ai.voice.WakeWordEvents
+import com.aura.ai.voice.wake.WakeWordResumePolicy
 import com.aura.ai.agent.AgentEvent
 import com.aura.ai.agent.AgentOrchestrator
 import com.aura.ai.agent.AgentPhase
@@ -369,6 +373,24 @@ class ChatViewModel @Inject constructor(
                 speaking = false,
                     partialSpeech = "",
             )
+        }
+        resumeWakeWordIfEnabled()
+    }
+
+    private fun resumeWakeWordIfEnabled() {
+        viewModelScope.launch {
+            val wakeWordEnabled = settings.settings.first().wakeWordEnabled
+            val microphoneGranted = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO,
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!WakeWordResumePolicy.shouldResume(wakeWordEnabled, microphoneGranted)) return@launch
+            runCatching { WakeWordService.start(context) }
+                .onFailure {
+                    _state.update {
+                        it.copy(banner = "Wake listening could not resume. Open Aura and start hands-free again.")
+                    }
+                }
         }
     }
 

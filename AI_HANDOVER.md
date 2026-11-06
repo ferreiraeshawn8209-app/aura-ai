@@ -171,3 +171,7 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - With the prior explicit device-test approval and successful backup/signature/package preflight, updated the existing `com.aura.ai` app in place using `adb install -r`; result `Success`. No uninstall, clear-data, or replacement package was used. Started `com.aura.ai/.MainActivity`; Android reported it as top resumed. A recent 600-line logcat scan showed no `FATAL EXCEPTION` or `AndroidRuntime` match. This verifies update/install/launch only.
 - New APK SHA-256 `C07912A9B18D9D8827C9ABE427DB23A46B8F3A5F49AED8B69BD55F221647581B`; package/version/signature above. The user has been asked for one live “Yo, yo, yo, what is five plus five?” turn. Transcript/audio outcome is pending; no voice behavior is claimed from launch evidence.
 - Integration implementation commit `a0a4606` and records commit `db6d650` were pushed successfully to `origin/integration/aura-voice-consolidation`; `main` was not changed. A subsequent `ls-remote` read was blocked by the PC proxy after the successful push; local tracking status showed no ahead/behind.
+
+## Latest handover publication — 2026-11-06
+
+- Device install/startup documentation commit `1a402459e7e30e046b56ea810b24df8c09dba294` was pushed successfully. GitHub returned `db6d650..1a40245` for `integration/aura-voice-consolidation`; `main` was not changed. This is a push result, not a later `ls-remote` read.

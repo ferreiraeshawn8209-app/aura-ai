@@ -161,3 +161,5 @@ Commit `a0a4606` records the cloud-only chat-readiness fix and automated verific
 - Device reconnected. Backed up accessible private app files to ignored `device-backups/com.aura.ai-preinstall-cloud-only-fix-20261106.tar` (997,376 bytes; SHA-256 `B7604B79A17CDFA52937361F7C9DD0E081AC7B6A350C70887C4A458A388F043A`). Verified old/new package IDs and matching Android Debug signer, then updated `com.aura.ai` in place with `adb install -r`; no uninstall/data clear. Separate `com.aura.ai.debug` was untouched.
 - New APK SHA-256 `C07912A9B18D9D8827C9ABE427DB23A46B8F3A5F49AED8B69BD55F221647581B`. MainActivity started and was top resumed; recent log scan contained no fatal/AndroidRuntime exception matches.
 - This is launch verification only. Live voice response is pending the user's test; provider calls, interruption, Ollama from phone, and WhatsApp remain unverified. Backup APK/data files remain untracked and excluded.
+
+The Honor install/startup record is committed as `1a40245` and was pushed successfully to `origin/integration/aura-voice-consolidation`; `main` remains unchanged.

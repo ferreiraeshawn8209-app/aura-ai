@@ -26,6 +26,8 @@ class AndroidSpeechRecognizerProvider(
     private val requestGate = RecognitionRequestGate()
     private var recognizer: SpeechRecognizer? = null
     private var listener: SpeechRecognitionListener? = null
+    private var timeoutRunnable: Runnable? = null
+    private var timeoutRequestId: Long? = null
     @Volatile private var released = false
 
     override val type = VoiceProviderType.ANDROID
@@ -51,6 +53,7 @@ class AndroidSpeechRecognizerProvider(
 
             // A new turn owns exactly one recognizer. Destroy the previous instance
             // before creating another so cancelled turns cannot retain the mic.
+            cancelTimeout()
             destroyRecognizer()
             this.listener = listener
             if (!isAvailable) {
@@ -95,6 +98,7 @@ class AndroidSpeechRecognizerProvider(
                         putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
                     },
                 )
+                scheduleTimeout(requestId)
             } catch (_: SecurityException) {
                 deliverFailure(
                     requestId,
@@ -115,6 +119,7 @@ class AndroidSpeechRecognizerProvider(
     override fun stopListening() {
         requestGate.invalidate()
         mainHandler.post {
+            cancelTimeout()
             listener = null
             destroyRecognizer()
         }
@@ -125,6 +130,7 @@ class AndroidSpeechRecognizerProvider(
         released = true
         requestGate.invalidate()
         mainHandler.post {
+            cancelTimeout()
             listener = null
             destroyRecognizer()
         }
@@ -132,13 +138,16 @@ class AndroidSpeechRecognizerProvider(
 
     private fun recognitionListener(requestId: Long) = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) = Unit
-        override fun onBeginningOfSpeech() = Unit
+        override fun onBeginningOfSpeech() {
+            refreshTimeout(requestId)
+        }
         override fun onRmsChanged(rmsdB: Float) = Unit
         override fun onBufferReceived(buffer: ByteArray?) = Unit
         override fun onEndOfSpeech() = Unit
         override fun onEvent(eventType: Int, params: Bundle?) = Unit
 
         override fun onPartialResults(results: Bundle?) {
+            refreshTimeout(requestId)
             emitResult(results, isFinal = false, requestId = requestId)
         }
 
@@ -200,6 +209,7 @@ class AndroidSpeechRecognizerProvider(
 
     private fun emit(requestId: Long, result: SpeechRecognitionResult, finish: Boolean) {
         if (!isCurrent(requestId)) return
+        if (finish) cancelTimeout(requestId)
         listener?.onResult(result)
         if (finish) {
             // Recognition callbacks run on the main thread. Defer cleanup so a
@@ -211,6 +221,38 @@ class AndroidSpeechRecognizerProvider(
                 }
             }
         }
+    }
+
+    private fun refreshTimeout(requestId: Long) {
+        if (isCurrent(requestId)) scheduleTimeout(requestId)
+    }
+
+    private fun scheduleTimeout(requestId: Long) {
+        cancelTimeout()
+        val timeout = Runnable {
+            if (isCurrent(requestId) && timeoutRequestId == requestId) {
+                timeoutRunnable = null
+                timeoutRequestId = null
+                emitFailure(
+                    requestId,
+                    VoiceError(
+                        VoiceErrorCode.NETWORK,
+                        "Speech recognition stopped responding. Try speaking again.",
+                        recoverable = true,
+                    ),
+                )
+            }
+        }
+        timeoutRequestId = requestId
+        timeoutRunnable = timeout
+        mainHandler.postDelayed(timeout, RecognitionTimeoutPolicy.DEFAULT_TIMEOUT_MILLIS)
+    }
+
+    private fun cancelTimeout(requestId: Long? = null) {
+        if (requestId != null && timeoutRequestId != requestId) return
+        timeoutRunnable?.let(mainHandler::removeCallbacks)
+        timeoutRunnable = null
+        timeoutRequestId = null
     }
 
     private fun isCurrent(requestId: Long): Boolean =

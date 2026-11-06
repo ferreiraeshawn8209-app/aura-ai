@@ -199,3 +199,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - The chat composer and hands-free control stay enabled once conversation history is ready, even when no AI provider is configured. The orchestrator returns a clear setup status instead of silently dropping the spoken or typed request; the normal optional voice-reply path can read it aloud. No tool/action runs without an available model.
 - Automated: app/voice reports show 91 tests across 31 suites, all passing; debug APK assembled and signer/package checked. APK is not installed.
 - Device test pending: Honor disconnected. Verify the clear status appears in the transcript and is spoken when voice replies are enabled, then confirm adding a provider restores normal replies. Do not infer phone playback from JVM/build results.
+
+## Recognizer no-progress recovery — 2026-11-07
+
+- The Android speech provider now has a 30-second watchdog reset by speech-start and partial-result callbacks. A stalled request becomes a recoverable network-style voice error; completion/stop/replacement cancels the timer. Three policy boundary/progress tests passed.
+- Full app/voice test reports: 94 tests / 32 suites, all passing. Debug APK assembled and signature/package verified, not installed.
+- Honor is disconnected, so actual recognizer callback timing, long pauses, transcript quality, automatic retry, wake, playback, and interruption remain pending. On device, test normal phrasing with pauses shorter than 30 seconds and verify a deliberately unavailable/stalled recognizer produces a visible error and resumes listening without a long gap.

@@ -308,3 +308,10 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## No-backend response publication — 2026-11-07
 
 - Implementation `5c93f2a` and handover record `6dc324a` are published; remote integration head is `6dc324aec2d6616da3e57ba9dfebfaae5ee56da5`. No main merge or APK installation.
+
+## Speech-recognition stall watchdog — 2026-11-07
+
+- The Android in-app recognizer now reports a recoverable failure if 30 seconds pass without speech progress. Speech beginning and partial-result callbacks reset the timer; final results, errors, stop, close, or request replacement cancel it. Chat's existing recoverable-error path can then restart listening rather than waiting indefinitely.
+- Automated verification: 94 app/voice tests across 32 suites, zero failures/errors/skips; the new three timeout-policy tests passed. Offline app build/APK assembly succeeded in 9m01s. APK package/signature verified, SHA-256 `D7BADFCC1402F85E786D00131087E6BF3CFC4DA88218F0A0259D2700EEBEF293`, `com.aura.ai` v1.0.0/code 1. Not installed.
+- No Honor/ADB or live ASR test; `adb devices -l` was empty. GitHub push is pending because this check could not connect to github.com:443 via the configured proxy. Local branch is `integration/aura-voice-consolidation`, starting commit `091c7a400e0969856fdd92a0cb055505598f7523`; local code/docs commit follows. `main` and backup data untouched.
+- Next: commit locally, retry branch publication when GitHub is reachable, then test the watchdog and pauses on the Honor after exact-build approval. Continue separate cloud/Ollama, voice identity, interruption, and action checks; automated results do not establish them.

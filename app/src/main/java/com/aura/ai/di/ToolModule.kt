@@ -6,6 +6,7 @@ import com.aura.ai.agent.tool.RecallMemoryTool
 import com.aura.ai.agent.tool.RecallSkillTool
 import com.aura.ai.agent.tool.RememberTool
 import com.aura.ai.agent.tool.Tool
+import com.aura.ai.agent.tool.WhatsAppDraftTool
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
@@ -20,4 +21,5 @@ abstract class ToolModule {
     @Binds @IntoSet abstract fun recallSkill(tool: RecallSkillTool): Tool
     @Binds @IntoSet abstract fun dateTime(tool: DateTimeTool): Tool
     @Binds @IntoSet abstract fun calculator(tool: CalculatorTool): Tool
+    @Binds @IntoSet abstract fun whatsappDraft(tool: WhatsAppDraftTool): Tool
 }

@@ -49,4 +49,21 @@ Continue the queue above in a code-capable workspace without waiting for the own
 
 ## Commit record — 2026-11-05
 
-- Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+- Code and test commit: `b93d67d (rebased commit; previous local hash ec7a312 was replaced during safe integration)` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+
+
+## Updated implementation checkpoint — 2026-11-06
+
+Completed in code and JVM verification:
+
+- Cloud-first OpenAI-compatible chat routing with Ollama fallback, timeout handling, 30-second failure cooldown, recovery retry, encrypted key input, and chat-trace backend status.
+- WhatsApp draft preparation through the installed standard WhatsApp app; user must review and send manually.
+- 32 app/voice unit tests pass, 0 failures/errors/skips, 11 suites. Debug APK assembled and signature/package verified; details are in AI_HANDOVER.md.
+
+Next implementation and acceptance:
+
+1. Add a user-configurable daily cloud request/spend limit; current per-request cloud output is capped at 768 tokens, but no daily budget exists.
+2. Configure the user's provider endpoint/model/key in Aura Settings (key stays on-device). Run actual cloud success, failure-to-Ollama, cooldown, and recovery checks; do not infer them from mocks.
+3. When Honor reconnects, request authorization for this exact APK before installing. Preserve/verify existing package, signer, and app data; test voice, wake, interruption, phone-to-PC Ollama, and WhatsApp draft opening. Sending must remain a user-confirmed tap.
+4. Verify the one selected TTS voice. Current saved ID is ar-language, not Austrian. Do not label the Austrian voice complete until the licensed engine and voice ID are available and tested.
+5. Keep main unchanged; update handover with the actual phone/provider results, unresolved items, and commit IDs.

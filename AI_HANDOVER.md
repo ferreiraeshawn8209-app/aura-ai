@@ -19,3 +19,19 @@ Repository: `ferreiraeshawn8209-app/aura-ai`; branch: `integration/aura-voice-co
 ## Commit record — 2026-11-05
 
 - Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+
+
+## Integration work — 2026-11-06
+
+Repository: ferreiraeshawn8209-app/aura-ai; branch: integration/aura-voice-consolidation. Work stayed in the existing Android app; package identity, database, and selected TTS voice were not changed.
+
+- Added an OpenAI-compatible cloud chat backend and provider router. When enabled and configured, cloud is tried first; cloud errors/timeouts fall back to the existing selected Ollama model. Cloud calls enter a 30-second cooldown after failure, then a later request retries cloud automatically. The chat trace names the backend/fallback. Inference text is buffered before display so a failed cloud stream cannot duplicate partial output.
+- Added cloud endpoint/model settings and a masked API-key field. The key is stored using the existing Android encrypted preferences (SecureStorage) and is not logged or embedded in the APK. Cloud routing is off until configured; the user’s actual key/endpoint/model are not available in this checkout.
+- Added prepare_whatsapp_message: opens standard WhatsApp with a prefilled wa.me draft. Aura does not send it; the user reviews the recipient/text and taps Send in WhatsApp.
+- Added cloud-first/fallback/recovery/cooldown/cancellation, HTTP request/auth/error-redaction, and WhatsApp draft-link tests.
+- Changed source files: AgentModels.kt, AgentOrchestrator.kt, SecureStorage.kt, SettingsRepository.kt, AppModule.kt, ToolModule.kt, ChatViewModel.kt, SettingsScreen.kt, SettingsViewModel.kt; added ProviderChatRouter.kt, WhatsAppDraftTool.kt, ProviderChatRouterTest.kt, OpenAiCompatibleChatBackendTest.kt, WhatsAppDraftToolTest.kt. Handover/status/voice-test/next-step files are also updated.
+- Verification command: gradlew.bat --no-daemon with Kotlin in-process compilation, running :app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug — BUILD SUCCESSFUL in 14m26s; 75 tasks, 17 executed and 58 up-to-date. JUnit XML: 32 tests, 0 failures, 0 errors, 0 skipped, 11 suites. git diff --check passed.
+- APK: app/build/outputs/apk/debug/app-debug.apk; package com.aura.ai, version 1.0.0/code 1; size 20,723,798 bytes; SHA-256 0A85F8C5811A5F3F332CB93A5985AD0C775D67AFD4FE56A3CF62283C5FBDA64A. Signature verification passed; signer SHA-256 1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3.
+- No install was performed. Honor/ADB is disconnected. No live cloud credential, cloud request, phone-to-PC Ollama call, WhatsApp launch/send, wake/microphone/speech/TTS/interruption test occurred. Ollama is intentionally stopped. The saved Android TTS voice remains ar-language; the requested Austrian voice is still not supplied/configured.
+- Limits: the router bounds cloud output to 768 tokens per request and cools down after failure, but a user-configurable daily spend/request budget is not implemented yet. The cloud adapter supports OpenAI-compatible chat-completions, not provider-specific proprietary APIs.
+- Next: configure a provider in Aura Settings, test cloud success/failure and Ollama recovery when available, complete phone voice/WhatsApp checks after reconnection and approval for this build, implement a daily cloud budget, and continue wake/barge-in/Austrian TTS work. No merge to main.

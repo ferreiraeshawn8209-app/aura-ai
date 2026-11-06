@@ -147,4 +147,16 @@ Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment f
 
 ## Commit record — 2026-11-05
 
-- Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+- Code and test commit: `b93d67d (rebased commit; previous local hash ec7a312 was replaced during safe integration)` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+
+
+## Cloud/local and WhatsApp integration — 2026-11-06
+
+- Existing Aura now routes inference through a new provider router. With cloud enabled and complete settings, an OpenAI-compatible chat-completions endpoint is tried first. Failed requests/timeouts fall back to the existing selected Ollama model; failures trigger a 30-second cooldown before cloud is retried on a future request.
+- Settings expose cloud endpoint/model/API key; API key is stored through the existing encrypted Android storage and not logged. Cloud remains opt-in. No actual cloud key or live provider test was available.
+- Chat trace now identifies whether the response came from cloud or Ollama and explains fallback.
+- Added a WhatsApp draft action using the official wa.me link format. It opens standard WhatsApp with prefilled text and requires the user to review/tap Send. No automatic send.
+- Final Gradle command passed in 14m26s: 32 tests, no failures/errors/skips in 11 suites; debug APK assemble passed. APK package/version: com.aura.ai 1.0.0/code 1; SHA-256 0A85F8C5811A5F3F332CB93A5985AD0C775D67AFD4FE56A3CF62283C5FBDA64A; signer SHA-256 matches the prior debug signer, 1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3.
+- APK was not installed; Honor is disconnected. No real cloud, phone-to-PC Ollama, WhatsApp launch/send, microphone, wake, voice, or interruption acceptance test occurred. Ollama is stopped.
+- Still missing: user-configurable daily spend/request budget; actual provider credentials; Austrian TTS voice (current saved Android voice ID ar-language); dedicated wake-word engine/acoustic barge-in. The handset acceptance gate remains open.
+- No database change, app identity change, replacement APK install, or main merge.

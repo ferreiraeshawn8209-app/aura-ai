@@ -52,4 +52,16 @@ This work is confined to the integration branch. The user approved and received 
 
 ## Commit record — 2026-11-05
 
-- Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+- Code and test commit: `b93d67d (rebased commit; previous local hash ec7a312 was replaced during safe integration)` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.
+
+
+## Remote development update — 2026-11-06
+
+- Cloud-first inference and automatic Ollama fallback are implemented behind an OpenAI-compatible chat endpoint. Failure opens a 30-second cooldown; future turns retry cloud. Chat trace reports the selected/fallback backend. Cloud mode is disabled until endpoint/model/key are configured.
+- The cloud key entry is masked and saved through encrypted Android storage. This build has no user key configured and no live cloud test.
+- Added a WhatsApp draft action that opens the standard app with a prefilled message; sending remains a manual confirmation in WhatsApp.
+- Build/tests: Gradle app tests, voice-library tests, and debug APK assemble passed (14m26s). 32 unit tests passed, 0 failed/errors/skipped, 11 suites. APK identity/signature verified: com.aura.ai v1.0.0/code 1, SHA-256 0A85F8C5811A5F3F332CB93A5985AD0C775D67AFD4FE56A3CF62283C5FBDA64A, signer SHA-256 1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3. Not installed.
+- Real-device tests remain pending: Honor disconnected. Ollama is stopped; cloud credentials are not configured. No current phone voice, wake, interruption, WhatsApp launch/send, local-model, or cloud-live result.
+- Existing voice selection was preserved; ar-language is not the requested Austrian TTS. Acoustic barge-in and a dedicated wake detector remain incomplete. Daily cloud budget controls are also still outstanding.
+- No database/package replacement or merge occurred. Personal device-backups remains untracked and excluded.
+- Next: test on Honor after reconnect and authorization for this APK; configure/test an actual provider; add a daily cloud budget; continue verified voice and wake repairs.

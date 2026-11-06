@@ -218,6 +218,13 @@ class ChatViewModel @Inject constructor(
                 is AgentEvent.Replan -> addTrace(AgentPhase.PLAN, "Re-planning (attempt ${event.attempt + 1})", TraceStatus.INFO)
                 is AgentEvent.Learned -> addTrace(AgentPhase.LEARN, event.note, TraceStatus.INFO)
                 is AgentEvent.Acknowledgement -> Unit // handled by the suspending voice path
+                is AgentEvent.BackendUsed -> addTrace(
+                    AgentPhase.EXECUTE,
+                    if (event.provider == "cloud") "Cloud provider answered"
+                    else if (event.fallbackReason != null) "Cloud unavailable; using local Ollama: " + event.fallbackReason
+                    else "Using local Ollama",
+                    TraceStatus.INFO,
+                )
                 is AgentEvent.Answer -> turn = turn.copy(
                     text = com.aura.ai.agent.ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement(event.text),
                 )

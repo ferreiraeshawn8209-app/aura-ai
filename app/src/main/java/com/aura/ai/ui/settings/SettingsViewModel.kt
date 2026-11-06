@@ -7,6 +7,7 @@ import com.aura.ai.voice.WakeWordService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import com.aura.ai.data.remote.ollama.OllamaModel
 import com.aura.ai.data.remote.ollama.OllamaRepository
+import com.aura.ai.core.security.SecureStorage
 import com.aura.ai.data.remote.ollama.OllamaResult
 import com.aura.ai.data.settings.SettingsRepository
 import com.aura.ai.data.settings.T1000Settings
@@ -41,11 +42,21 @@ data class VoiceSelectionUiState(
     val message: String? = null,
 )
 
+data class CloudSettingsUiState(
+    val enabled: Boolean = false,
+    val baseUrl: String = "https://openrouter.ai/api/v1",
+    val model: String = "",
+    val apiKeyDraft: String = "",
+    val apiKeyConfigured: Boolean = false,
+    val message: String? = null,
+)
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settings: SettingsRepository,
     private val ollama: OllamaRepository,
     private val voice: AuraVoiceSubsystem,
+    private val secureStorage: SecureStorage,
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
@@ -60,9 +71,22 @@ class SettingsViewModel @Inject constructor(
     )
     val voiceSelection: StateFlow<VoiceSelectionUiState> = _voiceSelection.asStateFlow()
 
+    private val _cloud = MutableStateFlow(CloudSettingsUiState())
+    val cloud: StateFlow<CloudSettingsUiState> = _cloud.asStateFlow()
+
     init {
         viewModelScope.launch {
-            settings.settings.collect { s -> _conn.update { it.copy(urlDraft = s.ollamaBaseUrl) } }
+            settings.settings.collect { s ->
+                _conn.update { it.copy(urlDraft = s.ollamaBaseUrl) }
+                _cloud.update {
+                    it.copy(
+                        enabled = s.cloudEnabled,
+                        baseUrl = s.cloudBaseUrl,
+                        model = s.cloudModel,
+                        apiKeyConfigured = secureStorage.hasSecret(com.aura.ai.agent.AgentOrchestrator.CLOUD_API_KEY_SECRET),
+                    )
+                }
+            }
         }
     }
 
@@ -141,6 +165,27 @@ class SettingsViewModel @Inject constructor(
                     it.copy(discovering = false, connected = false, message = result.error.message)
                 }
             }
+        }
+    }
+
+    fun onCloudBaseUrlChange(value: String) = _cloud.update { it.copy(baseUrl = value, message = null) }
+    fun onCloudModelChange(value: String) = _cloud.update { it.copy(model = value, message = null) }
+    fun onCloudApiKeyChange(value: String) = _cloud.update { it.copy(apiKeyDraft = value, message = null) }
+    fun onCloudEnabledChange(value: Boolean) = _cloud.update { it.copy(enabled = value, message = null) }
+
+    fun saveCloudSettings() = viewModelScope.launch {
+        val draft = _cloud.value
+        val key = draft.apiKeyDraft.trim()
+        if (key.isNotEmpty()) secureStorage.saveSecret(com.aura.ai.agent.AgentOrchestrator.CLOUD_API_KEY_SECRET, key)
+        settings.setCloudSettings(draft.enabled, draft.baseUrl, draft.model)
+        _cloud.update {
+            it.copy(
+                apiKeyDraft = "",
+                apiKeyConfigured = it.apiKeyConfigured || key.isNotEmpty(),
+                message = if (draft.enabled && (draft.model.isBlank() || !(it.apiKeyConfigured || key.isNotEmpty())))
+                    "Add a model and API key before cloud-first routing can be used."
+                else "Cloud settings saved. Cloud will be tried first; Ollama remains the automatic fallback.",
+            )
         }
     }
 

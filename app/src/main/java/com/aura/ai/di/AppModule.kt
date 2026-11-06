@@ -6,7 +6,11 @@ import com.aura.ai.BuildConfig
 import com.aura.ai.data.database.AuraDatabase
 import com.aura.ai.data.database.dao.*
 import com.aura.ai.data.auth.CoreTokenStore
+import com.aura.ai.core.security.SecureStorage
 import com.aura.ai.data.remote.OllamaAiProvider
+import com.aura.ai.data.remote.inference.ChatCompletionBackend
+import com.aura.ai.data.remote.inference.OllamaChatBackend
+import com.aura.ai.data.remote.inference.OpenAiCompatibleChatBackend
 import com.aura.ai.data.remote.OllamaConfiguration
 import com.aura.ai.data.remote.OllamaService
 import com.aura.ai.domain.ai.AiProvider
@@ -53,6 +57,32 @@ object AppModule {
             .writeTimeout(OllamaConfiguration.writeTimeoutSeconds, TimeUnit.SECONDS)
             .build()
     }
+
+    @Provides
+    @Singleton
+    @Named("cloud")
+    fun provideCloudOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .followRedirects(false)
+        .followSslRedirects(false)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(130, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build()
+
+    @Provides
+    @Singleton
+    @Named("cloudChat")
+    fun provideCloudChatBackend(
+        @Named("cloud") client: OkHttpClient,
+        json: kotlinx.serialization.json.Json,
+    ): ChatCompletionBackend = OpenAiCompatibleChatBackend(client, json)
+
+    @Provides
+    @Singleton
+    @Named("localChat")
+    fun provideLocalChatBackend(
+        ollama: com.aura.ai.data.remote.ollama.OllamaRepository,
+    ): ChatCompletionBackend = OllamaChatBackend(ollama)
 
     @Provides
     @Singleton

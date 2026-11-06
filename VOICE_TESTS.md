@@ -42,3 +42,11 @@ Do not mark pending checks as passing until tested on the actual phone. The user
 ## 2026-11-05 — Fresh rerun
 
 - Forced the app and `aura-voice` JVM unit suites (`--rerun-tasks`): 22 passed, 0 failed/errors/skips, 8 suites; Gradle completed in 10m02s with 50 tasks executed. This verifies JVM policy/order tests only, not live recognition, barge-in, or Austrian voice playback.
+
+
+## 2026-11-06 — Provider and WhatsApp regression checks
+
+- Added provider router tests for cloud-first behavior, local fallback after cloud failure, cooldown suppression, recovery to cloud on a later turn, incomplete cloud settings, and caller cancellation. Added MockWebServer checks for OpenAI-compatible request/auth parsing, HTTPS enforcement, and error-body redaction.
+- Added WhatsApp draft URL/phone validation tests. The tool only opens a prefilled draft; it does not send.
+- Combined app and voice-library JVM result: 32 tests passed, 0 failures/errors/skips across 11 suites. Full debug APK assemble also passed.
+- No live provider call, phone-originated Ollama call, WhatsApp app launch/send, or speech/wake/interruption/TTS test was performed. Honor is disconnected and Ollama is stopped. No APK installation occurred. Do not treat the automated checks as device acceptance.

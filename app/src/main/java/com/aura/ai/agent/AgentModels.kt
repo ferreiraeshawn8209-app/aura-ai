@@ -57,6 +57,7 @@ sealed interface AgentEvent {
         val text: String,
         val spoken: CompletableDeferred<Boolean>,
     ) : AgentEvent
+    data class BackendUsed(val provider: String, val fallbackReason: String? = null) : AgentEvent
     data class Phase(val phase: AgentPhase, val detail: String) : AgentEvent
     data class Understood(val understanding: Understanding) : AgentEvent
     data class Planned(val plan: Plan, val reusedSkill: Boolean) : AgentEvent

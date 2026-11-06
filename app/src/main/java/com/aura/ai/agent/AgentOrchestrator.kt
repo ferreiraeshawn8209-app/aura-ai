@@ -3,10 +3,11 @@ package com.aura.ai.agent
 import com.aura.ai.agent.tool.ToolRegistry
 import com.aura.ai.data.local.entity.SkillEntity
 import com.aura.ai.data.local.entity.TaskOutcome
-import com.aura.ai.data.remote.ollama.ChatChunk
+import com.aura.ai.core.security.SecureStorage
+import com.aura.ai.data.remote.inference.ChatCompletionCall
+import com.aura.ai.data.remote.inference.ProviderChatRouter
 import com.aura.ai.data.remote.ollama.OllamaChatMessage
 import com.aura.ai.data.remote.ollama.OllamaError
-import com.aura.ai.data.remote.ollama.OllamaRepository
 import com.aura.ai.data.repository.T1000MemoryRepository
 import com.aura.ai.data.repository.SkillRepository
 import com.aura.ai.data.settings.SettingsRepository
@@ -28,7 +29,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class AgentOrchestrator @Inject constructor(
-    private val ollama: OllamaRepository,
+    private val providerRouter: ProviderChatRouter,
+    private val secureStorage: SecureStorage,
     private val settings: SettingsRepository,
     private val memory: T1000MemoryRepository,
     private val skills: SkillRepository,
@@ -42,8 +44,11 @@ class AgentOrchestrator @Inject constructor(
         spokenInstruction: Boolean = false,
     ): Flow<AgentEvent> = channelFlow {
         val cfg = settings.settings.first()
-        val model = cfg.selectedModel
-        if (model.isNullOrBlank()) {
+        val model = cfg.selectedModel.orEmpty()
+        val cloudCanRunWithoutLocal = cfg.cloudEnabled &&
+            cfg.cloudModel.isNotBlank() &&
+            secureStorage.hasSecret(CLOUD_API_KEY_SECRET)
+        if (model.isBlank() && !cloudCanRunWithoutLocal) {
             send(AgentEvent.Failed(OllamaError.NoModelSelected.message))
             return@channelFlow
         }
@@ -52,23 +57,31 @@ class AgentOrchestrator @Inject constructor(
         val startedAt = System.currentTimeMillis()
 
         suspend fun complete(messages: List<Pair<String, String>>, streamTokens: Boolean): String {
-            val sb = StringBuilder()
-            ollama.chat(
-                model = model,
-                messages = messages.map { OllamaChatMessage(it.first, it.second) },
-                temperature = temperature,
-                timeoutSeconds = timeout,
-            ).collect { chunk ->
-                when (chunk) {
-                    is ChatChunk.Delta -> {
-                        sb.append(chunk.text)
-                        if (streamTokens) send(AgentEvent.Token(chunk.text))
-                    }
-                    is ChatChunk.Done -> Unit
-                    is ChatChunk.Error -> throw AgentException(chunk.error.message)
-                }
+            val chatMessages = messages.map { OllamaChatMessage(it.first, it.second) }
+            val cloudCall = if (cfg.cloudEnabled) {
+                ChatCompletionCall(
+                    model = cfg.cloudModel,
+                    messages = chatMessages,
+                    temperature = temperature,
+                    timeoutSeconds = timeout,
+                    baseUrl = cfg.cloudBaseUrl,
+                    apiKey = secureStorage.getSecret(CLOUD_API_KEY_SECRET),
+                )
+            } else {
+                null
             }
-            return sb.toString()
+            val result = providerRouter.complete(
+                local = ChatCompletionCall(
+                    model = model,
+                    messages = chatMessages,
+                    temperature = temperature,
+                    timeoutSeconds = timeout,
+                ),
+                cloud = cloudCall,
+            )
+            send(AgentEvent.BackendUsed(result.provider, result.fallbackReason))
+            if (streamTokens) send(AgentEvent.Token(result.text))
+            return result.text
         }
 
         try {
@@ -229,7 +242,9 @@ class AgentOrchestrator @Inject constructor(
                     ),
                 )
             }
-        } catch (e: AgentException) {
+        } catch (cancelled: kotlinx.coroutines.CancellationException) {
+            throw cancelled
+        } catch (e: Exception) {
             send(AgentEvent.Failed(e.message ?: "Agent error"))
         }
     }
@@ -305,5 +320,6 @@ class AgentOrchestrator @Inject constructor(
 
     companion object {
         const val MAX_ATTEMPTS = 3
+        const val CLOUD_API_KEY_SECRET = "aura_cloud_api_key"
     }
 }

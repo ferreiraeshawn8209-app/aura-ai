@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,6 +50,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
     val settings by viewModel.settingsState.collectAsStateWithLifecycle()
     val conn by viewModel.conn.collectAsStateWithLifecycle()
     val voiceSelection by viewModel.voiceSelection.collectAsStateWithLifecycle()
+    val cloud by viewModel.cloud.collectAsStateWithLifecycle()
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(
@@ -126,6 +128,49 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                                 onClick = { viewModel.selectModel(model.name) },
                             )
                         }
+                    }
+                }
+            }
+
+            item {
+                Section("Cloud provider & fallback") {
+                    Text(
+                        "When enabled, Aura tries this OpenAI-compatible cloud endpoint first. If it fails or times out, Aura uses the selected local Ollama model. The API key is encrypted in Android secure storage and never shown again after saving.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    ToggleRow(
+                        "Cloud-first reasoning",
+                        "Try cloud first, then automatically fall back to local Ollama.",
+                        cloud.enabled,
+                        viewModel::onCloudEnabledChange,
+                    )
+                    OutlinedTextField(
+                        value = cloud.baseUrl,
+                        onValueChange = viewModel::onCloudBaseUrlChange,
+                        label = { Text("Cloud API base URL") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    OutlinedTextField(
+                        value = cloud.model,
+                        onValueChange = viewModel::onCloudModelChange,
+                        label = { Text("Cloud model name") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    OutlinedTextField(
+                        value = cloud.apiKeyDraft,
+                        onValueChange = viewModel::onCloudApiKeyChange,
+                        label = { Text("Cloud API key") },
+                        placeholder = { if (cloud.apiKeyConfigured) Text("Saved securely; leave empty to keep it") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Button(onClick = viewModel::saveCloudSettings) { Text("Save cloud settings") }
+                    cloud.message?.let {
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }

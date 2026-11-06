@@ -29,6 +29,9 @@ data class T1000Settings(
     val autonomyEnabled: Boolean = true,
     val wakeWordEnabled: Boolean = false,
     val voiceRepliesEnabled: Boolean = true,
+    val cloudEnabled: Boolean = false,
+    val cloudBaseUrl: String = "https://openrouter.ai/api/v1",
+    val cloudModel: String = "",
 ) {
     companion object {
         const val DEFAULT_OLLAMA_URL = "http://192.168.8.18:11434"
@@ -48,6 +51,9 @@ class SettingsRepository @Inject constructor(
         val AUTONOMY = booleanPreferencesKey("autonomy_enabled")
         val WAKE = booleanPreferencesKey("wake_word_enabled")
         val VOICE = booleanPreferencesKey("voice_replies_enabled")
+        val CLOUD_ENABLED = booleanPreferencesKey("cloud_enabled")
+        val CLOUD_BASE_URL = stringPreferencesKey("cloud_base_url")
+        val CLOUD_MODEL = stringPreferencesKey("cloud_model")
     }
 
     val settings: Flow<T1000Settings> = context.dataStore.data.map { p ->
@@ -74,6 +80,9 @@ class SettingsRepository @Inject constructor(
             autonomyEnabled = p[Keys.AUTONOMY] ?: true,
             wakeWordEnabled = p[Keys.WAKE] ?: false,
             voiceRepliesEnabled = p[Keys.VOICE] ?: true,
+            cloudEnabled = p[Keys.CLOUD_ENABLED] ?: false,
+            cloudBaseUrl = p[Keys.CLOUD_BASE_URL] ?: "https://openrouter.ai/api/v1",
+            cloudModel = p[Keys.CLOUD_MODEL] ?: "",
         )
     }
 
@@ -84,4 +93,9 @@ class SettingsRepository @Inject constructor(
     suspend fun setAutonomy(enabled: Boolean) = context.dataStore.edit { it[Keys.AUTONOMY] = enabled }
     suspend fun setWakeWord(enabled: Boolean) = context.dataStore.edit { it[Keys.WAKE] = enabled }
     suspend fun setVoiceReplies(enabled: Boolean) = context.dataStore.edit { it[Keys.VOICE] = enabled }
+    suspend fun setCloudSettings(enabled: Boolean, baseUrl: String, model: String) = context.dataStore.edit {
+        it[Keys.CLOUD_ENABLED] = enabled
+        it[Keys.CLOUD_BASE_URL] = baseUrl.trim().trimEnd('/')
+        it[Keys.CLOUD_MODEL] = model.trim()
+    }
 }

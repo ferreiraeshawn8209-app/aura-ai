@@ -2,6 +2,7 @@ package com.aura.ai.core.security
 
 import android.content.Context
 import android.content.SharedPreferences
+import dagger.hilt.android.qualifiers.ApplicationContext
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import javax.inject.Inject
@@ -9,7 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SecureStorage @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)

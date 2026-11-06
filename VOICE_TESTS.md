@@ -76,3 +76,6 @@ The quota tests and handover are on origin/integration/aura-voice-consolidation 
 ## Commit — 2026-11-06
 
 - Android speech recognizer lifecycle fix and stale-callback tests committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3. This is automated-only verification; no phone install or real-mic test.
+## Speech repair branch publication — 2026-11-06
+
+The speech provider lifecycle fix and test record were published to integration/aura-voice-consolidation. At verification remote HEAD was 12af8d08565847d406672fa4741b77c4123f3. No install was performed.

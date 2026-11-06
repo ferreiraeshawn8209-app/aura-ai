@@ -192,3 +192,6 @@ The latest quota implementation and test record are pushed to origin/integration
 ## Speech lifecycle commit — 2026-11-06
 
 - Provider cleanup and unit regression checks are committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3 on integration/aura-voice-consolidation. Push and verify branch; do not merge to main.
+## Publication update — 2026-11-06
+
+The speech lifecycle code commit e3d86b3215ca67a88f595a77e01dc8946255a1f3 and handover commit 12af8d08565847d406672fa4741b77c4123f3 were pushed successfully. main remains untouched. The Honor remains disconnected, so physical tests are pending.

@@ -92,3 +92,6 @@ The implementation and handover are published on integration/aura-voice-consolid
 ## Voice lifecycle commit — 2026-11-06
 
 - Recognizer lifecycle repair and test docs committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3 on integration/aura-voice-consolidation. Next verify remote publication and keep physical phone checks pending until reconnect/approval.
+## Speech repair published — 2026-11-06
+
+The speech adapter fix and test/handover commits are on the integration branch; publication verified through 12af8d08565847d406672fa4741b77c4123f3. Continue with code-side work while the phone is offline; do not install until it reconnects and the exact build is approved.

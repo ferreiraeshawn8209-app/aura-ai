@@ -97,3 +97,6 @@ The quota code and test documentation are published on GitHub. Integration branc
 ## Voice repair commit — 2026-11-06
 
 - Speech recognizer lifecycle repair and test records committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3 on integration/aura-voice-consolidation. Build passed; Honor tests pending. Main unchanged.
+## Speech repair publication — 2026-11-06
+
+The recognizer lifecycle repair is pushed. At verification, origin/integration/aura-voice-consolidation matched 12af8d08565847d406672fa4741b77c4123f3. No tracked local changes; device-backups/ remains excluded; main unchanged.

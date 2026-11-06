@@ -71,3 +71,6 @@ The quota implementation and documentation were pushed successfully. origin/inte
 ## Voice lifecycle commit — 2026-11-06
 
 - Recognizer cleanup, stale-callback gate/tests, and the five handover updates committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3 (Release stale Android speech recognizers) on integration/aura-voice-consolidation. Awaiting push; main unchanged. device-backups/ excluded.
+## Voice repair published — 2026-11-06
+
+GitHub accepted the speech lifecycle implementation commit e3d86b3215ca67a88f595a77e01dc8946255a1f3 and its handover commit 12af8d08565847d406672fa4741b77c4123f3c32. The verified integration branch head was 12af8d0 at publication check; main remains unchanged. The only untracked path is the pre-existing device-backups/ folder.

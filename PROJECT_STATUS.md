@@ -236,3 +236,9 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - No ADB/live voice/provider/WhatsApp test was run. Honor is disconnected. Main unchanged; exclude `device-backups/`.
 - Wake-to-chat handoff source/tests `cb04a22` and records `25e9af6` are pushed on the integration branch; `main` unchanged.
 - The publication confirmation `d95ec2a` is pushed. The newly built APK remains uninstalled; real-device/provider checks remain pending.
+
+## Memory recall publication — 2026-11-06
+
+- Source and tests are committed as `13b64ed0d788be2881e8375f798fc999b715e45b` and published to `origin/integration/aura-voice-consolidation`; `main` is unchanged.
+- Build/test: offline app + voice unit tests and debug APK assemble passed; 81 tests, no failures/errors/skips. APK SHA-256 `9D46DEB9542FE2F200BDA0DDE98B7875B0F1106834D565FBE8808D0F699F56E5`; not installed.
+- Honor remains disconnected; no real-device acceptance. See `AI_HANDOVER.md` and `NEXT_STEPS.md` for exact remaining checks.

@@ -35,6 +35,7 @@ data class T1000Settings(
     val cloudBaseUrl: String = "https://openrouter.ai/api/v1",
     val cloudModel: String = "",
     val cloudRequestsPerDayLimit: Int = 60,
+    val sharedFilesTreeUri: String? = null,
 ) {
     companion object {
         const val DEFAULT_OLLAMA_URL = "http://192.168.8.18:11434"
@@ -60,6 +61,7 @@ class SettingsRepository @Inject constructor(
         val CLOUD_DAILY_LIMIT = intPreferencesKey("cloud_daily_request_limit")
         val CLOUD_USAGE_DAY = stringPreferencesKey("cloud_usage_day_utc")
         val CLOUD_USAGE_COUNT = intPreferencesKey("cloud_usage_count")
+        val SHARED_FILES_TREE_URI = stringPreferencesKey("shared_files_tree_uri")
     }
 
     val settings: Flow<T1000Settings> = context.dataStore.data.map { p ->
@@ -90,6 +92,7 @@ class SettingsRepository @Inject constructor(
             cloudBaseUrl = p[Keys.CLOUD_BASE_URL] ?: "https://openrouter.ai/api/v1",
             cloudModel = p[Keys.CLOUD_MODEL] ?: "",
             cloudRequestsPerDayLimit = p[Keys.CLOUD_DAILY_LIMIT] ?: 60,
+            sharedFilesTreeUri = p[Keys.SHARED_FILES_TREE_URI],
         )
     }
 
@@ -108,6 +111,11 @@ class SettingsRepository @Inject constructor(
 
     suspend fun setCloudDailyRequestLimit(limit: Int) = context.dataStore.edit {
         it[Keys.CLOUD_DAILY_LIMIT] = limit.coerceIn(1, 1000)
+    }
+
+    suspend fun setSharedFilesTreeUri(uri: String?) = context.dataStore.edit {
+        if (uri.isNullOrBlank()) it.remove(Keys.SHARED_FILES_TREE_URI)
+        else it[Keys.SHARED_FILES_TREE_URI] = uri
     }
 
     suspend fun reserveCloudRequest(limit: Int): Boolean {

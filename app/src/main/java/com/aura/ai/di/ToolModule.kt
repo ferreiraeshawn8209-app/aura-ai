@@ -12,6 +12,8 @@ import com.aura.ai.agent.tool.RecallMemoryTool
 import com.aura.ai.agent.tool.RecallSkillTool
 import com.aura.ai.agent.tool.RememberTool
 import com.aura.ai.agent.tool.SearchContactsTool
+import com.aura.ai.agent.tool.SearchSharedFilesTool
+import com.aura.ai.agent.tool.OpenSharedFileTool
 import com.aura.ai.agent.tool.Tool
 import com.aura.ai.agent.tool.WhatsAppDraftTool
 import dagger.Binds
@@ -36,4 +38,6 @@ abstract class ToolModule {
     @Binds @IntoSet abstract fun searchContacts(tool: SearchContactsTool): Tool
     @Binds @IntoSet abstract fun prepareContactCall(tool: PrepareContactCallTool): Tool
     @Binds @IntoSet abstract fun prepareContactSms(tool: PrepareContactSmsTool): Tool
+    @Binds @IntoSet abstract fun searchSharedFiles(tool: SearchSharedFilesTool): Tool
+    @Binds @IntoSet abstract fun openSharedFile(tool: OpenSharedFileTool): Tool
 }

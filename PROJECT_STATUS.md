@@ -20,6 +20,12 @@ Branch: `integration/aura-voice-consolidation`
 - Honor disconnected; live permission, contact, call/SMS/WhatsApp, voice and backend tests are pending. Main unchanged; personal backup folder excluded.
 - Contact implementation/tests and this status are committed as `055d535a0028713fb3c7ce8d6355b80472b929c1` on the integration branch; publication will be recorded in the handover.
 
+## User-selected file access — 2026-11-06
+
+- Settings now lets the user grant one folder with Android's system folder picker. Aura persists only the selected tree URI and the OS read grant. Agent tools search filename/relative path and open a unique match through an installed app. No file contents are read; no modification/deletion, broad storage permission, or Room migration was added.
+- Automated checks: 71 tests passed, 0 failures/errors/skips across 23 suites; debug APK assembled; signature verified. APK SHA-256 `ffc0e51f2ae16c02004e142bf325310c2bdff681098e8ed5701ae51613c5309f`, package `com.aura.ai` v1.0.0/code 1. Not installed.
+- Folder picker, persistent permission, revocation and opening files are not device-verified; Honor remains disconnected. Main unchanged; personal backup folder excluded.
+
 ## Current delivery
 
 - Integrated the reusable `Aura-Voice-Subsystem` Android library into the existing Kotlin app and wired its recognizer/speech providers into chat and settings.

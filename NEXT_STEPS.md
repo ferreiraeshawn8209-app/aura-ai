@@ -4,7 +4,8 @@
 
 - Added agent tools for opening an installed app or web page and preparing a call/SMS draft. Automated tests and APK assembly pass; APK remains uninstalled while the Honor is disconnected.
 - Added contact-name lookup and preparation of a call/SMS draft for a uniquely matched contact. Existing `READ_CONTACTS` permission is required. The legacy action flow now also opens the native confirmation screens instead of directly calling or sending.
-- Continue device-independent code work on the existing integration branch. Revisit voice-turn reliability and backend routing, then test after reconnect: Contacts permission and ambiguous matches, app/browser/dialer/SMS/WhatsApp intents, wake and repeated conversation, interruption, phone-to-PC Ollama, and live cloud fallback/recovery.
+- Added a Settings folder picker and bounded filename search/open tools scoped to the selected read-only SAF folder. Unit/build checks pass; picker grants and file opening still need Honor validation.
+- Continue device-independent code work on the existing integration branch. Revisit voice-turn reliability and backend routing, then test after reconnect: file-folder grant/search/open/revoke, Contacts permission and ambiguous matches, app/browser/dialer/SMS/WhatsApp intents, wake and repeated conversation, interruption, phone-to-PC Ollama, and live cloud fallback/recovery.
 - Do not install without the previously required package/signature check, app-data backup, and explicit build approval. Do not merge `main`.
 
 **Owner unavailable for phone/PC testing. Do not block software development on device access.** Work on `integration/aura-voice-consolidation`; do not merge `main` without approval. Preserve app data, recordings, models, voice choice, and checkpoints.

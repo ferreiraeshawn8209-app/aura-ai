@@ -246,4 +246,8 @@ class SettingsViewModel @Inject constructor(
     }
     fun setVoiceReplies(enabled: Boolean) = viewModelScope.launch { settings.setVoiceReplies(enabled) }
     fun setCloudDailyRequestLimit(limit: Int) = viewModelScope.launch { settings.setCloudDailyRequestLimit(limit) }
+
+    fun saveSharedFilesTreeUri(uri: String) = viewModelScope.launch { settings.setSharedFilesTreeUri(uri) }
+
+    fun clearSharedFilesTreeUri() = viewModelScope.launch { settings.setSharedFilesTreeUri(null) }
 }

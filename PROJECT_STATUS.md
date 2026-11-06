@@ -300,3 +300,7 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Honor disconnected: no real-device or live provider test. No microphone/voice/wake/interruption, Ollama/cloud, or WhatsApp acceptance claimed. Initial wrapper invocation hit access denied; retry with the existing Gradle cache completed successfully. No cache was cleared.
 - Files changed: `ChatBackendAvailabilityPolicy.kt`, `ChatScreen.kt`, `ChatViewModel.kt`, `OllamaResult.kt`, `ChatBackendAvailabilityPolicyTest.kt`, `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md`. Starting commit `6ee487ae47146c2b47fe1c6860e1cbc37c37bc33`; code/docs commit and remote publication follow. Integration branch only; `main` and backups untouched.
 - Next: publish, then continue code-only reliability work. On phone reconnect and owner approval, verify a no-backend spoken request gets the clear status response, then verify full voice and backend/action paths on the actual Honor.
+
+## No-backend response implementation commit — 2026-11-07
+
+- Code, test, and initial records are committed as `5c93f2a` (`Explain missing model instead of dropping chat`) on `integration/aura-voice-consolidation`; `main` unchanged. `device-backups/` was excluded. Push result to be recorded after remote verification.

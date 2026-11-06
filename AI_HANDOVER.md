@@ -404,3 +404,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Device/live status: Honor disconnected; no ADB, mic, transcript, TTS, wake, interruption, live Ollama/cloud, or WhatsApp test. This is JVM/build verification only. Cloud credentials are not configured for live checks and Ollama was not contacted.
 - Starting commit: `6ee487ae47146c2b47fe1c6860e1cbc37c37bc33`, branch `integration/aura-voice-consolidation`. `main` unchanged. Exclude pre-existing `device-backups/`.
 - Next: commit and push this fix with the project records. Then keep working on provider/voice reliability in code while disconnected; when the Honor reconnects, install only after approval for this exact APK and test the no-backend spoken status, selected voice, wake/multi-turn flow, interruption, Ollama/cloud fallback, and WhatsApp draft.
+
+## No-backend response implementation commit — 2026-11-07
+
+- The code, regression test, and project records are committed as `5c93f2a` (`Explain missing model instead of dropping chat`) on `integration/aura-voice-consolidation`. `main` unchanged; `device-backups/` excluded. Push and remote status follow.

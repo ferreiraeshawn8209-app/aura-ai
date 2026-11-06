@@ -119,3 +119,4 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added policy tests for wake enabled/disabled crossed with microphone permission granted/denied: passed (1 JUnit test method covering all four cases).
 - Full app reports: 42 tests, 0 failures/errors/skips across 15 suites; debug APK build succeeded. No `aura-voice` test XML was present. APK package/signature verified, SHA-256 `C3659671B0E42BB488E8CFC3E87075CB74D1106C4B1ABD1E5A84C4EB6F317DA4`.
 - Not a device test. Honor disconnected and APK not installed. Wake service restart at runtime, microphone capture, transcript, speech, interruption, local/cloud inference and WhatsApp remain pending device verification.
+- Implementation and test records are committed as `04fd7a4ad8e3927b2f6d39271fe83b4afc57d61c`, pushed to and verified on `integration/aura-voice-consolidation`; `main` was not changed.

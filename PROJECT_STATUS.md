@@ -145,4 +145,4 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Code now attempts to resume standby wake listening after a hands-free session stops, gated by the saved wake setting and Android microphone permission. Added four-case policy unit test coverage.
 - Verification: full app/voice task invocation and debug APK build succeeded on BEATK; app JUnit XML: 42 passed, 0 failures/errors/skips, 15 suites. No test XML existed under `aura-voice/build/test-results`. APK package/signature verified; SHA-256 `C3659671B0E42BB488E8CFC3E87075CB74D1106C4B1ABD1E5A84C4EB6F317DA4`.
 - Honor disconnected; not installed. No real-device voice, wake, interruption, Ollama/cloud or WhatsApp claim. No production merge.
-- Branch `integration/aura-voice-consolidation`, starting HEAD `cfdf931`; pending implementation/documentation commit. Exclude `device-backups/`.
+- Branch `integration/aura-voice-consolidation`, starting HEAD `cfdf931`; implementation commit `04fd7a4ad8e3927b2f6d39271fe83b4afc57d61c` is published and verified. `main` remains unchanged. Honor remains disconnected; tests pending on device. Exclude `device-backups/`.

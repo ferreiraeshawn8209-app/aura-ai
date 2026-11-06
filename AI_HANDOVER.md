@@ -269,3 +269,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Device checks remain pending: actual folder picker URI grants/revocation, behavior with external providers/large trees, and opening representative file types. Honor remains disconnected; no ADB or install was attempted. No phone-to-PC Ollama or live cloud provider request was made. Existing package, databases and user files were not replaced.
 - Next: leave this APK uninstalled until the Honor reconnects and the exact build is approved; back up current app data and verify package/signature first. Then grant a test folder in Aura Settings and test filename search, duplicate-name handling, opening a file, access revocation, and re-selection. Continue the voice/backend/Windows work while the phone is offline.
 - File-picker/search implementation, tests, and handover updates are committed as `5883d84284f42c3849378010eb4da637ec207bec` (`Add-user-selected-folder-file-tools`) on `integration/aura-voice-consolidation`. `main` is unchanged; publication status is recorded after push.
+
+## File access branch publication — 2026-11-06
+
+- GitHub accepted file-access implementation commit `5883d84284f42c3849378010eb4da637ec207bec` and handover commit `f800d4e`; push `0a94038..f800d4e` succeeded for `integration/aura-voice-consolidation`. Production `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. APK remains uninstalled; personal `device-backups/` was excluded.

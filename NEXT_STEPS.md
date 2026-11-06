@@ -162,6 +162,6 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 
 ## Wake listener follow-up — 2026-11-06
 
-1. Commit and publish wake recognizer generation guard/tests and the updated handover on `integration/aura-voice-consolidation`; never stage `device-backups/`.
+1. Wake recognizer generation guard, tests, and records are committed as `1eb7027`; publish only `integration/aura-voice-consolidation` and never stage `device-backups/`.
 2. Keep APK SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4` uninstalled until the Honor reconnects and package/signature/data backup checks are complete, followed by explicit approval.
 3. On-device, verify stale callback recovery, repeated wake start/stop, ASR transcript, spoken answer, interruption, Ollama/cloud fallback and WhatsApp draft. The current run only proves unit/build behavior.

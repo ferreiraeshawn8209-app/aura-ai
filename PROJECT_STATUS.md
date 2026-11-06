@@ -179,3 +179,4 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Stale recognizer callbacks are now ignored after a wake listener restarts or stops; recognizer construction/start failures use capped retry, while mic permission denial stops the service.
 - Full app/voice tests and APK assemble passed: 58 tests, zero failures/errors/skips, 20 suites. APK `com.aura.ai` v1.0.0/code 1; SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4`; v2 signature verified. Not installed.
 - No ADB or live device/provider test was performed. Device wake/audio, cloud/Ollama requests and WhatsApp remain pending. Branch `integration/aura-voice-consolidation`; main unchanged. Exclude `device-backups/`.
+- Implementation and verification records are committed as `1eb7027` on `integration/aura-voice-consolidation`; `main` is unchanged.

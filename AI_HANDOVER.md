@@ -308,3 +308,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,863,028 bytes; package `com.aura.ai`, v1.0.0/code 1; SHA-256 `4930072AF2184041BD9482DFC67E8B9012347D5B92538DB46F0631C31BB8E3B6`; signature verified; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed.
 - No phone/provider acceptance: Honor disconnected, no ADB/install, no confirmation of on-device en-ZA model availability, wake/audio capture, cloud/Ollama, TTS, barge-in or WhatsApp. Android's generic system recognizer may use network even when offline was requested. Started from `071efd56a11791b3bd4736370f8e52b9675a7c1a`; source and documentation commit follows. `main` unchanged; exclude `device-backups/`.
 - Next: on Honor reconnection, verify package/signature/data backup before separately approving the exact APK; test with network disabled/enabled to confirm which recognizer is used and whether en-ZA works offline, then test wake/turn-taking. Keep local fallback behavior if the language pack is unsupported.
+
+## Wake language fallback commit — 2026-11-06
+
+- Implementation, policy test, and initial records committed as `8756b1db708a0d7e49d3c067d0ab38333a08d379` (`Fall back when offline wake language is unavailable`) on `integration/aura-voice-consolidation`. `main` unchanged; `device-backups/` excluded. Push and final handover publication state follow.

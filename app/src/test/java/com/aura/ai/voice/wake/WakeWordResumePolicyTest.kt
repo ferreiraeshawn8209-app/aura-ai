@@ -6,6 +6,28 @@ import org.junit.Test
 
 class WakeWordResumePolicyTest {
     @Test
+    fun wakeTriggeredActivityDoesNotRestartStandbyListener() {
+        assertFalse(
+            WakeWordResumePolicy.shouldStartStandby(
+                wakeEventPending = true,
+                wakeWordEnabled = true,
+                microphonePermissionGranted = true,
+            ),
+        )
+    }
+
+    @Test
+    fun normalActivityStartMayResumeOptedInStandbyListener() {
+        assertTrue(
+            WakeWordResumePolicy.shouldStartStandby(
+                wakeEventPending = false,
+                wakeWordEnabled = true,
+                microphonePermissionGranted = true,
+            ),
+        )
+    }
+
+    @Test
     fun resumesOnlyWhenWakeModeAndMicrophonePermissionAreEnabled() {
         assertTrue(
             WakeWordResumePolicy.shouldResume(

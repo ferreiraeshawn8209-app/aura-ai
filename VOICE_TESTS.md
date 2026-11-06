@@ -147,3 +147,8 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - New JVM tests confirm that starting a replacement wake request and invalidating a stopped request reject old callbacks.
 - Full app/voice test and APK build passed: 58 tests / 20 suites, no failures, errors or skipped tests. APK v2 signature verified; SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4`.
 - No ADB or physical wake/microphone test was run. This verifies callback-generation logic, not actual wake phrase detection, background-service survival, speech recognition quality or audio behavior.
+
+## Wake-triggered Activity mic handoff — 2026-11-06
+
+- Two unit tests cover that a normal Activity launch may start opted-in standby listening while a wake-triggered launch must not start a competing standby listener.
+- Full Android + voice run passed 60 tests with zero failures/errors/skips; APK package/signature verified. No ADB used, so actual phone mic ownership and conversation behavior are pending.

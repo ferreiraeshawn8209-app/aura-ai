@@ -180,3 +180,9 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Full app/voice tests and APK assemble passed: 58 tests, zero failures/errors/skips, 20 suites. APK `com.aura.ai` v1.0.0/code 1; SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4`; v2 signature verified. Not installed.
 - No ADB or live device/provider test was performed. Device wake/audio, cloud/Ollama requests and WhatsApp remain pending. Branch `integration/aura-voice-consolidation`; main unchanged. Exclude `device-backups/`.
 - Implementation `1eb7027` and handover `86e2f72` are pushed to `integration/aura-voice-consolidation`; `main` is unchanged.
+
+## Wake-triggered microphone handoff — 2026-11-06
+
+- Activity startup now skips a second standby wake service start when it was launched by the wake listener, removing a microphone ownership race with hands-free chat. Ordinary launches remain opt-in and permission-gated.
+- Full Android unit/build verification: 60 tests, 0 failures/errors/skips, 20 suites; APK assembled and v2 signature verified. Fresh APK SHA-256 `9CF7CD5B965D36E964D124877165362C11514B180A8DE957E607E586454B0CB6`, package `com.aura.ai` v1.0.0/code 1. Not installed.
+- No ADB/live voice/provider/WhatsApp test was run. Honor is disconnected. Main unchanged; exclude `device-backups/`.

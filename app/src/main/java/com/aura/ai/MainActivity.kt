@@ -13,6 +13,7 @@ import com.aura.ai.ui.T1000App
 import com.aura.ai.ui.theme.AuraTheme
 import com.aura.ai.voice.WakeWordEvents
 import com.aura.ai.voice.WakeWordService
+import com.aura.ai.voice.wake.WakeWordResumePolicy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     @Inject lateinit var wakeWordEvents: WakeWordEvents
     @Inject lateinit var settingsRepository: SettingsRepository
+    private var wakeEventPending = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +44,29 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        val launchedByWake = wakeEventPending
+        wakeEventPending = false
         lifecycleScope.launch {
             val enabled = settingsRepository.settings.first().wakeWordEnabled
             val microphoneGranted = ContextCompat.checkSelfPermission(
                 this@MainActivity,
                 Manifest.permission.RECORD_AUDIO,
             ) == PackageManager.PERMISSION_GRANTED
-            if (enabled && microphoneGranted) WakeWordService.start(this@MainActivity)
+            if (
+                WakeWordResumePolicy.shouldStartStandby(
+                    wakeEventPending = launchedByWake,
+                    wakeWordEnabled = enabled,
+                    microphonePermissionGranted = microphoneGranted,
+                )
+            ) {
+                WakeWordService.start(this@MainActivity)
+            }
         }
     }
 
     private fun dispatchWakeIfNeeded(intent: android.content.Intent?) {
         if (intent?.getBooleanExtra(WakeWordService.EXTRA_WOKEN, false) == true) {
+            wakeEventPending = true
             intent.removeExtra(WakeWordService.EXTRA_WOKEN)
             val transcript = intent.getStringExtra(WakeWordService.EXTRA_WAKE_TRANSCRIPT)
             intent.removeExtra(WakeWordService.EXTRA_WAKE_TRANSCRIPT)

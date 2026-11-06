@@ -189,3 +189,6 @@ The latest quota implementation and test record are pushed to origin/integration
 - Added request-gate JVM tests. Build/test command passed in 10m23s: 39 tests, zero failures/errors/skips in 14 suites; APK assembled and signature verified. See AI_HANDOVER.md for exact APK metadata and SHA-256.
 - Device acceptance is still blocked only by the phone being disconnected (per user instruction). Do not claim microphone, wake word, transcript, acoustic interruption, or voice response works from this code/build evidence. The platform recognizer still needs a real-device test and is not evidence of a dedicated hotword engine.
 - Provider routing and WhatsApp draft work from the previous commit remain. Live cloud needs user endpoint/model/key; Ollama is currently stopped. The Austrian TTS voice is still unavailable. Daily cloud quota is a request-count limit, not spend in currency.
+## Speech lifecycle commit — 2026-11-06
+
+- Provider cleanup and unit regression checks are committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3 on integration/aura-voice-consolidation. Push and verify branch; do not merge to main.

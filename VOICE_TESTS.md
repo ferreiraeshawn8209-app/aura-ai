@@ -73,3 +73,6 @@ The quota tests and handover are on origin/integration/aura-voice-consolidation 
 - Fixed Android speech provider resource handling: a new recognition turn destroys the prior recognizer, stop/close invalidate old callbacks and release the recognizer, and asynchronous setup failures are reported to the caller.
 - Added JVM tests for stale-request invalidation. Gradle app and voice tests plus debug assemble passed; 39 tests, 0 failures/errors/skips across 14 suites. APK package/signature/hash are recorded in AI_HANDOVER.md.
 - This checks the request-generation guard and compilation, not Android AudioRecord exclusivity or physical microphone behavior. No device was connected, installed, or tested. Wake/transcript/TTS/barge-in acceptance remains pending on the Honor.
+## Commit — 2026-11-06
+
+- Android speech recognizer lifecycle fix and stale-callback tests committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3. This is automated-only verification; no phone install or real-mic test.

@@ -94,3 +94,6 @@ The quota code and test documentation are published on GitHub. Integration branc
 - New JVM coverage exercises stale callback invalidation on restart/stop. Full Gradle app+voice tests and APK assemble passed in 10m23s: 39 tests, 0 failures/errors/skips, 14 suites; 75 tasks, 16 executed, 59 up-to-date. git diff --check passed.
 - Rebuilt APK: com.aura.ai v1.0.0/code 1, same existing debug signer, SHA-256 C241E0899CB45F23AE74E736B674349DF5DFCF14A826562CB9F7734BC6B41E2C. Not installed.
 - No physical microphone, wake, transcription, TTS interruption, or multi-turn behavior is claimed. Honor is disconnected by request. Cloud credentials and live Ollama are unavailable (Ollama stopped); Austrian voice remains unconfigured. Original app data/database/identity preserved.
+## Voice repair commit — 2026-11-06
+
+- Speech recognizer lifecycle repair and test records committed as e3d86b3215ca67a88f595a77e01dc8946255a1f3 on integration/aura-voice-consolidation. Build passed; Honor tests pending. Main unchanged.

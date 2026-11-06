@@ -138,4 +138,4 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 3. Run physical tests for repeated “Yo, yo, yo” wake, tap-to-speak, transcript accuracy, multi-turn speech, barge-in, audio output, Ollama from phone, cloud fallback/recovery, and WhatsApp draft review. Record only observed results.
 4. Continue code work without ADB while disconnected; do not install, merge to `main`, or claim device acceptance.
 
-Latest code change adds a race guard for the asynchronous wake restart. It was rebuilt and verified with 42 app tests passing. The final commit ID will be recorded in `AI_HANDOVER.md` and `PROJECT_STATUS.md` after publication. The resulting APK remains uninstalled pending phone reconnection.
+Latest code change adds a race guard for the asynchronous wake restart. It was rebuilt and verified with 42 app tests passing. Commit `b33b06dd8832893d8f6429b074933f7b0fce2e70` is published on the integration branch. The resulting APK remains uninstalled pending phone reconnection.

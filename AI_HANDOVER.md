@@ -230,3 +230,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Remaining: actual intent resolution and app labels, default-browser behavior, dialer/SMS draft UI, WhatsApp draft, Honor voice/wake/mic/interruption, and phone-to-PC Ollama remain unverified on-device. Cloud/Ollama fallback tests remain automated/mock-only without configured live cloud credentials; no live provider request was made. Austrian TTS is not yet available/configured. The existing app, package identity, database, user data, APK outputs, and backup folder were preserved.
 - Branch `integration/aura-voice-consolidation`; pre-change HEAD `fdc3d95950e1e3d839c0177a952fd5598ac66987`; production `main` remains unchanged. Personal `device-backups/` is untracked and excluded. Commit and publication status are recorded below after commit/push.
 - Next: keep the APK uninstalled until the Honor reconnects and the exact update has been approved. Then back up app data and verify package/signature before installation, and exercise the real app-open, browser, dialer, SMS/WhatsApp draft, voice, wake, interruption, local Ollama and cloud fallback flows. Obtain/configure a live provider to test actual failover and recovery.
+
+## Commit record — 2026-11-06
+
+- Action tools, tests and initial records are committed as `f5655fa` (`Add-safe-Android-action-tools-to-agent`) on `integration/aura-voice-consolidation`. The follow-up documentation commit records that commit's complete hash and push status. `main` is unchanged; `device-backups/` was excluded.

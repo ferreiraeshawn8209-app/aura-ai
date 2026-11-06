@@ -10,6 +10,7 @@ Branch: `integration/aura-voice-consolidation`
 - APK: `app/build/outputs/apk/debug/app-debug.apk`, package `com.aura.ai`, version 1.0.0/code 1, SHA-256 `9cbb5714d088c8e134e8c7044ff48b99194971adbafae1aa6f7b1a959d5a1a2e`; v2 signature valid with existing debug signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. APK is not installed.
 - Honor disconnected as requested. Real device UI/action and voice acceptance are pending; do not infer success from unit/build tests. Cloud/Ollama live failover/recovery still needs live configured providers and device/network checks. Austrian voice remains unconfigured. No database, permissions, package identity, personal data, or main branch changes.
 - Personal `device-backups/` remains untracked and excluded.
+- Code and initial verification records are committed as `f5655fa` on `integration/aura-voice-consolidation`; the final handover record and branch publication status follow in `AI_HANDOVER.md`.
 
 ## Current delivery
 

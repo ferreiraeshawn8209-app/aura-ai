@@ -250,3 +250,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Existing database, package identity, settings and user data were not changed; existing permission declarations were left untouched; `main` and personal `device-backups/` were not changed/staged. Record commit and publication status below.
 - Next: keep the APK uninstalled until Honor reconnects and the exact build has explicit install approval. Verify backup/package/signer, then exercise granted/denied Contacts permission, unique/ambiguous contact behavior, user-confirmed dial/SMS drafts, WhatsApp draft, voice, and local/cloud connectivity. Continue offline code integration meanwhile.
 - Source/tests/records are committed on `integration/aura-voice-consolidation`; final commit IDs and GitHub publication are listed in the following record after commit.
+
+## Contact action implementation commit — 2026-11-06
+
+- Contact search, contact-based call/SMS drafts, legacy ACTION_DIAL/ACTION_SENDTO safety changes, tests and project records are committed as `055d535a0028713fb3c7ce8d6355b80472b929c1` (`Add-contact-actions-and-safe-confirmation`) on `integration/aura-voice-consolidation`. Production `main` remains unchanged; `device-backups/` was excluded. Push status is recorded after publication.

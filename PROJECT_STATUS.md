@@ -18,6 +18,7 @@ Branch: `integration/aura-voice-consolidation`
 - Changed the legacy action path from direct calls/SMS to Android ACTION_DIAL/ACTION_SENDTO review screens. Static scan shows no direct call or SMS send API remaining in app Kotlin source.
 - Verification: full app and voice suites plus debug build passed: 68 tests, 0 failures/errors/skips, 22 suites. APK v2 signature verified, SHA-256 `4cdfdbc615394e201c0395f7d774b32a1b16ddd7b3c3bed5b8b28a912e7399c7`; package remains `com.aura.ai` v1.0.0/code 1. Not installed.
 - Honor disconnected; live permission, contact, call/SMS/WhatsApp, voice and backend tests are pending. Main unchanged; personal backup folder excluded.
+- Contact implementation/tests and this status are committed as `055d535a0028713fb3c7ce8d6355b80472b929c1` on the integration branch; publication will be recorded in the handover.
 
 ## Current delivery
 

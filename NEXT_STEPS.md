@@ -229,3 +229,7 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 - The app classifier now routes only explicit command-at-start phrases (including polite and wake-prefixed commands) to the agent planner, preventing ordinary questions that mention task vocabulary from receiving action handling. App tests: 78 pass; unchanged voice-library report: 12 pass. A separate voice-task rerun was blocked by Gradle wrapper lock access before test execution.
 - Offline one-worker APK assembly passed after the parallel dex merge ran out of disk space. It is verified and remains uninstalled; exact hash/package/signature are in `AI_HANDOVER.md`.
 - Next: commit and publish source/tests/docs on the integration branch. On Honor reconnection and owner approval, verify question-vs-action routing, then repeated wake/voice turns, interruption, Ollama/cloud fallback/recovery, and WhatsApp draft. No real-device or live-provider result is currently verified.
+
+## Routing commit checkpoint — 2026-11-06
+
+- Source and regression tests are committed as `a487a29` on `integration/aura-voice-consolidation`; `device-backups/` was excluded and `main` was not changed. Push and record remote confirmation next.

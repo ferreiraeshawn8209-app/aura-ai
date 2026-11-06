@@ -284,3 +284,7 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Honor is disconnected: no device voice/wake/interruption/Ollama/cloud/WhatsApp acceptance. Cloud/live Ollama not exercised. The APK build and JVM tests are not device proof.
 - Changed files: `app/src/main/java/com/aura/ai/agent/ConversationIntent.kt`, `app/src/test/java/com/aura/ai/ConversationIntentTest.kt`, `AI_HANDOVER.md`, `PROJECT_STATUS.md`, and `NEXT_STEPS.md`. Starting commit `f7107c36ab7bcb4a3fabbb05fe0ad5e4b05a2b00`; implementation/docs commit and publication confirmation follow. `integration/aura-voice-consolidation` only; main and user backups untouched.
 - Next: publish the current code/docs on the integration branch; after reconnection and exact-build approval, confirm question/action routing on the Honor, then verify live voice and configured cloud/Ollama behavior. Keep all device checks pending until run.
+
+## Conversation routing commit — 2026-11-06
+
+- Code/tests and baseline handover committed as `a487a29` (`Keep ordinary questions out of action planner`) on `integration/aura-voice-consolidation`. `main` unchanged. Publication confirmation follows; APK remains uninstalled.

@@ -385,3 +385,8 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Device/live status: Honor is disconnected. APK was not installed. No microphone, wake, voice response, interruption, Ollama/cloud provider, WhatsApp, or real-device acceptance test was run. This classifier repair is JVM-tested only. Cloud credentials and live Ollama service are not available in this check.
 - Starting commit: `f7107c36ab7bcb4a3fabbb05fe0ad5e4b05a2b00` on `integration/aura-voice-consolidation`; `main` remains unchanged. Exclude the pre-existing untracked `device-backups/` directory.
 - Next: commit source/test and project records together, push the integration branch, then after the Honor reconnects and the owner approves installation of this exact build, verify normal questions do not receive a spoken action acknowledgement and explicit action commands still enter the guarded planner. Continue live backend and voice checks separately; do not mark them verified based on these unit tests.
+
+## Conversation routing implementation commit — 2026-11-06
+
+- Source, regression tests, and initial records committed on `integration/aura-voice-consolidation` as `a487a29` (`Keep ordinary questions out of action planner`). `main` unchanged. The existing untracked `device-backups/` directory was excluded.
+- Branch publication is the remaining repository step; record the remote result below after pushing. APK remains uninstalled and phone/live-service checks remain pending.

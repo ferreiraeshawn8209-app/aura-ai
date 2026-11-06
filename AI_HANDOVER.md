@@ -296,3 +296,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 ## Wake recognizer commit — 2026-11-06
 
 - Source, policy tests, and initial handover records committed as `13f17e7` (`Prefer on-device speech for standby wake`) on `integration/aura-voice-consolidation`. Production `main` is unchanged; personal `device-backups/` was not staged. The final handover publication record follows after push verification.
+
+## Wake recognizer publication — 2026-11-06
+
+- GitHub accepted source commit `13f17e7` and handover commit `9cfd5ffd70caea7bbb0d9a56b89bbf5e429736c5` on `integration/aura-voice-consolidation`; remote matched local at `9cfd5ffd70caea7bbb0d9a56b89bbf5e429736c5` after push. `main` remains unchanged. `device-backups/` remains excluded. This publication note is committed after push verification.

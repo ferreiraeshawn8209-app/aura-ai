@@ -62,3 +62,6 @@ Do not mark pending checks as passing until tested on the actual phone. The user
 - Full Gradle command (:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug) passed in 12m20s. 35 tests passed, 0 failures/errors/skips, 12 suites. APK assemble passed. git diff --check passed.
 - This is automated JVM/build verification only. No phone test, live cloud provider call, Ollama call, or WhatsApp launch/send was run. No install was performed.
 - APK package/version/signature and SHA-256 are recorded in AI_HANDOVER.md; the handset remains disconnected. Do not treat this as device acceptance.
+## Commit — 2026-11-06
+
+- Daily quota logic, local-fallback reason, Settings control and tests committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. 35 JVM tests and APK build passed; no phone install/device check occurred.

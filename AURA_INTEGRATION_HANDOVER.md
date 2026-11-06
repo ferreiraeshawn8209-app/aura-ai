@@ -177,3 +177,6 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 - Latest build/test result: Gradle app + aura-voice unit tests + debug APK assemble passed in 12m20s; 75 tasks (15 executed, 60 up-to-date), 35 tests, 0 failures/errors/skips, 12 suites. git diff --check passed. Exact APK SHA-256 and signer are in AI_HANDOVER.md.
 - No physical phone or live model/provider test occurred. Honor is disconnected; Ollama is stopped; cloud credentials are not configured. No APK installed. Existing app package/database remain unchanged.
 - Next after this docs update: commit only the quota implementation and handover records on integration/aura-voice-consolidation, push branch and confirm remote head. When the phone reconnects, obtain authorization for this exact build before in-place installation, then test voice, wake, interruptions, local Ollama, WhatsApp draft opening, and cloud success/fallback/recovery. Continue Austrian TTS integration only with an authorized provider/voice identity. Keep main unchanged.
+## Implementation commit — 2026-11-06
+
+- Daily cloud request cap and verification record committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. The commit preserves existing app identity/data and excludes device-backups/. Main remains unchanged. Branch publication is pending.

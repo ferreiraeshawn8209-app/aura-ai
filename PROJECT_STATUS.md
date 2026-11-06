@@ -82,3 +82,6 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 - Automated result: Gradle app and voice-library tests plus debug assembly passed in 12m20s (75 tasks; 15 executed, 60 up-to-date). 35 tests passed, 0 failures/errors/skips across 12 suites. git diff --check passed.
 - APK is debug build, package com.aura.ai v1.0.0/code 1, 20,761,174 bytes, SHA-256 F2B2FC2D00E6028B9DD708385319422411EE668622E26CB2CD9BC3998ECD63E5; signature verified with existing debug signer SHA-256 1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3. Not installed; no phone connected.
 - Cloud adapter still requires user configuration and live credentials. Mocks cover router and HTTP behavior; no live cloud request or active Ollama fallback/recovery was run. Voice/wake/WhatsApp remain untested on the device. Saved Android voice ar-language is not Austrian. The original app/database/package were preserved; device-backups/ was not staged.
+## Implementation commit — 2026-11-06
+
+- Daily cloud request limit and test/documentation updates committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. Working tree contains no tracked changes. device-backups/ remains untracked and excluded. Branch publication is pending; main unchanged.

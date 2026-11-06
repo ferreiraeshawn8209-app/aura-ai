@@ -78,3 +78,6 @@ Next implementation and acceptance:
 - Implemented the configurable daily cloud inference request cap (60/day default; 1–1,000 setting; atomic persisted UTC-day accounting; local Ollama fallback after the cap). This is a request-count cap, not a cost/spend cap. Added quota and fallback tests.
 - Latest Gradle verification passed: :app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug, 12m20s, 35 tests/0 failures/0 errors/0 skipped across 12 suites. APK assembled and identity/signature verified; details in AI_HANDOVER.md.
 - Next: finish code/doc commit and branch push, confirm the remote branch head; then, only after phone reconnects and approval for this exact build, test actual voice/wake/interruption, phone-to-PC Ollama, WhatsApp draft opening, and configured cloud operation. Do not install while disconnected. Austrian voice remains unavailable/unverified. Do not merge into main.
+## Quota implementation commit — 2026-11-06
+
+- Code and the current handover records committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. Verify branch publication and continue with live provider and phone acceptance only when resources reconnect.

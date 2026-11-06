@@ -195,3 +195,10 @@ The latest quota implementation and test record are pushed to origin/integration
 ## Publication update — 2026-11-06
 
 The speech lifecycle code commit e3d86b3215ca67a88f595a77e01dc8946255a1f3 and handover commit 12af8d08565847d406672fa4741b77c4123f3 were pushed successfully. main remains untouched. The Honor remains disconnected, so physical tests are pending.
+
+## Saved transcript integration — 2026-11-06
+
+- Reused the existing Room conversation repository in active Agent chat to load/persist user and assistant messages; added transcript search and copy via text selection. No database/schema changes.
+- Added 3 JVM tests. App and `aura-voice` tests: 42 passed, 0 failures/errors/skips, 15 suites. Debug APK build passed; `git diff --check` passed. Full run: 21m12s.
+- APK package/version/signer verified; SHA-256 `1614E230F6663E00D86D975B5CFE21F9BF84E7F998EADB24C98F3E356F8CB3F1`. Not installed. The Honor remains disconnected by request.
+- No live device voice, Ollama/cloud routing, or WhatsApp run is claimed. Provider credentials are not configured; Austrian voice remains unavailable and the existing `ar-language` preference is preserved.

@@ -33,4 +33,7 @@ data class ChatUiState(
     val modelReady: Boolean = false,
     val modelName: String? = null,
     val banner: String? = null,
+    val historyLoaded: Boolean = false,
+    val historySearchOpen: Boolean = false,
+    val historySearchQuery: String = "",
 )

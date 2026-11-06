@@ -21,6 +21,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,10 +38,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,6 +72,14 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
                     )
                 }
             },
+            actions = {
+                IconButton(onClick = { viewModel.setHistorySearchOpen(!state.historySearchOpen) }) {
+                    Icon(
+                        if (state.historySearchOpen) Icons.Filled.Close else Icons.Filled.Search,
+                        contentDescription = if (state.historySearchOpen) "Close transcript search" else "Search saved conversation",
+                    )
+                }
+            },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface,
             ),
@@ -88,16 +100,32 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
             }
         }
 
-        if (state.turns.isEmpty()) {
-            EmptyState(Modifier.weight(1f))
-        } else {
-            LazyColumn(
+        if (state.historySearchOpen) {
+            OutlinedTextField(
+                value = state.historySearchQuery,
+                onValueChange = viewModel::setHistorySearchQuery,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp),
+                singleLine = true,
+                label = { Text("Search saved conversation") },
+            )
+        }
+
+        val visibleTurns = remember(state.turns, state.historySearchQuery) {
+            TranscriptSearch.filter(state.turns, state.historySearchQuery)
+        }
+        when {
+            state.turns.isEmpty() -> EmptyState(Modifier.weight(1f))
+            visibleTurns.isEmpty() -> Box(
+                Modifier.weight(1f).fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) { Text("No saved messages match this search.", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            else -> LazyColumn(
                 state = listState,
                 modifier = Modifier.weight(1f).fillMaxWidth(),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                items(state.turns, key = { it.id }) { turn -> MessageBubble(turn) }
+                items(visibleTurns, key = { it.id }) { turn -> MessageBubble(turn) }
             }
         }
 
@@ -109,7 +137,7 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
             handsFreeSession = state.handsFreeSession,
             partial = state.partialSpeech,
             speechDiagnostic = state.speechDiagnostic,
-            enabled = state.modelReady,
+            enabled = state.modelReady && state.historyLoaded,
             onInput = viewModel::onInputChange,
             onSend = { viewModel.send() },
             onMic = viewModel::toggleListening,
@@ -164,7 +192,9 @@ private fun MessageBubble(turn: ChatTurn) {
                             color = MintAccent,
                         )
                     } else {
-                        Text(turn.text, style = MaterialTheme.typography.bodyLarge, color = textColor)
+                        SelectionContainer {
+                            Text(turn.text, style = MaterialTheme.typography.bodyLarge, color = textColor)
+                        }
                     }
                 }
             }

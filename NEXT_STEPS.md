@@ -95,3 +95,11 @@ The implementation and handover are published on integration/aura-voice-consolid
 ## Speech repair published — 2026-11-06
 
 The speech adapter fix and test/handover commits are on the integration branch; publication verified through 12af8d08565847d406672fa4741b77c4123f3. Continue with code-side work while the phone is offline; do not install until it reconnects and the exact build is approved.
+
+## Next — after transcript integration (2026-11-06)
+
+1. Commit the transcript persistence/search/copy code, its three unit tests, and the current handover updates on `integration/aura-voice-consolidation`; publish that branch and verify the remote head. Keep `device-backups/` unstaged and leave `main` untouched.
+2. When the Honor reconnects, verify package/version/signature and back up existing app data before asking to install this exact APK. Check saved transcript load, search, and copy.
+3. On the phone, repeat wake phrase, tap-to-speak, multi-turn recognition/TTS, interruption, and recovery checks. Record actual outcomes in `VOICE_TESTS.md`.
+4. With user-configured cloud endpoint/model/key, test cloud success/failure/recovery; with Ollama available, test phone-to-PC model discovery and fallback. Verify WhatsApp draft opens and requires manual review/send.
+5. Keep limitations explicit: Austrian TTS is not configured; saved `ar-language` remains; a dedicated wake detector and acoustic barge-in remain unverified; no production merge/install without approval.

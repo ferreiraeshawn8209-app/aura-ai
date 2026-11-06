@@ -9,6 +9,8 @@ import com.aura.ai.agent.AgentEvent
 import com.aura.ai.agent.AgentOrchestrator
 import com.aura.ai.agent.AgentPhase
 import com.aura.ai.data.settings.SettingsRepository
+import com.aura.ai.data.model.ChatMessage
+import com.aura.ai.data.repository.ConversationRepository
 import com.aura.voice.AuraVoiceSubsystem
 import com.aura.voice.ConversationState
 import com.aura.voice.ConversationStateObserver
@@ -37,6 +39,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val orchestrator: AgentOrchestrator,
     private val settings: SettingsRepository,
+    private val conversationRepository: ConversationRepository,
     private val voice: AuraVoiceSubsystem,
     private val wakeWordEvents: WakeWordEvents,
     @ApplicationContext private val context: Context,
@@ -61,6 +64,21 @@ class ChatViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            try {
+                val savedMessages = conversationRepository.messages.first()
+                _state.update { current ->
+                    current.copy(
+                        turns = TranscriptSearch.fromMessages(savedMessages),
+                        historyLoaded = true,
+                    )
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (failure: Exception) {
+                _state.update { it.copy(historyLoaded = true, banner = "Saved conversation history could not be loaded.") }
+            }
+        }
+        viewModelScope.launch {
             settings.settings.collect { s ->
                 _state.update {
                     it.copy(
@@ -81,7 +99,7 @@ class ChatViewModel @Inject constructor(
 
     fun send(text: String = _state.value.input, spokenInstruction: Boolean = false) {
         val prompt = text.trim()
-        if (prompt.isEmpty() || _state.value.busy) return
+        if (prompt.isEmpty() || _state.value.busy || !_state.value.historyLoaded) return
         if (!_state.value.modelReady) return
 
         val userTurn = ChatTurn(id = System.nanoTime(), isUser = true, text = prompt)
@@ -101,6 +119,7 @@ class ChatViewModel @Inject constructor(
 
         runJob?.cancel()
         runJob = viewModelScope.launch {
+            persistMessageSafely(prompt, ChatMessage.Role.USER)
             voice.markProcessing()
             try {
                 orchestrator.run(prompt, conversationContext, spokenInstruction).collect { event ->
@@ -133,6 +152,7 @@ class ChatViewModel @Inject constructor(
                 }
             }
             val finalText = _state.value.turns.firstOrNull { it.id == assistantId }?.text.orEmpty()
+            if (finalText.isNotBlank()) persistMessageSafely(finalText, ChatMessage.Role.ASSISTANT)
             val voiceOn = settings.settings.first().voiceRepliesEnabled
             if (voiceOn && finalText.isNotBlank()) {
                 val result = voice.speak(finalText, object : SpeechSynthesisListener {
@@ -269,6 +289,7 @@ class ChatViewModel @Inject constructor(
         }
         listenJob?.cancel()
         listenJob = viewModelScope.launch {
+            state.first { it.historyLoaded }
             if (command.isNullOrBlank()) {
                 startListeningTurn()
             } else {
@@ -365,6 +386,22 @@ class ChatViewModel @Inject constructor(
     }
 
     fun dismissBanner() = _state.update { it.copy(banner = null) }
+
+    fun setHistorySearchOpen(open: Boolean) = _state.update {
+        it.copy(historySearchOpen = open, historySearchQuery = if (open) it.historySearchQuery else "")
+    }
+
+    fun setHistorySearchQuery(query: String) = _state.update { it.copy(historySearchQuery = query) }
+
+    private suspend fun persistMessageSafely(text: String, role: ChatMessage.Role) {
+        try {
+            conversationRepository.saveMessage(ChatMessage(role = role, content = text))
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            _state.update { it.copy(banner = "Aura couldn't save this message to conversation history.") }
+        }
+    }
 
     override fun onCleared() {
         listenJob?.cancel()

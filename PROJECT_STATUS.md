@@ -100,3 +100,11 @@ The quota code and test documentation are published on GitHub. Integration branc
 ## Speech repair publication — 2026-11-06
 
 The recognizer lifecycle repair is pushed. At verification, origin/integration/aura-voice-consolidation matched 12af8d08565847d406672fa4741b77c4123f3. No tracked local changes; device-backups/ remains excluded; main unchanged.
+
+## Transcript persistence and verification — 2026-11-06
+
+- Existing Agent chat now loads and persists turns through the existing Room-backed conversation repository. Search filters saved/current transcript text case-insensitively; Compose text selection supports copy. No database migration or package change.
+- New unit coverage: 3 transcript conversion/search tests. Full app + voice-library tests and debug APK build passed: 42 total tests, 0 failures/errors/skips, 15 suites; Gradle 21m12s, 75 tasks (46 executed, 29 up-to-date). `git diff --check` passed.
+- Debug APK: `com.aura.ai` v1.0.0/code 1, 20,621,965 bytes, SHA-256 `1614E230F6663E00D86D975B5CFE21F9BF84E7F998EADB24C98F3E356F8CB3F1`; signature verified, signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed; Honor disconnected.
+- Initial build was blocked by a full C: drive; only generated Gradle intermediates/cache/temp folders inside the repo were cleared, preserving source, backups, APK outputs and personal data. The rerun completed successfully.
+- Remaining: device acceptance pending (mic, wake, transcript, voice, interruption, Ollama/cloud fallback and WhatsApp draft review); no live provider credentials used. Austrian TTS is not configured; `ar-language` remains saved. Continue on integration branch, do not merge to main.

@@ -79,3 +79,10 @@ The quota tests and handover are on origin/integration/aura-voice-consolidation 
 ## Speech repair branch publication — 2026-11-06
 
 The speech provider lifecycle fix and test record were published to integration/aura-voice-consolidation. At verification remote HEAD was 12af8d08565847d406672fa4741b77c4123f3. No install was performed.
+
+## Transcript unit/build checks — 2026-11-06
+
+- Added `TranscriptSearchTest`: persisted-message mapping, blank search preserving order, case-insensitive filtering. Result: 3 added tests pass.
+- Combined app + `aura-voice` JUnit reports: 42 tests, 0 failed, 0 errors, 0 skipped, 15 suites.
+- Debug APK assemble passed in the same Gradle invocation. APK is uninstalled. Build evidence does not verify Android microphone/audio behavior; phone remains disconnected.
+- `git diff --check` passed.

@@ -187,3 +187,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added persistent Android-only pitch and pace controls in a bounded, natural range. Cloud voice providers retain control of their own voice settings. New unit tests verify that tuning preserves the exact selected voice ID and clamps the range.
 - Automated verification: full app/voice suite reports 88 tests passed, 0 failures/errors/skips; a signed debug APK was built. Its hash is in `AI_HANDOVER.md`; it is not installed.
 - On Honor reconnect, test slider persistence across reopening settings and preview the selected voice. Confirm the accent audibly; the code cannot produce an Austrian accent if the installed/authorized voice does not have one.
+
+## Wake retry policy test — 2026-11-06
+
+- Wake-service silence and no-match outcomes now restart after 800 ms; actual recognizer failures retain capped backoff. Two tests cover normal idle and repeated failures.
+- Full app/voice test reports: 90 total, zero failures/errors/skips; APK built and signature verified. Not installed; no acoustic device test. APK hash is in `AI_HANDOVER.md`.
+- On Honor reconnect, verify wake phrase after several seconds of silence and confirm any platform mic-sound behavior. Also repeat wake-to-chat, long answer interruption, and backend/action checks.

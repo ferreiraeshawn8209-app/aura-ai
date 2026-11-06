@@ -21,6 +21,7 @@ import com.aura.ai.R
 import com.aura.ai.AuraApplication
 import com.aura.ai.voice.wake.WakePhraseMatcher
 import com.aura.ai.voice.wake.WakeRecognizerPolicy
+import com.aura.ai.voice.wake.WakeRestartPolicy
 import com.aura.ai.voice.wake.WakeWordRequestGate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -151,9 +152,15 @@ class WakeWordService : LifecycleService() {
             return
         }
         handler.removeCallbacks(restart)
-        consecutiveErrors = if (error == null) 0 else (consecutiveErrors + 1).coerceAtMost(5)
-        val delayMs = if (error == null) 800L else (1000L * (1 shl (consecutiveErrors - 1))).coerceAtMost(16_000L)
-        handler.postDelayed(restart, delayMs)
+        val cause = when (error) {
+            null -> WakeRestartPolicy.Cause.NORMAL
+            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> WakeRestartPolicy.Cause.SPEECH_TIMEOUT
+            SpeechRecognizer.ERROR_NO_MATCH -> WakeRestartPolicy.Cause.NO_MATCH
+            else -> WakeRestartPolicy.Cause.RECOGNIZER_FAILURE
+        }
+        val decision = WakeRestartPolicy.decide(cause, consecutiveErrors)
+        consecutiveErrors = decision.consecutiveErrors
+        handler.postDelayed(restart, decision.delayMillis)
     }
 
     private fun onPhraseDetected(transcript: String) {

@@ -217,3 +217,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Automated reports: 88 tests, no failures/errors/skips; fresh signed APK hash is recorded in `AI_HANDOVER.md`. Not installed.
 3. After Honor reconnects and exact-build approval, verify controls persist after reopening Settings, preview the selected voice, and check voice identity across several spoken turns. Continue all other live voice/backend/action acceptance checks.
 4. Source/handover publication state follows. Keep work on `integration/aura-voice-consolidation`; `main` untouched; exclude `device-backups/`.
+
+## Wake idle recovery follow-up — 2026-11-06
+
+1. Normal speech timeouts and no-match now retry the wake listener after 800 ms; real recognizer failures use the existing capped exponential backoff. Unit tests/build pass (90 total reports, no failures); APK is not installed. Exact hash in `AI_HANDOVER.md`.
+2. After Honor reconnection and approval of this exact build, test wake activation after quiet periods, repeat several times, and record whether audio indicators/sounds come from Android's recognizer. Then check wake-to-conversation, transcript, spoken answer and interruption.
+3. Source and publication commit details follow; continue only on `integration/aura-voice-consolidation`. Do not stage `device-backups/` or merge `main`.

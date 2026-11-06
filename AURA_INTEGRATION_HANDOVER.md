@@ -183,3 +183,9 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 ## GitHub publication — 2026-11-06
 
 The latest quota implementation and test record are pushed to origin/integration/aura-voice-consolidation, verified at 8c332e49254fa4d40a372794202bf8ca61c1e2e1. No main merge. The existing device-backups/ directory was not staged.
+## Voice capture lifecycle improvement — 2026-11-06
+
+- Code inspection found each new Android listening turn created another SpeechRecognizer without destroying the previous one. The provider now invalidates callbacks from old turns and releases the old recognizer on restart, stop, close, final result and recognition error. Permission/runtime setup failures become explicit voice errors.
+- Added request-gate JVM tests. Build/test command passed in 10m23s: 39 tests, zero failures/errors/skips in 14 suites; APK assembled and signature verified. See AI_HANDOVER.md for exact APK metadata and SHA-256.
+- Device acceptance is still blocked only by the phone being disconnected (per user instruction). Do not claim microphone, wake word, transcript, acoustic interruption, or voice response works from this code/build evidence. The platform recognizer still needs a real-device test and is not evidence of a dedicated hotword engine.
+- Provider routing and WhatsApp draft work from the previous commit remain. Live cloud needs user endpoint/model/key; Ollama is currently stopped. The Austrian TTS voice is still unavailable. Daily cloud quota is a request-count limit, not spend in currency.

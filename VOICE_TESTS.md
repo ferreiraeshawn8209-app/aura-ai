@@ -68,3 +68,8 @@ Do not mark pending checks as passing until tested on the actual phone. The user
 ## Publication — 2026-11-06
 
 The quota tests and handover are on origin/integration/aura-voice-consolidation at 8c332e49254fa4d40a372794202bf8ca61c1e2e1. main unchanged; the debug APK is not installed.
+## 2026-11-06 — Speech recognizer lifecycle regression tests
+
+- Fixed Android speech provider resource handling: a new recognition turn destroys the prior recognizer, stop/close invalidate old callbacks and release the recognizer, and asynchronous setup failures are reported to the caller.
+- Added JVM tests for stale-request invalidation. Gradle app and voice tests plus debug assemble passed; 39 tests, 0 failures/errors/skips across 14 suites. APK package/signature/hash are recorded in AI_HANDOVER.md.
+- This checks the request-generation guard and compilation, not Android AudioRecord exclusivity or physical microphone behavior. No device was connected, installed, or tested. Wake/transcript/TTS/barge-in acceptance remains pending on the Honor.

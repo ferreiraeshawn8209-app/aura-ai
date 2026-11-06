@@ -88,3 +88,9 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 ## Branch publication — 2026-11-06
 
 The quota code and test documentation are published on GitHub. Integration branch and origin both resolve to 8c332e49254fa4d40a372794202bf8ca61c1e2e1. main was not changed. The pre-existing device-backups/ folder remains untracked and excluded.
+## Voice recognizer lifecycle repair — 2026-11-06
+
+- Repeated speech turns now invalidate previous recognizer callbacks and destroy the old Android SpeechRecognizer before creating a fresh session. Stop/close also release the recognizer. Asynchronous microphone/recognizer setup errors are returned to Aura as explicit failures.
+- New JVM coverage exercises stale callback invalidation on restart/stop. Full Gradle app+voice tests and APK assemble passed in 10m23s: 39 tests, 0 failures/errors/skips, 14 suites; 75 tasks, 16 executed, 59 up-to-date. git diff --check passed.
+- Rebuilt APK: com.aura.ai v1.0.0/code 1, same existing debug signer, SHA-256 C241E0899CB45F23AE74E736B674349DF5DFCF14A826562CB9F7734BC6B41E2C. Not installed.
+- No physical microphone, wake, transcription, TTS interruption, or multi-turn behavior is claimed. Honor is disconnected by request. Cloud credentials and live Ollama are unavailable (Ollama stopped); Austrian voice remains unconfigured. Original app data/database/identity preserved.

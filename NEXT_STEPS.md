@@ -84,3 +84,8 @@ Next implementation and acceptance:
 ## Branch publication confirmation — 2026-11-06
 
 The implementation and handover are published on integration/aura-voice-consolidation at remote commit 8c332e49254fa4d40a372794202bf8ca61c1e2e1. Main stays unchanged. Device testing remains pending until the phone reconnects.
+## Offline voice work — 2026-11-06
+
+- Fixed a code-level recognizer leak/conflict: listening turns now replace and destroy the previous Android SpeechRecognizer, stale callbacks are invalidated, and permission/setup failures are surfaced. Added JVM tests for stale callback protection.
+- Build and automated result: 39 tests passed, 0 failures/errors/skips, 14 suites; APK rebuilt and signature/package verified. APK hash recorded in AI_HANDOVER.md. Physical phone tests were intentionally not run.
+- Next: commit/publish this repair, then after phone reconnect and approval, test microphone open/close across repeated turns, wake phrase, accurate transcript, TTS response and interruption. Continue cloud-provider live checks only after configuration and Ollama recovery testing when its service is available.

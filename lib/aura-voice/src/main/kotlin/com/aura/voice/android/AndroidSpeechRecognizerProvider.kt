@@ -23,9 +23,10 @@ class AndroidSpeechRecognizerProvider(
 ) : SpeechRecognitionProvider {
     private val appContext = context.applicationContext
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val requestGate = RecognitionRequestGate()
     private var recognizer: SpeechRecognizer? = null
     private var listener: SpeechRecognitionListener? = null
-    private var released = false
+    @Volatile private var released = false
 
     override val type = VoiceProviderType.ANDROID
     override val isAvailable: Boolean
@@ -43,13 +44,46 @@ class AndroidSpeechRecognizerProvider(
                 ),
             )
         }
-        this.listener = listener
+
+        val requestId = requestGate.begin()
         mainHandler.post {
-            if (released) return@post
-            recognizer?.cancel()
-            recognizer = SpeechRecognizer.createSpeechRecognizer(appContext).also {
-                it.setRecognitionListener(recognitionListener)
-                it.startListening(
+            if (!isCurrent(requestId)) return@post
+
+            // A new turn owns exactly one recognizer. Destroy the previous instance
+            // before creating another so cancelled turns cannot retain the mic.
+            destroyRecognizer()
+            this.listener = listener
+            if (!isAvailable) {
+                deliverFailure(
+                    requestId,
+                    VoiceErrorCode.PROVIDER_UNAVAILABLE,
+                    "Android SpeechRecognizer became unavailable.",
+                )
+                return@post
+            }
+
+            val next = try {
+                SpeechRecognizer.createSpeechRecognizer(appContext)
+            } catch (_: SecurityException) {
+                deliverFailure(
+                    requestId,
+                    VoiceErrorCode.AUDIO_PERMISSION_DENIED,
+                    "Microphone permission is required.",
+                )
+                return@post
+            } catch (_: RuntimeException) {
+                deliverFailure(
+                    requestId,
+                    VoiceErrorCode.AUDIO_UNAVAILABLE,
+                    "Could not create Android speech recognition.",
+                )
+                return@post
+            }
+
+            recognizer = next
+            next.setRecognitionListener(recognitionListener(requestId))
+            try {
+                next.startListening(
                     Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                         putExtra(
                             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -61,26 +95,42 @@ class AndroidSpeechRecognizerProvider(
                         putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
                     },
                 )
+            } catch (_: SecurityException) {
+                deliverFailure(
+                    requestId,
+                    VoiceErrorCode.AUDIO_PERMISSION_DENIED,
+                    "Microphone permission is required.",
+                )
+            } catch (_: RuntimeException) {
+                deliverFailure(
+                    requestId,
+                    VoiceErrorCode.AUDIO_UNAVAILABLE,
+                    "Could not start Android speech recognition.",
+                )
             }
         }
         return VoiceOperationResult.accepted()
     }
 
     override fun stopListening() {
-        mainHandler.post { recognizer?.cancel() }
+        requestGate.invalidate()
+        mainHandler.post {
+            listener = null
+            destroyRecognizer()
+        }
     }
 
     override fun close() {
         if (released) return
         released = true
+        requestGate.invalidate()
         mainHandler.post {
-            recognizer?.destroy()
-            recognizer = null
             listener = null
+            destroyRecognizer()
         }
     }
 
-    private val recognitionListener = object : RecognitionListener {
+    private fun recognitionListener(requestId: Long) = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) = Unit
         override fun onBeginningOfSpeech() = Unit
         override fun onRmsChanged(rmsdB: Float) = Unit
@@ -89,44 +139,94 @@ class AndroidSpeechRecognizerProvider(
         override fun onEvent(eventType: Int, params: Bundle?) = Unit
 
         override fun onPartialResults(results: Bundle?) {
-            emitResult(results, isFinal = false)
+            emitResult(results, isFinal = false, requestId = requestId)
         }
 
         override fun onResults(results: Bundle?) {
-            emitResult(results, isFinal = true)
+            emitResult(results, isFinal = true, requestId = requestId)
         }
 
         override fun onError(errorCode: Int) {
-            listener?.onResult(
-                SpeechRecognitionResult(
-                    transcript = "",
-                    confidence = null,
-                    languageTag = null,
-                    isFinal = true,
-                    error = VoiceError(
-                        mapError(errorCode),
-                        "Android SpeechRecognizer error code $errorCode.",
-                        recoverable = errorCode != SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS,
-                    ),
+            emitFailure(
+                requestId,
+                VoiceError(
+                    mapError(errorCode),
+                    "Android SpeechRecognizer error code $errorCode.",
+                    recoverable = errorCode != SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS,
                 ),
             )
         }
     }
 
-    private fun emitResult(results: Bundle?, isFinal: Boolean) {
+    private fun emitResult(results: Bundle?, isFinal: Boolean, requestId: Long) {
+        if (!isCurrent(requestId)) return
         val transcripts = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
         val confidence = results
             ?.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES)
             ?.firstOrNull()
             ?.takeUnless { it < 0f }
-        listener?.onResult(
+        emit(
+            requestId,
             SpeechRecognitionResult(
                 transcript = transcripts?.firstOrNull().orEmpty(),
                 confidence = confidence,
                 languageTag = null,
                 isFinal = isFinal,
             ),
+            finish = isFinal,
         )
+    }
+
+    private fun deliverFailure(requestId: Long, code: VoiceErrorCode, message: String) {
+        emitFailure(
+            requestId,
+            VoiceError(code, message, recoverable = code != VoiceErrorCode.AUDIO_PERMISSION_DENIED),
+        )
+    }
+
+    private fun emitFailure(requestId: Long, error: VoiceError) {
+        emit(
+            requestId,
+            SpeechRecognitionResult(
+                transcript = "",
+                confidence = null,
+                languageTag = null,
+                isFinal = true,
+                error = error,
+            ),
+            finish = true,
+        )
+    }
+
+    private fun emit(requestId: Long, result: SpeechRecognitionResult, finish: Boolean) {
+        if (!isCurrent(requestId)) return
+        listener?.onResult(result)
+        if (finish) {
+            // Recognition callbacks run on the main thread. Defer cleanup so a
+            // callback may safely transition to TTS or another listening turn.
+            mainHandler.post {
+                if (isCurrent(requestId)) {
+                    listener = null
+                    destroyRecognizer()
+                }
+            }
+        }
+    }
+
+    private fun isCurrent(requestId: Long): Boolean =
+        !released && requestGate.isCurrent(requestId)
+
+    private fun destroyRecognizer() {
+        val current = recognizer ?: return
+        recognizer = null
+        try {
+            current.cancel()
+        } catch (_: RuntimeException) {
+        }
+        try {
+            current.destroy()
+        } catch (_: RuntimeException) {
+        }
     }
 
     private fun mapError(code: Int): VoiceErrorCode = when (code) {

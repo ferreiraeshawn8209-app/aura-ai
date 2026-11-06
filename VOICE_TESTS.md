@@ -94,3 +94,7 @@ Transcript feature and the 42-test/build record are committed as `d0e8e9c` and p
 ## Publication verification — 2026-11-06
 
 The transcript feature commit `d0e8e9c` and its handover commit `1ae7c1c` are published on `integration/aura-voice-consolidation`; the post-push remote head was verified as `1ae7c1c99562b4c00ca767e2f57ade323202bf68`. No phone installation or physical voice test was performed.
+
+## PC backend check — 2026-11-06
+
+A PC-side direct (no proxy) GET to `http://192.168.8.18:11434/api/tags` returned `qwen3:1.7b` and `qwen3:4b-q4_K_M`. This is not an Android phone test and did not run inference. Honor remains disconnected.

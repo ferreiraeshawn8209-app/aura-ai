@@ -208,3 +208,7 @@ Implementation commit: `d0e8e9c` on `integration/aura-voice-consolidation`; bran
 ## Publication verification — 2026-11-06
 
 - Immediately after publishing the code and first handover commits, GitHub `origin/integration/aura-voice-consolidation` resolved to `1ae7c1c99562b4c00ca767e2f57ade323202bf68`; `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. No merge. The publication step in the prior entry is complete.
+
+## Ollama reachability — PC only — 2026-11-06
+
+A direct request from BEATK to the configured PC LAN host `http://192.168.8.18:11434/api/tags` succeeded and returned `qwen3:1.7b` and `qwen3:4b-q4_K_M`. The proxy route failed at local proxy address `127.0.0.1:9`; the no-proxy request worked. No configuration was changed. This does not verify phone-to-PC connectivity or model inference on Honor.

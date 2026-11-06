@@ -109,3 +109,7 @@ The transcript feature and test records are committed as `d0e8e9c`; publication 
 ## Publication verification — 2026-11-06
 
 - The integration branch was verified at `1ae7c1c99562b4c00ca767e2f57ade323202bf68` immediately after the code and first handover commits were pushed; `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. The code and handover pushes are complete; continue with the listed Honor/provider checks when available.
+
+## Local Ollama check — 2026-11-06
+
+PC-to-Ollama GET `/api/tags` works when bypassing the configured proxy and lists both Qwen models. Do not change the user's proxy/firewall. After the phone reconnects, test model discovery from Aura on Honor; separately test cloud only after credentials are configured.

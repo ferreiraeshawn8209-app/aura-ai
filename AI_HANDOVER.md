@@ -94,3 +94,9 @@ GitHub accepted the speech lifecycle implementation commit e3d86b3215ca67a88f595
 ## Publication verification — 2026-11-06
 
 - Immediately after publishing the code and first handover commits, GitHub remote `origin/integration/aura-voice-consolidation` resolved to `1ae7c1c99562b4c00ca767e2f57ade323202bf68`. `main` remains `4b48185e9f110764938f10548f80a29acda674f7`; no merge. This supersedes the earlier note that publication was pending.
+
+## PC-side Ollama availability check — 2026-11-06
+
+- Direct HTTP check from the authorized BEATK PC to `http://192.168.8.18:11434/api/tags` succeeded with proxy bypassed. Ollama listed `qwen3:1.7b` and `qwen3:4b-q4_K_M`, matching the app's configured default LAN endpoint and requested models.
+- The normal shell request was intercepted by the machine's proxy configuration and refused at `127.0.0.1:9`; the direct no-proxy request reached Ollama. I changed no proxy, firewall, Ollama, or model settings and did not run a generation request.
+- This verifies PC-to-Ollama HTTP/model discovery only. Honor remains disconnected, so Android-to-PC reachability and model selection are still pending. Cloud is implemented and covered by mock tests; no provider credentials/live cloud request are configured.

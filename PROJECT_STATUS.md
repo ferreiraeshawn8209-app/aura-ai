@@ -116,3 +116,9 @@ The recognizer lifecycle repair is pushed. At verification, origin/integration/a
 ## Publication verification — 2026-11-06
 
 - Immediately after publishing the code and first handover commits, GitHub remote `origin/integration/aura-voice-consolidation` resolved to `1ae7c1c99562b4c00ca767e2f57ade323202bf68`. `main` remains `4b48185e9f110764938f10548f80a29acda674f7`; no merge. This supersedes the earlier pending-publication note.
+
+## Local backend check — 2026-11-06
+
+- Direct no-proxy GET to `http://192.168.8.18:11434/api/tags` from the PC succeeded; Ollama advertised `qwen3:1.7b` and `qwen3:4b-q4_K_M`. The app default endpoint is `http://192.168.8.18:11434`.
+- The default proxy route was refused at `127.0.0.1:9`; bypassing it for this read-only check succeeded. No system proxy/firewall/server settings were changed and no model generation was run.
+- Phone-to-PC access remains unverified until Honor reconnects. Cloud fallback remains unit/mock verified only without configured user credentials.

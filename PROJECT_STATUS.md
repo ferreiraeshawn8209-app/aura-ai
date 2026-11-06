@@ -171,3 +171,5 @@ Commit `a0a4606` records the cloud-only chat-readiness fix and automated verific
 - Integration branch remains `integration/aura-voice-consolidation`; code/tests/records committed as `6e2a221`; main unchanged. Exclude `device-backups/`. Publication status to follow.
 
 The Honor install/startup record is committed as `1a40245` and was pushed successfully to `origin/integration/aura-voice-consolidation`; `main` remains unchanged.
+
+The voice-monitor implementation is `6e2a221`; final test-results handover is `ac8c9bc`. Both were pushed to the integration branch; `main` remains unchanged. Honor remains disconnected and the APK remains uninstalled.

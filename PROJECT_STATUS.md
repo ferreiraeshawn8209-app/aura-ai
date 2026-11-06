@@ -304,3 +304,7 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## No-backend response implementation commit — 2026-11-07
 
 - Code, test, and initial records are committed as `5c93f2a` (`Explain missing model instead of dropping chat`) on `integration/aura-voice-consolidation`; `main` unchanged. `device-backups/` was excluded. Push result to be recorded after remote verification.
+
+## No-backend response publication — 2026-11-07
+
+- Implementation `5c93f2a` and handover record `6dc324a` are published; remote integration head is `6dc324aec2d6616da3e57ba9dfebfaae5ee56da5`. No main merge or APK installation.

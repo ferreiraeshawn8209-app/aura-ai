@@ -408,3 +408,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 ## No-backend response implementation commit — 2026-11-07
 
 - The code, regression test, and project records are committed as `5c93f2a` (`Explain missing model instead of dropping chat`) on `integration/aura-voice-consolidation`. `main` unchanged; `device-backups/` excluded. Push and remote status follow.
+
+## No-backend response publication — 2026-11-07
+
+- GitHub accepted implementation commit `5c93f2a` and handover commit `6dc324a`; `origin/integration/aura-voice-consolidation` resolves to `6dc324aec2d6616da3e57ba9dfebfaae5ee56da5`. `main` remains unchanged. APK not installed; phone/live-provider checks remain pending.

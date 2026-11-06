@@ -246,3 +246,7 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 ## No-backend response commit — 2026-11-07
 
 - Source and initial project records are committed as `5c93f2a`; push and verify the integration branch next. Phone remains disconnected and the APK remains uninstalled.
+
+## No-backend response publication — 2026-11-07
+
+- GitHub accepted implementation `5c93f2a` and handover `6dc324a` on the integration branch. Continue code-only voice/provider work while disconnected; do not install until the phone reconnects and the exact build is approved.

@@ -354,3 +354,9 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Fresh APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,821,779 bytes; package `com.aura.ai`, version 1.0.0 / code 1; SHA-256 `34770A6C4FB123D9034983CB7FCCEF561C058A84FD28C1EA79C7A74F98DBE5C2`. `apksigner verify --print-certs` passed; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. It was not installed.
 - No device test was possible: Honor remains disconnected. Android Settings slider interaction, voice persistence after app restart, preview audio, selected Austrian voice, continuous listening, interruption, Ollama/cloud, and WhatsApp remain unverified on-device/live provider. Starting HEAD `97baa3e4f5b9a148ff2e19e80bd48ad0ba3435b6`; source and handover commit follows. `main` unchanged; exclude `device-backups/`.
 - Next: on reconnection and after approval of this exact APK, adjust Android voice pitch/rate, reopen Settings to confirm persistence, preview the exact selected voice, and check it remains the same during multi-turn conversation. Confirm accent through actual voice playback; do not infer it from slider values.
+
+## Voice tuning publication — 2026-11-06
+
+- Android voice-tuning implementation, tests, and initial handover records are committed as `af603cf83fe379e275681b4676b8c298505b39e5` (`Add persistent Android voice tuning controls`) on `integration/aura-voice-consolidation` and accepted by `origin`.
+- Production `main` remains unchanged. APK is not installed; `device-backups/` remains untracked and excluded. APK SHA-256 and test totals are in the implementation section above.
+- No Honor/settings/preview playback or live AI/action test was run. On reconnection, verify saved tuning and selected voice audibly before making any voice-quality claim.

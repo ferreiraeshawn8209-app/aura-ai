@@ -259,3 +259,8 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Settings now offers saved, bounded pitch and speaking-rate controls for Android voices; cloud voices remain provider-controlled. Voice ID is not changed. This tuning cannot create an Austrian accent.
 - 88 app/voice tests passed (30 suites, zero failures/errors/skips), and a fresh signed `com.aura.ai` APK was built (SHA-256 in `AI_HANDOVER.md`). Not installed. Phone playback, persistence after restart, Austrian accent, hands-free, and live backends remain unverified.
 - Source and handover commit details follow after publication; `main` is unchanged.
+
+## Voice tuning publication — 2026-11-06
+
+- `af603cf83fe379e275681b4676b8c298505b39e5` is published on `origin/integration/aura-voice-consolidation`; `main` unchanged.
+- 88 app/voice tests passed; signed APK built and left uninstalled. Device validation remains pending.

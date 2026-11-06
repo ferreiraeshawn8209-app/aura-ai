@@ -35,3 +35,9 @@ Repository: ferreiraeshawn8209-app/aura-ai; branch: integration/aura-voice-conso
 - No install was performed. Honor/ADB is disconnected. No live cloud credential, cloud request, phone-to-PC Ollama call, WhatsApp launch/send, wake/microphone/speech/TTS/interruption test occurred. Ollama is intentionally stopped. The saved Android TTS voice remains ar-language; the requested Austrian voice is still not supplied/configured.
 - Limits: the router bounds cloud output to 768 tokens per request and cools down after failure, but a user-configurable daily spend/request budget is not implemented yet. The cloud adapter supports OpenAI-compatible chat-completions, not provider-specific proprietary APIs.
 - Next: configure a provider in Aura Settings, test cloud success/failure and Ollama recovery when available, complete phone voice/WhatsApp checks after reconnection and approval for this build, implement a daily cloud budget, and continue wake/barge-in/Austrian TTS work. No merge to main.
+
+
+## Commit record — 2026-11-06
+
+- Cloud/local routing, WhatsApp draft tool, tests, and updated project docs committed as 45eaf56dc6caf629927c6ba0e23319e2f2351d11 (Add cloud fallback and WhatsApp draft actions) on integration/aura-voice-consolidation.
+- Prior spoken-action gate is b93d67d after rebasing on the latest remote audit commits. Branch has not been merged to main. The debug APK is not installed; Honor tests remain pending.

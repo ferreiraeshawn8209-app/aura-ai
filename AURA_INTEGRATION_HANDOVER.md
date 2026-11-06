@@ -160,3 +160,9 @@ Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment f
 - APK was not installed; Honor is disconnected. No real cloud, phone-to-PC Ollama, WhatsApp launch/send, microphone, wake, voice, or interruption acceptance test occurred. Ollama is stopped.
 - Still missing: user-configurable daily spend/request budget; actual provider credentials; Austrian TTS voice (current saved Android voice ID ar-language); dedicated wake-word engine/acoustic barge-in. The handset acceptance gate remains open.
 - No database change, app identity change, replacement APK install, or main merge.
+
+
+## Commit record — 2026-11-06
+
+- Cloud/local routing, WhatsApp draft tool, tests, and updated project docs committed as 45eaf56dc6caf629927c6ba0e23319e2f2351d11 (Add cloud fallback and WhatsApp draft actions) on integration/aura-voice-consolidation.
+- Prior spoken-action gate is b93d67d after rebasing on the latest remote audit commits. Branch has not been merged to main. The debug APK is not installed; Honor tests remain pending.

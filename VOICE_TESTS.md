@@ -50,3 +50,9 @@ Do not mark pending checks as passing until tested on the actual phone. The user
 - Added WhatsApp draft URL/phone validation tests. The tool only opens a prefilled draft; it does not send.
 - Combined app and voice-library JVM result: 32 tests passed, 0 failures/errors/skips across 11 suites. Full debug APK assemble also passed.
 - No live provider call, phone-originated Ollama call, WhatsApp app launch/send, or speech/wake/interruption/TTS test was performed. Honor is disconnected and Ollama is stopped. No APK installation occurred. Do not treat the automated checks as device acceptance.
+
+
+## Commit record — 2026-11-06
+
+- Cloud/local routing, WhatsApp draft tool, tests, and updated project docs committed as 45eaf56dc6caf629927c6ba0e23319e2f2351d11 (Add cloud fallback and WhatsApp draft actions) on integration/aura-voice-consolidation.
+- Prior spoken-action gate is b93d67d after rebasing on the latest remote audit commits. Branch has not been merged to main. The debug APK is not installed; Honor tests remain pending.

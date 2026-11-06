@@ -65,3 +65,9 @@ This work is confined to the integration branch. The user approved and received 
 - Existing voice selection was preserved; ar-language is not the requested Austrian TTS. Acoustic barge-in and a dedicated wake detector remain incomplete. Daily cloud budget controls are also still outstanding.
 - No database/package replacement or merge occurred. Personal device-backups remains untracked and excluded.
 - Next: test on Honor after reconnect and authorization for this APK; configure/test an actual provider; add a daily cloud budget; continue verified voice and wake repairs.
+
+
+## Commit record — 2026-11-06
+
+- Cloud/local routing, WhatsApp draft tool, tests, and updated project docs committed as 45eaf56dc6caf629927c6ba0e23319e2f2351d11 (Add cloud fallback and WhatsApp draft actions) on integration/aura-voice-consolidation.
+- Prior spoken-action gate is b93d67d after rebasing on the latest remote audit commits. Branch has not been merged to main. The debug APK is not installed; Honor tests remain pending.

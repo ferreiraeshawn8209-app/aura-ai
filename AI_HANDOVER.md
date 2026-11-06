@@ -254,3 +254,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 ## Contact action implementation commit — 2026-11-06
 
 - Contact search, contact-based call/SMS drafts, legacy ACTION_DIAL/ACTION_SENDTO safety changes, tests and project records are committed as `055d535a0028713fb3c7ce8d6355b80472b929c1` (`Add-contact-actions-and-safe-confirmation`) on `integration/aura-voice-consolidation`. Production `main` remains unchanged; `device-backups/` was excluded. Push status is recorded after publication.
+
+## Contact actions publication — 2026-11-06
+
+- GitHub accepted the contact implementation commit `055d535a0028713fb3c7ce8d6355b80472b929c1` and handover commit `3d66643` on `integration/aura-voice-consolidation` (`a4228e7..3d66643`). The push succeeded. `main` remains `4b48185e9f110764938f10548f80a29acda674f7`; no phone APK was installed. The personal backup directory remains excluded.

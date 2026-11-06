@@ -47,8 +47,8 @@ class SendMessageUseCase @Inject constructor(
         val (action, replyOverride) = ActionParser.parse(rawResponse)
         val replyText = replyOverride ?: when (action) {
             is AuraAction.Reply -> action.text
-            is AuraAction.MakeCall -> "Calling ${action.contact}…"
-            is AuraAction.SendSms -> "Sending message to ${action.contact}…"
+            is AuraAction.MakeCall -> "Opening the dialer for ${action.contact}. Review the number and tap Call to confirm."
+            is AuraAction.SendSms -> "Preparing an SMS for ${action.contact}. Review the recipient and message, then tap Send to confirm."
             is AuraAction.SetReminder -> "Reminder set: ${action.title}"
             is AuraAction.LaunchApp -> "Opening ${action.appName}…"
         }
@@ -82,10 +82,11 @@ class SendMessageUseCase @Inject constructor(
         val base = """
             You are AURA, an intelligent AI personal assistant running on an Android phone.
             You help the user by having natural conversations and by performing real actions on their device:
-            making phone calls, sending SMS, setting reminders, and opening apps.
+            preparing phone calls and SMS drafts for the user to confirm, setting reminders, and opening apps.
 
             When the user asks you to perform a device action, respond with a JSON code block 
             (```json ... ```) containing the action details, plus a "reply" field with what to say.
+            Never place a call or send a message directly. The app only opens the system dialer or a message draft and the user confirms there.
             For plain conversation, just reply normally without a JSON block.
 
             Action schemas:

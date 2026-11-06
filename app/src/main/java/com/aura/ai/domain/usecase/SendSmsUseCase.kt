@@ -1,30 +1,23 @@
 package com.aura.ai.domain.usecase
 
 import android.content.Context
-import android.telephony.SmsManager
+import android.content.Intent
+import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class SendSmsUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    /**
-     * Sends an SMS [message] to [number].
-     * Requires [android.Manifest.permission.SEND_SMS].
-     */
+    /** Opens a prefilled SMS draft; the user reviews and sends it in their messaging app. */
     fun execute(number: String, message: String): Result<Unit> = runCatching {
         val sanitized = number.filter { it.isDigit() || it == '+' }
-        @Suppress("DEPRECATION")
-        val smsManager: SmsManager = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            context.getSystemService(SmsManager::class.java)
-        } else {
-            SmsManager.getDefault()
+        require(sanitized.count { it.isDigit() } in 7..15) { "A valid phone number is required." }
+        require(message.isNotBlank()) { "Message text is required." }
+        val intent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("smsto", sanitized, null)).apply {
+            putExtra("sms_body", message)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        val parts = smsManager.divideMessage(message)
-        if (parts.size == 1) {
-            smsManager.sendTextMessage(sanitized, null, message, null, null)
-        } else {
-            smsManager.sendMultipartTextMessage(sanitized, null, parts, null, null)
-        }
+        context.startActivity(intent)
     }
 }

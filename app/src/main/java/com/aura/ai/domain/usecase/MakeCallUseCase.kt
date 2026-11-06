@@ -9,13 +9,11 @@ import javax.inject.Inject
 class MakeCallUseCase @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    /**
-     * Initiates a phone call to [number].
-     * Requires [android.Manifest.permission.CALL_PHONE].
-     */
+    /** Opens the system dialer; the user confirms the call there. */
     fun execute(number: String): Result<Unit> = runCatching {
         val sanitized = number.filter { it.isDigit() || it == '+' }
-        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$sanitized"))
+        require(sanitized.count { it.isDigit() } in 7..15) { "A valid phone number is required." }
+        val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", sanitized, null))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }

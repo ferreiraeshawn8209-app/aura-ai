@@ -12,6 +12,13 @@ Branch: `integration/aura-voice-consolidation`
 - Personal `device-backups/` remains untracked and excluded.
 - Code and initial verification records are committed as `f5655fa` on `integration/aura-voice-consolidation`; the final handover record and branch publication status follow in `AI_HANDOVER.md`.
 
+## Contact actions and call/SMS confirmation — 2026-11-06
+
+- Added active agent tools to search contacts and prepare a call or SMS draft from a uniquely matched contact. Contact names/counts may be summarized to the model; phone numbers remain in the local Android tool and are not returned in the agent transcript. Ambiguous matches stop for clarification. Existing READ_CONTACTS permission is checked; this work added/granted no permission.
+- Changed the legacy action path from direct calls/SMS to Android ACTION_DIAL/ACTION_SENDTO review screens. Static scan shows no direct call or SMS send API remaining in app Kotlin source.
+- Verification: full app and voice suites plus debug build passed: 68 tests, 0 failures/errors/skips, 22 suites. APK v2 signature verified, SHA-256 `4cdfdbc615394e201c0395f7d774b32a1b16ddd7b3c3bed5b8b28a912e7399c7`; package remains `com.aura.ai` v1.0.0/code 1. Not installed.
+- Honor disconnected; live permission, contact, call/SMS/WhatsApp, voice and backend tests are pending. Main unchanged; personal backup folder excluded.
+
 ## Current delivery
 
 - Integrated the reusable `Aura-Voice-Subsystem` Android library into the existing Kotlin app and wired its recognizer/speech providers into chat and settings.

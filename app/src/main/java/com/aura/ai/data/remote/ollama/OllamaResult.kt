@@ -33,5 +33,5 @@ sealed class OllamaError(val message: String) {
 
     /** No model has been selected yet. */
     data object NoModelSelected :
-        OllamaError("No model selected. Pick a model in Settings first.")
+        OllamaError("Aura can't answer yet. Select a local Ollama model or finish setting up a cloud provider in Settings.")
 }

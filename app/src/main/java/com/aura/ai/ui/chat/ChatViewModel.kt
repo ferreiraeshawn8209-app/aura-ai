@@ -122,7 +122,8 @@ class ChatViewModel @Inject constructor(
     fun send(text: String = _state.value.input, spokenInstruction: Boolean = false) {
         val prompt = text.trim()
         if (prompt.isEmpty() || _state.value.busy || !_state.value.historyLoaded) return
-        if (!_state.value.modelReady && LocalAnswerIntent.answer(prompt) == null) return
+        // Let the orchestrator surface its precise no-backend status instead of
+        // silently dropping typed or spoken requests when configuration is missing.
 
         val userTurn = ChatTurn(id = System.nanoTime(), isUser = true, text = prompt)
         val assistantId = System.nanoTime() + 1

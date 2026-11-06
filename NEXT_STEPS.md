@@ -237,3 +237,8 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 ## Routing publication confirmation — 2026-11-06
 
 - GitHub accepted implementation `a487a29` and handover `035ee0f` on the integration branch. Do not install until the Honor reconnects and the owner approves this exact build.
+
+## No-backend response repair — 2026-11-07
+
+- Chat now accepts turns after transcript history loads even if model setup is missing, allowing Aura to display/save and optionally speak an actionable setup error. The app/voice test reports show 91 passing tests; offline single-worker debug APK assembly and signature/package verification passed. Exact APK hash is in `AI_HANDOVER.md`. Not installed.
+- Next: commit and publish these changes on `integration/aura-voice-consolidation`. Continue non-device coding on voice/backend reliability while the Honor is disconnected. After reconnect and exact-build approval, verify no-backend status through phone TTS, then configured cloud/local reply, wake, repeat turns, interruption, and WhatsApp draft.

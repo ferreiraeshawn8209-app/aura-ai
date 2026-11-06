@@ -7,6 +7,12 @@ import org.junit.Test
 
 class ChatBackendAvailabilityPolicyTest {
     @Test
+    fun composerRemainsAvailableWhenHistoryLoadsEvenWithoutABackend() {
+        assertFalse(ChatBackendAvailabilityPolicy.canSubmit(historyLoaded = false))
+        assertTrue(ChatBackendAvailabilityPolicy.canSubmit(historyLoaded = true))
+    }
+
+    @Test
     fun cloudOnlyConfigurationEnablesChatWithoutLocalModel() {
         val result = ChatBackendAvailabilityPolicy.evaluate(
             localModel = null,

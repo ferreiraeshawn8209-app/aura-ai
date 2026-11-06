@@ -193,3 +193,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Wake-service silence and no-match outcomes now restart after 800 ms; actual recognizer failures retain capped backoff. Two tests cover normal idle and repeated failures.
 - Full app/voice test reports: 90 total, zero failures/errors/skips; APK built and signature verified. Not installed; no acoustic device test. APK hash is in `AI_HANDOVER.md`.
 - On Honor reconnect, verify wake phrase after several seconds of silence and confirm any platform mic-sound behavior. Also repeat wake-to-chat, long answer interruption, and backend/action checks.
+
+## No-backend spoken status — 2026-11-07
+
+- The chat composer and hands-free control stay enabled once conversation history is ready, even when no AI provider is configured. The orchestrator returns a clear setup status instead of silently dropping the spoken or typed request; the normal optional voice-reply path can read it aloud. No tool/action runs without an available model.
+- Automated: app/voice reports show 91 tests across 31 suites, all passing; debug APK assembled and signer/package checked. APK is not installed.
+- Device test pending: Honor disconnected. Verify the clear status appears in the transcript and is spoken when voice replies are enabled, then confirm adding a provider restores normal replies. Do not infer phone playback from JVM/build results.

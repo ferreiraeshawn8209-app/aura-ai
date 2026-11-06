@@ -292,3 +292,11 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## Conversation routing publication — 2026-11-06
 
 - Implementation `a487a29` and handover record `035ee0f` are published to `origin/integration/aura-voice-consolidation`; production `main` is unchanged. No phone install or real-device test was performed.
+
+## No-backend response reliability — 2026-11-07
+
+- Chat no longer drops turns or disables the composer solely because no model is configured. After history loads, the user can submit or speak; the orchestrator reports that Aura needs a local Ollama model or a configured cloud provider. The status follows the normal transcript persistence and optional TTS path; no task is executed without a model.
+- Verification: Android app and voice reports show 91 tests across 31 suites, 0 failures/errors/skips. Offline single-worker `:app:assembleDebug` succeeded. The debug APK is `com.aura.ai` v1.0.0/code 1, 20,877,183 bytes, SHA-256 `7C860B980741E322B134F3C9D1662A78F701DD39CA0978FFF192F329CA4E527C`; signature verified. Not installed.
+- Honor disconnected: no real-device or live provider test. No microphone/voice/wake/interruption, Ollama/cloud, or WhatsApp acceptance claimed. Initial wrapper invocation hit access denied; retry with the existing Gradle cache completed successfully. No cache was cleared.
+- Files changed: `ChatBackendAvailabilityPolicy.kt`, `ChatScreen.kt`, `ChatViewModel.kt`, `OllamaResult.kt`, `ChatBackendAvailabilityPolicyTest.kt`, `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md`. Starting commit `6ee487ae47146c2b47fe1c6860e1cbc37c37bc33`; code/docs commit and remote publication follow. Integration branch only; `main` and backups untouched.
+- Next: publish, then continue code-only reliability work. On phone reconnect and owner approval, verify a no-backend spoken request gets the clear status response, then verify full voice and backend/action paths on the actual Honor.

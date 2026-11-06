@@ -8,6 +8,9 @@ internal object ChatBackendAvailabilityPolicy {
         val banner: String? = null,
     )
 
+    /** Keep chat controls available after history loads so Aura can explain a missing backend. */
+    fun canSubmit(historyLoaded: Boolean): Boolean = historyLoaded
+
     fun evaluate(
         localModel: String?,
         cloudEnabled: Boolean,

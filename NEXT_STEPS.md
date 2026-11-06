@@ -146,3 +146,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Verify cloud-first routing, local Ollama fallback, and recovery with actual provider calls; no live provider test was run here.
 3. When Honor reconnects, verify package/version/signer and back up accessible app data before installing the newly built APK; then run the pending real-device voice, interruption, local/cloud, and WhatsApp draft tests.
 4. Keep work on `integration/aura-voice-consolidation`; do not merge to `main` or stage `device-backups/`.
+
+## Honor is reconnected — 2026-11-06
+
+1. Await the user's result from one spoken arithmetic turn on the updated app. If it fails, capture the visible transcript/status and relevant logcat before changing voice or provider code.
+2. Test follow-up turn, wake resume, interruption, Ollama model discovery/inference, cloud-only/fallback/recovery, and WhatsApp draft review with the user present.
+3. Preserve `device-backups/`; do not stage it or merge this branch into `main`.

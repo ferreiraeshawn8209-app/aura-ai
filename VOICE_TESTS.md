@@ -128,3 +128,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added cases for cloud-only readiness without local model, cloud-first with local fallback, local-only readiness, and incomplete cloud credentials. Focused Android unit test passed; full app and voice-library suite/build passed: 50 tests, 0 failures, 0 errors, 0 skipped.
 - APK package/signature verification passed; SHA-256 `C07912A9B18D9D8827C9ABE427DB23A46B8F3A5F49AED8B69BD55F221647581B`.
 - Not a live provider or device test: no cloud credential was used, no Ollama inference was run, and Honor is disconnected. Voice, wake, mic, interruption, and WhatsApp acceptance remain pending.
+
+## Honor install and launch check — 2026-11-06
+
+- Honor reconnected. Existing `com.aura.ai` app data archive created before update (997,376 bytes; SHA-256 `B7604B79A17CDFA52937361F7C9DD0E081AC7B6A350C70887C4A458A388F043A`). Existing and new APK package/version are both `com.aura.ai` 1.0.0/code 1; signer SHA-256 matched `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
+- Installed the new APK in place with `adb install -r` (Success); did not uninstall or clear app data. MainActivity started and resumed. No fatal AndroidRuntime error matched in recent logcat.
+- Launch is verified, not voice acceptance. User's spoken test is pending; no live mic, wake, interruption, model inference, or WhatsApp action has been verified.

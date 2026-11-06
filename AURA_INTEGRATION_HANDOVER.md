@@ -238,3 +238,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Honor disconnected; APK not installed; all hardware/audio and phone-backend tests remain pending. Branch `integration/aura-voice-consolidation`; starting HEAD `cfdf931`. Main untouched; `device-backups/` excluded.
 - Next: verify the fresh APK and backed-up app data before installing once the phone reconnects, then run the physical voice/Ollama/cloud/WhatsApp checks.
 - Code and records were committed as `04fd7a4ad8e3927b2f6d39271fe83b4afc57d61c` and pushed to the integration branch. Remote head matched; `main` remains unchanged.
+
+## Delayed wake restart race guard — 2026-11-06
+
+- Wake listener restart now rechecks that no hands-free session became active while persisted setting and microphone permission were being read. Added the active-session policy case to the JVM test.
+- Verification on BEATK: `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` passed in 8m27s; app reports 42/42 tests, 0 failed/errors/skipped, 15 suites; voice-library test task up-to-date. `git diff --check` passed before handover edits.
+- Latest APK: `com.aura.ai` v1.0.0/code 1, 20,862,522 bytes, SHA-256 `3C5BA73F4582281AC2A27BAEB17B3BD008E68F068566438E876CBDB12CAAD511`; signature verified with existing Android Debug signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
+- Honor disconnected, APK not installed, phone voice/Ollama/cloud/WhatsApp checks pending. Main unchanged. Final code and handover commit is pending publication.

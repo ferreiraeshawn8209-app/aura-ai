@@ -384,7 +384,12 @@ class ChatViewModel @Inject constructor(
                 context,
                 Manifest.permission.RECORD_AUDIO,
             ) == PackageManager.PERMISSION_GRANTED
-            if (!WakeWordResumePolicy.shouldResume(wakeWordEnabled, microphoneGranted)) return@launch
+            if (!WakeWordResumePolicy.shouldResume(
+                    wakeWordEnabled = wakeWordEnabled,
+                    microphonePermissionGranted = microphoneGranted,
+                    handsFreeSessionActive = _state.value.handsFreeSession,
+                )
+            ) return@launch
             runCatching { WakeWordService.start(context) }
                 .onFailure {
                     _state.update {

@@ -7,9 +7,40 @@ import org.junit.Test
 class WakeWordResumePolicyTest {
     @Test
     fun resumesOnlyWhenWakeModeAndMicrophonePermissionAreEnabled() {
-        assertTrue(WakeWordResumePolicy.shouldResume(wakeWordEnabled = true, microphonePermissionGranted = true))
-        assertFalse(WakeWordResumePolicy.shouldResume(wakeWordEnabled = false, microphonePermissionGranted = true))
-        assertFalse(WakeWordResumePolicy.shouldResume(wakeWordEnabled = true, microphonePermissionGranted = false))
-        assertFalse(WakeWordResumePolicy.shouldResume(wakeWordEnabled = false, microphonePermissionGranted = false))
+        assertTrue(
+            WakeWordResumePolicy.shouldResume(
+                wakeWordEnabled = true,
+                microphonePermissionGranted = true,
+                handsFreeSessionActive = false,
+            ),
+        )
+        assertFalse(
+            WakeWordResumePolicy.shouldResume(
+                wakeWordEnabled = false,
+                microphonePermissionGranted = true,
+                handsFreeSessionActive = false,
+            ),
+        )
+        assertFalse(
+            WakeWordResumePolicy.shouldResume(
+                wakeWordEnabled = true,
+                microphonePermissionGranted = false,
+                handsFreeSessionActive = false,
+            ),
+        )
+        assertFalse(
+            WakeWordResumePolicy.shouldResume(
+                wakeWordEnabled = true,
+                microphonePermissionGranted = true,
+                handsFreeSessionActive = true,
+            ),
+        )
+        assertFalse(
+            WakeWordResumePolicy.shouldResume(
+                wakeWordEnabled = false,
+                microphonePermissionGranted = false,
+                handsFreeSessionActive = false,
+            ),
+        )
     }
 }

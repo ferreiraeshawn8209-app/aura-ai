@@ -138,3 +138,12 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 ## Commit and publication — 2026-11-06
 
 - Code, unit test and records committed as `04fd7a4ad8e3927b2f6d39271fe83b4afc57d61c` (`Resume Aura wake listener after voice session`). Push succeeded; `origin/integration/aura-voice-consolidation` verified at the same commit. `main` remains `4b48185e9f110764938f10548f80a29acda674f7`; no merge. Only the pre-existing personal `device-backups/` is untracked.
+
+## Wake restart race guard and final verification — 2026-11-06
+
+- Tightened the restart policy to also require that a new hands-free session is not active at the moment the asynchronous settings/permission check finishes. This prevents a delayed standby restart from taking microphone ownership after the user has already started another conversation. The policy test now covers wake setting, permission, and active-session state.
+- Updated files: `app/src/main/java/com/aura/ai/ui/chat/ChatViewModel.kt`, `app/src/main/java/com/aura/ai/voice/wake/WakeWordResumePolicy.kt`, `app/src/test/java/com/aura/ai/voice/wake/WakeWordResumePolicyTest.kt`.
+- Re-ran `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` on BEATK: `BUILD SUCCESSFUL` in 8m27s (75 actionable tasks: 14 executed, 61 up-to-date). App XML summary: 42 tests, 0 failures, 0 errors, 0 skipped across 15 suites. `aura-voice:testDebugUnitTest` was up-to-date. Existing deprecation warnings remain.
+- Latest APK replaces the earlier APK hash recorded above: `app/build/outputs/apk/debug/app-debug.apk`, 20,862,522 bytes, SHA-256 `3C5BA73F4582281AC2A27BAEB17B3BD008E68F068566438E876CBDB12CAAD511`. `apksigner verify --print-certs` passed; package `com.aura.ai`, version 1.0.0/code 1; Android Debug signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
+- Honor remains disconnected and this APK was not installed. No physical wake, mic, transcript, voice, interruption, Ollama/cloud or WhatsApp results are claimed. `main` remains unchanged; `device-backups/` remains excluded.
+- Next: when the Honor reconnects, verify app data backup and APK identity before installing under the existing approval. Test race scenario (end, immediately restart session) plus wake enabled/disabled and permission denied, then full multi-turn voice and backend/device action coverage.

@@ -426,3 +426,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 ## Speech-recognition watchdog commit and publication — 2026-11-07
 
 - Implementation/tests/initial records committed as `6518392` (`Recover stalled Android speech recognition`) on `integration/aura-voice-consolidation`. GitHub accepted the push (`091c7a4..6518392`). Remote branch verification and final documentation commit follow. Production `main` unchanged; APK is not installed.
+
+## Speech-recognition watchdog final publication — 2026-11-07
+
+- Final handover commit `a1a3447` is also pushed. `git ls-remote` confirms `origin/integration/aura-voice-consolidation` at `a1a34472b12d738ac54d16a84187ef6c77e1c8ef`. Production `main` remains unchanged. `device-backups/` remains untracked/excluded.

@@ -259,3 +259,7 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 ## Speech-recognition watchdog commit — 2026-11-07
 
 - Implementation commit `6518392` has been pushed to `integration/aura-voice-consolidation`; GitHub accepted the update. The phone is still disconnected, and the fresh APK remains uninstalled. Retry a remote-head check and record final publication next.
+
+## Speech-recognition watchdog publication confirmed — 2026-11-07
+
+- Remote integration head is `a1a34472b12d738ac54d16a84187ef6c77e1c8ef`; implementation and final handover are both published. Keep main unchanged and device acceptance pending.

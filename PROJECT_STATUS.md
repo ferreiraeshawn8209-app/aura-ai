@@ -319,3 +319,7 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## Speech-recognition watchdog publication — 2026-11-07
 
 - Watchdog code/tests and initial records are committed as `6518392` and the push to `origin/integration/aura-voice-consolidation` succeeded (`091c7a4..6518392`). `main` unchanged. Final remote head and handover confirmation follow; APK not installed.
+
+## Speech-recognition watchdog final publication — 2026-11-07
+
+- Final handover commit `a1a3447` is pushed; `git ls-remote` verified remote branch head `a1a34472b12d738ac54d16a84187ef6c77e1c8ef`. `main` unchanged; APK is still uninstalled and phone checks remain pending.

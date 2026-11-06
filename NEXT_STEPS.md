@@ -139,3 +139,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 4. Continue code work without ADB while disconnected; do not install, merge to `main`, or claim device acceptance.
 
 Latest code change adds a race guard for the asynchronous wake restart. It was rebuilt and verified with 42 app tests passing. Commit `b33b06dd8832893d8f6429b074933f7b0fce2e70` is published on the integration branch. The resulting APK remains uninstalled pending phone reconnection.
+
+## Continue cloud-first chat verification — 2026-11-06
+
+1. The cloud-only chat gate is fixed and unit-tested; with the owner's configured provider key, verify chat without a local model and run a cloud-only reply.
+2. Verify cloud-first routing, local Ollama fallback, and recovery with actual provider calls; no live provider test was run here.
+3. When Honor reconnects, verify package/version/signer and back up accessible app data before installing the newly built APK; then run the pending real-device voice, interruption, local/cloud, and WhatsApp draft tests.
+4. Keep work on `integration/aura-voice-consolidation`; do not merge to `main` or stage `device-backups/`.

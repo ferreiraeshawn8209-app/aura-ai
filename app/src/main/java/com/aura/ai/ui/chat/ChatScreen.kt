@@ -66,7 +66,7 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
                 Column {
                     Text("T1000", style = MaterialTheme.typography.titleLarge)
                     Text(
-                        text = state.modelName?.let { "on-device · $it" } ?: "no model connected",
+                        text = state.backendLabel,
                         style = MaterialTheme.typography.labelMedium,
                         color = if (state.modelReady) MintAccent else RoseError,
                     )

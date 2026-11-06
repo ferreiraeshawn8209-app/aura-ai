@@ -12,6 +12,7 @@ import com.aura.ai.voice.wake.WakeWordResumePolicy
 import com.aura.ai.agent.AgentEvent
 import com.aura.ai.agent.AgentOrchestrator
 import com.aura.ai.agent.AgentPhase
+import com.aura.ai.core.security.SecureStorage
 import com.aura.ai.data.settings.SettingsRepository
 import com.aura.ai.data.model.ChatMessage
 import com.aura.ai.data.repository.ConversationRepository
@@ -43,6 +44,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val orchestrator: AgentOrchestrator,
     private val settings: SettingsRepository,
+    private val secureStorage: SecureStorage,
     private val conversationRepository: ConversationRepository,
     private val voice: AuraVoiceSubsystem,
     private val wakeWordEvents: WakeWordEvents,
@@ -84,12 +86,19 @@ class ChatViewModel @Inject constructor(
         }
         viewModelScope.launch {
             settings.settings.collect { s ->
+                val backend = ChatBackendAvailabilityPolicy.evaluate(
+                    localModel = s.selectedModel,
+                    cloudEnabled = s.cloudEnabled,
+                    cloudBaseUrl = s.cloudBaseUrl,
+                    cloudModel = s.cloudModel,
+                    cloudApiKeyConfigured = secureStorage.hasSecret(AgentOrchestrator.CLOUD_API_KEY_SECRET),
+                )
                 _state.update {
                     it.copy(
-                        modelReady = !s.selectedModel.isNullOrBlank(),
+                        modelReady = backend.ready,
                         modelName = s.selectedModel,
-                        banner = if (s.selectedModel.isNullOrBlank())
-                            "No model selected. Open Settings to connect Ollama and pick a model." else null,
+                        backendLabel = backend.label,
+                        banner = backend.banner,
                     )
                 }
             }

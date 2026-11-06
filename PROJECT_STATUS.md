@@ -147,3 +147,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Honor disconnected; not installed. No real-device voice, wake, interruption, Ollama/cloud or WhatsApp claim. No production merge.
 - Branch `integration/aura-voice-consolidation`, starting HEAD `cfdf931`; implementation commit `04fd7a4ad8e3927b2f6d39271fe83b4afc57d61c` is published and verified. `main` remains unchanged. Honor remains disconnected; tests pending on device. Exclude `device-backups/`.
 - Final race-guard verification: app tests 42/42 passed, no failures/errors/skips; Gradle build successful. Latest APK SHA-256 `3C5BA73F4582281AC2A27BAEB17B3BD008E68F068566438E876CBDB12CAAD511`, package `com.aura.ai` v1.0.0/code 1; signature verified. This APK is not installed. Commit `b33b06dd8832893d8f6429b074933f7b0fce2e70` is published on the integration branch; main unchanged.
+
+## Cloud-only readiness fix — 2026-11-06
+
+- Android chat now enables Send/Talk when either a local model is selected or cloud is enabled with URL, model, and saved encrypted API key. The header distinguishes cloud-first with Ollama fallback, cloud-only, and local-only. The provider router remains responsible for routing and fallback.
+- Focused policy tests passed; full app and voice-library test/build passed: 50 tests, 0 failures/errors/skips across 18 XML suites. APK signature passed. SHA-256: `C07912A9B18D9D8827C9ABE427DB23A46B8F3A5F49AED8B69BD55F221647581B`; package `com.aura.ai` v1.0.0/code 1; signer digest unchanged.
+- No phone install or device acceptance. Live cloud/Ollama inference and WhatsApp action remain unverified. See `AI_HANDOVER.md` for exact pending tests.

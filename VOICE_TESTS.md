@@ -122,3 +122,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Implementation and test records are committed as `04fd7a4ad8e3927b2f6d39271fe83b4afc57d61c`, pushed to and verified on `integration/aura-voice-consolidation`; `main` was not changed.
 - Additional race guard blocks a delayed wake-listener restart if a hands-free session has already restarted. Rerun: app JUnit XML 42 passed, 0 failures/errors/skips across 15 suites; Gradle build successful; voice-library unit task up-to-date. Latest APK SHA-256 `3C5BA73F4582281AC2A27BAEB17B3BD008E68F068566438E876CBDB12CAAD511`; signature/package verified. Honor still disconnected; no device result.
 - Final code and test records are published as `b33b06dd8832893d8f6429b074933f7b0fce2e70`; main was not changed.
+
+## Cloud-only chat gate regression — 2026-11-06
+
+- Added cases for cloud-only readiness without local model, cloud-first with local fallback, local-only readiness, and incomplete cloud credentials. Focused Android unit test passed; full app and voice-library suite/build passed: 50 tests, 0 failures, 0 errors, 0 skipped.
+- APK package/signature verification passed; SHA-256 `C07912A9B18D9D8827C9ABE427DB23A46B8F3A5F49AED8B69BD55F221647581B`.
+- Not a live provider or device test: no cloud credential was used, no Ollama inference was run, and Honor is disconnected. Voice, wake, mic, interruption, and WhatsApp acceptance remain pending.

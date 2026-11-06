@@ -32,6 +32,7 @@ data class ChatUiState(
     val handsFreeSession: Boolean = false,
     val modelReady: Boolean = false,
     val modelName: String? = null,
+    val backendLabel: String = "no model connected",
     val banner: String? = null,
     val historyLoaded: Boolean = false,
     val historySearchOpen: Boolean = false,

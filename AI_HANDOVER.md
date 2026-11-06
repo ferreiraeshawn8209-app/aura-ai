@@ -159,3 +159,7 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Device acceptance is pending. Honor is disconnected; this APK was not installed. No live voice, interruption, speech recognition, Ollama inference from phone, live cloud request, or WhatsApp launch/draft test was performed. The prior PC-side Ollama `/api/tags` check only confirmed host reachability/model listing.
 - Branch `integration/aura-voice-consolidation`; main unchanged. The personal `device-backups/` folder remains untracked and excluded. Commit ID and remote publication will be recorded after commit.
 - Next: test chat readiness and cloud-only response with owner-configured credentials, then cloud-first/local fallback and recovery with live providers; after Honor reconnects, verify package/signature and back up accessible app data before installing the approved APK, then test voice, local/cloud route, and WhatsApp draft on device.
+
+## Commit record — 2026-11-06
+
+- Cloud-only readiness implementation, four policy tests, and project records are committed on `integration/aura-voice-consolidation` as `a0a4606` (`Enable cloud-only Aura chat readiness`). Branch started at `63a5f1dcd6b27dd4de0bada84e50a8df06681e16`; `main` remains unchanged. `device-backups/` was excluded.

@@ -153,3 +153,5 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Android chat now enables Send/Talk when either a local model is selected or cloud is enabled with URL, model, and saved encrypted API key. The header distinguishes cloud-first with Ollama fallback, cloud-only, and local-only. The provider router remains responsible for routing and fallback.
 - Focused policy tests passed; full app and voice-library test/build passed: 50 tests, 0 failures/errors/skips across 18 XML suites. APK signature passed. SHA-256: `C07912A9B18D9D8827C9ABE427DB23A46B8F3A5F49AED8B69BD55F221647581B`; package `com.aura.ai` v1.0.0/code 1; signer digest unchanged.
 - No phone install or device acceptance. Live cloud/Ollama inference and WhatsApp action remain unverified. See `AI_HANDOVER.md` for exact pending tests.
+
+Commit `a0a4606` records the cloud-only chat-readiness fix and automated verification on `integration/aura-voice-consolidation`. Main unchanged; `device-backups/` excluded.

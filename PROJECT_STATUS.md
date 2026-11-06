@@ -25,6 +25,7 @@ Branch: `integration/aura-voice-consolidation`
 - Settings now lets the user grant one folder with Android's system folder picker. Aura persists only the selected tree URI and the OS read grant. Agent tools search filename/relative path and open a unique match through an installed app. No file contents are read; no modification/deletion, broad storage permission, or Room migration was added.
 - Automated checks: 71 tests passed, 0 failures/errors/skips across 23 suites; debug APK assembled; signature verified. APK SHA-256 `ffc0e51f2ae16c02004e142bf325310c2bdff681098e8ed5701ae51613c5309f`, package `com.aura.ai` v1.0.0/code 1. Not installed.
 - Folder picker, persistent permission, revocation and opening files are not device-verified; Honor remains disconnected. Main unchanged; personal backup folder excluded.
+- File access code and test results are committed as `5883d84284f42c3849378010eb4da637ec207bec` on the integration branch; see `AI_HANDOVER.md` for publication state.
 
 ## Current delivery
 

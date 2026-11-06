@@ -315,3 +315,7 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Automated verification: 94 app/voice tests across 32 suites, zero failures/errors/skips; the new three timeout-policy tests passed. Offline app build/APK assembly succeeded in 9m01s. APK package/signature verified, SHA-256 `D7BADFCC1402F85E786D00131087E6BF3CFC4DA88218F0A0259D2700EEBEF293`, `com.aura.ai` v1.0.0/code 1. Not installed.
 - No Honor/ADB or live ASR test; `adb devices -l` was empty. GitHub push is pending because this check could not connect to github.com:443 via the configured proxy. Local branch is `integration/aura-voice-consolidation`, starting commit `091c7a400e0969856fdd92a0cb055505598f7523`; local code/docs commit follows. `main` and backup data untouched.
 - Next: commit locally, retry branch publication when GitHub is reachable, then test the watchdog and pauses on the Honor after exact-build approval. Continue separate cloud/Ollama, voice identity, interruption, and action checks; automated results do not establish them.
+
+## Speech-recognition watchdog publication — 2026-11-07
+
+- Watchdog code/tests and initial records are committed as `6518392` and the push to `origin/integration/aura-voice-consolidation` succeeded (`091c7a4..6518392`). `main` unchanged. Final remote head and handover confirmation follow; APK not installed.

@@ -422,3 +422,7 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Device/live status: `adb devices -l` listed no device. No phone microphone, wake phrase, transcript timing, TTS, interruption, Ollama/cloud, or WhatsApp test was performed. In this check, GitHub was also unreachable (`git ls-remote` could not connect to github.com:443 through the configured local proxy); record local commit and retry publication when connectivity returns.
 - Starting commit: `091c7a400e0969856fdd92a0cb055505598f7523` on `integration/aura-voice-consolidation`. Do not merge to `main`; exclude pre-existing `device-backups/`.
 - Next: commit the source and records locally. Retry pushing the authorized integration branch when GitHub is reachable. After the Honor reconnects and this exact APK is approved, verify no-callback recovery, natural pauses, partial transcript progress, and successive turns on the actual device. Keep the 30-second bound under review if device tests show unwanted cutoffs.
+
+## Speech-recognition watchdog commit and publication — 2026-11-07
+
+- Implementation/tests/initial records committed as `6518392` (`Recover stalled Android speech recognition`) on `integration/aura-voice-consolidation`. GitHub accepted the push (`091c7a4..6518392`). Remote branch verification and final documentation commit follow. Production `main` unchanged; APK is not installed.

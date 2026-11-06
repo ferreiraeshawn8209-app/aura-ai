@@ -255,3 +255,7 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 
 - Added a tested 30-second no-progress watchdog to Android in-app recognition; partial progress resets it and failure follows the existing retry path. Full app/voice reports show 94 passing tests; signed APK built, not installed. Details and hash are in `AI_HANDOVER.md`.
 - Commit source plus records locally, then retry publishing when GitHub connectivity is available (the current `git ls-remote` failed to connect). No ADB device is present. After reconnect and owner approval, verify real recognizer behavior, long natural pauses, wake-to-chat, interruption, and repeated turns. Do not assume handset providers honor the same timeout behavior as JVM policy.
+
+## Speech-recognition watchdog commit — 2026-11-07
+
+- Implementation commit `6518392` has been pushed to `integration/aura-voice-consolidation`; GitHub accepted the update. The phone is still disconnected, and the fresh APK remains uninstalled. Retry a remote-head check and record final publication next.

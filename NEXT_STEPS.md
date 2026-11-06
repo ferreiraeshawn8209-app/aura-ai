@@ -179,3 +179,16 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. Activity wake-launch guard and tests (`cb04a22`), records (`25e9af6`), and publication confirmation (`d95ec2a`) are pushed to `integration/aura-voice-consolidation`; continue only on this branch and do not stage `device-backups/`.
 2. Fresh APK SHA-256 `9CF7CD5B965D36E964D124877165362C11514B180A8DE957E607E586454B0CB6`; keep uninstalled until phone reconnects, identity/signature and data backup are verified, and this exact install is approved.
 3. On Honor, verify wake-triggered launch leaves the microphone with active chat, then test recognized text, answer speech, multiple turns, interruption, and ordinary standby restart.
+
+## Offline verification refresh — 2026-11-06
+
+1. The offline Gradle invocation succeeded; 71 existing app/voice tests report passed (23 suites), but all tasks were up-to-date and were not forcibly rerun. APK signature/package/hash are recorded in `AI_HANDOVER.md`.
+2. Continue code-only work while the Honor is disconnected; leave the APK uninstalled and exclude `device-backups/`.
+3. After reconnection and explicit build approval, back up accessible Aura data, verify package/signature, install in place only if compatible, then test wake, mic handoff, visible transcripts, two-way speech, interruption, selected voice, Ollama and confirmed cloud fallback/recovery.
+4. Obtain/configure an authorized Austrian voice identity, then test voice preview/playback; do not claim it is available before an actual provider/device check.
+
+## On-device wake recognition — 2026-11-06
+
+1. Wake standby prefers Android's dedicated on-device recognizer when available on API 31+, requests offline mode, and keeps the existing system recognizer fallback. Unit policy tests and the APK build passed; Honor support and en-ZA model availability remain unknown.
+2. On reconnection, inspect OS on-device recognition availability and language resources, then test repeated “Yo, yo, yo” plus a multi-turn exchange. Keep the APK uninstalled until its exact update has separate approval.
+3. If offline recognition is unavailable or inaccurate, evaluate a dedicated wake-word engine and its model/license; do not claim local wake recognition is verified yet.

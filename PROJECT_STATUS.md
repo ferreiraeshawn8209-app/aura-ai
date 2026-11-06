@@ -3,6 +3,18 @@
 Updated: 2026-11-06
 Branch: `integration/aura-voice-consolidation`
 
+## Offline build check — 2026-11-06
+
+- Offline Gradle build/test command completed successfully in 1m13s. App + `lib/aura-voice` reports: 71 tests / 23 suites, 0 failures/errors/skips. All 75 Gradle tasks were up-to-date, so this invocation reused prior outputs rather than executing test bodies again.
+- Debug APK artifact verified: package `com.aura.ai`, version 1.0.0/code 1, SHA-256 `FFC0E51F2AE16C02004E142BF325310C2BDFF681098E8ED5701AE51613C5309F`; signing verified with existing debug signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed.
+- No phone/ADB or live provider test. Cloud-first/Ollama fallback, WhatsApp draft, voice/wake and action policy checks are not equivalent to live-device acceptance. The original app, data, package identity and main branch were untouched; `device-backups/` remains excluded.
+
+## Wake recognizer update — 2026-11-06
+
+- Standby wake now prefers Android's dedicated on-device speech recognizer on API 31+ when available, with the existing Android system recognizer as fallback; the intent also requests offline recognition. The OS/provider may ignore the offline hint, and Honor support/language resources have not been checked.
+- Added two policy tests. Full offline app + voice test/build completed successfully: 73 reports / 24 suites, 0 failures/errors/skips; 14 of 75 Gradle tasks executed, other tasks up-to-date. Debug APK SHA-256 `A88BF09A91C596752669D3D274065B81F66E2D32511D19F10C96685CD45D4363`, package `com.aura.ai` v1.0.0/code 1; signature verified with the established debug signer. Not installed.
+- Phone and live-provider acceptance remain pending. No ADB/install was used. Code and record are on the integration branch; `main` and `device-backups/` remain untouched.
+
 ## Current verified status — 2026-11-06
 
 - The existing Aura app now exposes `open_app`, HTTP(S)-only `open_website`, user-reviewed `prepare_phone_call`, and user-reviewed `prepare_sms` tools to its active agent registry. Existing WhatsApp draft action is retained. Calls and messages are not placed/sent automatically.

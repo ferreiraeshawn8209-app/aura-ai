@@ -158,3 +158,15 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 
 - Two unit tests cover that a normal Activity launch may start opted-in standby listening while a wake-triggered launch must not start a competing standby listener.
 - Full Android + voice run passed 60 tests with zero failures/errors/skips; APK package/signature verified. No ADB used, so actual phone mic ownership and conversation behavior are pending.
+
+## Offline project continuation — 2026-11-06
+
+- Rechecked existing app and voice-library reports: 71 tests across 23 suites, zero failures/errors/skips. The Gradle invocation reported all tasks up-to-date, so these are existing report results, not a forced fresh test run.
+- APK assemble task succeeded/up-to-date and signature/package were checked. No phone, microphone, wake phrase, TTS, interruption, Ollama request, cloud request, or WhatsApp intent was exercised.
+- Device acceptance remains pending: wake listener uses Android `SpeechRecognizer`; real handset mic ownership, ASR accuracy, Austrian voice availability, continuous turns and barge-in have not been established by this offline check.
+
+## On-device recognizer preference — 2026-11-06
+
+- Added policy coverage for selecting the dedicated on-device recognizer only on API 31+ when available; policy tests passed as part of the 73-test app/voice suite. The wake request also asks Android to prefer offline processing.
+- Build and debug APK assembly passed. This does not confirm the Honor has an on-device en-ZA model, and Android permits the generic recognizer to ignore the offline hint.
+- No real-device test: Honor disconnected; no microphone capture, wake phrase, speech answer, interruption or live backend check. Keep the APK uninstalled until reconnect and explicit install authorization.

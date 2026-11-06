@@ -20,6 +20,7 @@ import com.aura.ai.MainActivity
 import com.aura.ai.R
 import com.aura.ai.AuraApplication
 import com.aura.ai.voice.wake.WakePhraseMatcher
+import com.aura.ai.voice.wake.WakeRecognizerPolicy
 import com.aura.ai.voice.wake.WakeWordRequestGate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,7 +84,7 @@ class WakeWordService : LifecycleService() {
         listening = true
         val requestId = requestGate.begin()
         val next = try {
-            SpeechRecognizer.createSpeechRecognizer(this)
+            createWakeRecognizer()
         } catch (_: SecurityException) {
             requestGate.invalidate()
             listening = false
@@ -111,8 +112,24 @@ class WakeWordService : LifecycleService() {
     private fun recognizerIntent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-ZA")
-        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, false)
+        // Prefer local standby recognition to avoid sending ambient wake audio
+        // to a network service. Android recognizers may ignore this hint.
+        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+    }
+
+    private fun createWakeRecognizer(): SpeechRecognizer {
+        val onDeviceAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            SpeechRecognizer.isOnDeviceRecognitionAvailable(this)
+        if (WakeRecognizerPolicy.useOnDeviceRecognizer(Build.VERSION.SDK_INT, onDeviceAvailable)) {
+            try {
+                return SpeechRecognizer.createOnDeviceSpeechRecognizer(this)
+            } catch (_: RuntimeException) {
+                // Some platform providers can report availability and still
+                // fail creation. Preserve wake availability via system fallback.
+            }
+        }
+        return SpeechRecognizer.createSpeechRecognizer(this)
     }
 
     private fun restartSoon(requestId: Long, error: Int? = null) {

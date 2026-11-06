@@ -65,3 +65,6 @@ Do not mark pending checks as passing until tested on the actual phone. The user
 ## Commit — 2026-11-06
 
 - Daily quota logic, local-fallback reason, Settings control and tests committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. 35 JVM tests and APK build passed; no phone install/device check occurred.
+## Publication — 2026-11-06
+
+The quota tests and handover are on origin/integration/aura-voice-consolidation at 8c332e49254fa4d40a372794202bf8ca61c1e2e1. main unchanged; the debug APK is not installed.

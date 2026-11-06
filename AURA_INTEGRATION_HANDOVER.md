@@ -180,3 +180,6 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 ## Implementation commit — 2026-11-06
 
 - Daily cloud request cap and verification record committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. The commit preserves existing app identity/data and excludes device-backups/. Main remains unchanged. Branch publication is pending.
+## GitHub publication — 2026-11-06
+
+The latest quota implementation and test record are pushed to origin/integration/aura-voice-consolidation, verified at 8c332e49254fa4d40a372794202bf8ca61c1e2e1. No main merge. The existing device-backups/ directory was not staged.

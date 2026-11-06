@@ -85,3 +85,6 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 ## Implementation commit — 2026-11-06
 
 - Daily cloud request limit and test/documentation updates committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. Working tree contains no tracked changes. device-backups/ remains untracked and excluded. Branch publication is pending; main unchanged.
+## Branch publication — 2026-11-06
+
+The quota code and test documentation are published on GitHub. Integration branch and origin both resolve to 8c332e49254fa4d40a372794202bf8ca61c1e2e1. main was not changed. The pre-existing device-backups/ folder remains untracked and excluded.

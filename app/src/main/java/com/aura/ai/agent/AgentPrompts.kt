@@ -16,7 +16,11 @@ object AgentPrompts {
             "Answer simple questions directly without a filler acknowledgement. For actionable requests, do not write an acknowledgement in the final result; the app speaks its pre-action acknowledgement separately. Report only the verified outcome. " +
             "Never use ‘I'm on it’ or ‘I'll be back’ in the final result, repeat catchphrases, or claim completion without evidence. If uncertain, say so plainly."
 
-    fun understand(request: String, memories: List<MemoryEntity>): List<Pair<String, String>> {
+    fun understand(
+        request: String,
+        memories: List<MemoryEntity>,
+        conversationContext: List<Pair<String, String>> = emptyList(),
+    ): List<Pair<String, String>> {
         val memoryBlock = if (memories.isEmpty()) "(none)" else
             memories.joinToString("\n") { "- ${it.content}" }
         val system = """
@@ -26,11 +30,13 @@ object AgentPrompts {
             Relevant long-term memory:
             $memoryBlock
 
+            Prior conversation messages are supplied in order before the current user request.
+
             Reply with ONLY minified JSON:
             {"goal":string,"successCriteria":[string],"constraints":[string],"clarificationNeeded":string|null}
             Set clarificationNeeded only if the request is genuinely ambiguous and cannot proceed.
         """.trimIndent()
-        return listOf("system" to system, "user" to request)
+        return listOf("system" to system) + conversationContext.takeLast(18) + ("user" to request)
     }
 
     fun plan(

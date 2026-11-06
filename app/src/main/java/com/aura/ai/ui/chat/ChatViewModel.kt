@@ -126,9 +126,15 @@ class ChatViewModel @Inject constructor(
         val userTurn = ChatTurn(id = System.nanoTime(), isUser = true, text = prompt)
         val assistantId = System.nanoTime() + 1
         val assistantTurn = ChatTurn(id = assistantId, isUser = false, text = "", streaming = true)
-        val conversationContext = _state.value.turns.takeLast(12).map { turn ->
+        val turnsSnapshot = _state.value.turns
+        val recentTurns = turnsSnapshot.takeLast(12)
+        val recalledTurns = ConversationRecallPolicy.relevantExchanges(
+            request = prompt,
+            olderTurns = turnsSnapshot.dropLast(recentTurns.size),
+        )
+        val conversationContext = (recalledTurns + recentTurns.map { turn ->
             (if (turn.isUser) "user" else "assistant") to turn.text
-        }
+        }).takeLast(18)
 
         _state.update {
             it.copy(

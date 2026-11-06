@@ -115,7 +115,7 @@ class AgentOrchestrator @Inject constructor(
                 }
                 val messages = buildList {
                     add("system" to system)
-                    addAll(conversationContext.takeLast(12))
+                    addAll(conversationContext.takeLast(18))
                     add("user" to request)
                 }
                 // Hold ordinary chat tokens until the response is complete. A
@@ -132,7 +132,7 @@ class AgentOrchestrator @Inject constructor(
             send(AgentEvent.Phase(AgentPhase.UNDERSTAND, "Interpreting your request"))
             val memories = memory.recall(request)
             val understanding = parseUnderstanding(
-                complete(AgentPrompts.understand(request, memories), streamTokens = false),
+                complete(AgentPrompts.understand(request, memories, conversationContext), streamTokens = false),
             )
             send(AgentEvent.Understood(understanding))
             understanding.clarificationNeeded?.takeIf { it.isNotBlank() }?.let {

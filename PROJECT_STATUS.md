@@ -21,6 +21,12 @@ Branch: `integration/aura-voice-consolidation`
 - Offline Gradle app/voice tests and debug APK assembly succeeded: 74 tests / 24 suites, 0 failures/errors/skips. APK SHA-256 `4930072AF2184041BD9482DFC67E8B9012347D5B92538DB46F0631C31BB8E3B6`, package `com.aura.ai` v1.0.0/code 1, signer verified. Not installed; no phone test.
 - Source/tests/docs are being committed to the existing integration branch; main is unchanged and personal backup data is excluded.
 
+## Memory and conversation context — 2026-11-06
+
+- Long-term memory recall now uses bounded meaningful-word searches plus ranking and includes high-priority preference/setting/instruction/project memories. Older transcript retrieval selects up to three matching exchanges (1,800 characters), alongside recent history; task understanding now receives history too. No schema/data change.
+- Regression tests cover memory word matching/ranking/deduplication, old conversation selection/bounds, and task prompt context. Full offline Android build passed: 81 tests / 27 suites, zero failures/errors/skips. Debug APK package/signature verified, SHA-256 `9D46DEB9542FE2F200BDA0DDE98B7875B0F1106834D565FBE8808D0F699F56E5`; not installed.
+- This is lexical policy/build verification only. No Honor, voice, live cloud/Ollama, or action test. Device acceptance remains pending; `main` and personal backups untouched.
+
 ## Current verified status — 2026-11-06
 
 - The existing Aura app now exposes `open_app`, HTTP(S)-only `open_website`, user-reviewed `prepare_phone_call`, and user-reviewed `prepare_sms` tools to its active agent registry. Existing WhatsApp draft action is retained. Calls and messages are not placed/sent automatically.

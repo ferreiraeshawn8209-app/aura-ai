@@ -23,9 +23,14 @@ class T1000MemoryRepository @Inject constructor(
     suspend fun remember(content: String, type: String, importance: Float, source: String): Long =
         rememberFact(type, content, (importance * 10f).toInt().coerceIn(1, 10))
 
-    suspend fun recall(query: String): List<MemoryEntity> =
-        if (query.isBlank()) memoryDao.getTopMemories(20).first()
-        else memoryDao.searchMemories(query).first()
+    suspend fun recall(query: String): List<MemoryEntity> {
+        val topMemories = memoryDao.getTopMemories(20).first()
+        if (query.isBlank()) return topMemories
+
+        val matchingMemories = MemoryRecallPolicy.queryTerms(query)
+            .flatMap { term -> memoryDao.searchMemories(term).first() }
+        return MemoryRecallPolicy.rank(query, topMemories + matchingMemories)
+    }
 
     fun observeAll(): Flow<List<MemoryEntity>> = memoryDao.getTopMemories(100)
 

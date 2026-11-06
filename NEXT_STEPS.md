@@ -198,3 +198,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. The updated wake service now switches to the system recognizer after on-device `en-ZA` support errors; policy/build checks pass. The new APK is uninstalled and Honor acceptance is pending.
 2. After phone reconnection, back up accessible app data and verify package/signer before getting approval for this exact build. Test on-device language availability and behavior without network, then enable network and verify system fallback; record actual device output.
 3. Continue cloud/Ollama live failover, TTS identity, interruption, and WhatsApp checks only when their real provider/phone is available. Automated mocks are not acceptance evidence.
+
+## Memory recall verification — 2026-11-06
+
+1. Bounded lexical memory recall and older transcript exchange recall are implemented and pass 81 app/voice tests; APK SHA-256 and details are in `AI_HANDOVER.md`. No database migration; APK remains uninstalled.
+2. After Honor reconnection and approval of the exact build, restart Aura and test retrieval of a saved user preference/project fact and a follow-up referring to an older exchange. Check that unrelated exchanges are not inserted.
+3. Treat this as word-overlap retrieval, not semantic learning. Consider a locally evaluated synonym or embedding index only if device tests show paraphrase misses; preserve current Room data/schema.

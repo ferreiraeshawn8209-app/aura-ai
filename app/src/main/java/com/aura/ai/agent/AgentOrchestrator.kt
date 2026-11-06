@@ -58,7 +58,7 @@ class AgentOrchestrator @Inject constructor(
 
         suspend fun complete(messages: List<Pair<String, String>>, streamTokens: Boolean): String {
             val chatMessages = messages.map { OllamaChatMessage(it.first, it.second) }
-            val cloudCall = if (cfg.cloudEnabled) {
+            var cloudCall = if (cfg.cloudEnabled) {
                 ChatCompletionCall(
                     model = cfg.cloudModel,
                     messages = chatMessages,
@@ -70,6 +70,17 @@ class AgentOrchestrator @Inject constructor(
             } else {
                 null
             }
+            var cloudUnavailableReason: String? = null
+            if (
+                cloudCall?.model?.isNotBlank() == true &&
+                !cloudCall.baseUrl.isNullOrBlank() &&
+                !cloudCall.apiKey.isNullOrBlank()
+            ) {
+                if (!settings.reserveCloudRequest(cfg.cloudRequestsPerDayLimit)) {
+                    cloudCall = null
+                    cloudUnavailableReason = "Daily cloud request limit reached; using local Ollama."
+                }
+            }
             val result = providerRouter.complete(
                 local = ChatCompletionCall(
                     model = model,
@@ -78,6 +89,7 @@ class AgentOrchestrator @Inject constructor(
                     timeoutSeconds = timeout,
                 ),
                 cloud = cloudCall,
+                cloudUnavailableReason = cloudUnavailableReason,
             )
             send(AgentEvent.BackendUsed(result.provider, result.fallbackReason))
             if (streamTokens) send(AgentEvent.Token(result.text))

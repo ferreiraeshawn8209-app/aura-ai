@@ -171,3 +171,9 @@ Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment f
 ## Branch publication — 2026-11-06
 
 GitHub accepted the integration branch push: origin/integration/aura-voice-consolidation now includes the spoken-action gate and cloud/WhatsApp work through commit b7ba19425b8c0cf6ba2d40cba26f4375049d94bd. Production main remains unchanged. Phone acceptance and live provider tests remain pending.
+## Cloud request cap continuation — 2026-11-06
+
+- Settings now provides a persisted daily cloud request cap, default 60 and configurable from 1 to 1,000. Reservation is atomic and based on UTC day. When exhausted, cloud is skipped and the existing Ollama route is attempted with a trace reason. This is a request-count limit, not a monetary spend limit; an agent task with multiple inference steps can consume multiple units.
+- Latest build/test result: Gradle app + aura-voice unit tests + debug APK assemble passed in 12m20s; 75 tasks (15 executed, 60 up-to-date), 35 tests, 0 failures/errors/skips, 12 suites. git diff --check passed. Exact APK SHA-256 and signer are in AI_HANDOVER.md.
+- No physical phone or live model/provider test occurred. Honor is disconnected; Ollama is stopped; cloud credentials are not configured. No APK installed. Existing app package/database remain unchanged.
+- Next after this docs update: commit only the quota implementation and handover records on integration/aura-voice-consolidation, push branch and confirm remote head. When the phone reconnects, obtain authorization for this exact build before in-place installation, then test voice, wake, interruptions, local Ollama, WhatsApp draft opening, and cloud success/fallback/recovery. Continue Austrian TTS integration only with an authorized provider/voice identity. Keep main unchanged.

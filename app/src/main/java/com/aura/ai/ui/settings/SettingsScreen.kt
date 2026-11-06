@@ -159,6 +159,13 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
+                    LabeledSlider(
+                        label = "Maximum cloud requests per day",
+                        value = settings.cloudRequestsPerDayLimit,
+                        valueLabel = settings.cloudRequestsPerDayLimit.toString() + " requests",
+                        range = 1..1000,
+                        onChange = viewModel::setCloudDailyRequestLimit,
+                    )
                     OutlinedTextField(
                         value = cloud.apiKeyDraft,
                         onValueChange = viewModel::onCloudApiKeyChange,

@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "t1000_settings")
 
@@ -32,6 +34,7 @@ data class T1000Settings(
     val cloudEnabled: Boolean = false,
     val cloudBaseUrl: String = "https://openrouter.ai/api/v1",
     val cloudModel: String = "",
+    val cloudRequestsPerDayLimit: Int = 60,
 ) {
     companion object {
         const val DEFAULT_OLLAMA_URL = "http://192.168.8.18:11434"
@@ -54,6 +57,9 @@ class SettingsRepository @Inject constructor(
         val CLOUD_ENABLED = booleanPreferencesKey("cloud_enabled")
         val CLOUD_BASE_URL = stringPreferencesKey("cloud_base_url")
         val CLOUD_MODEL = stringPreferencesKey("cloud_model")
+        val CLOUD_DAILY_LIMIT = intPreferencesKey("cloud_daily_request_limit")
+        val CLOUD_USAGE_DAY = stringPreferencesKey("cloud_usage_day_utc")
+        val CLOUD_USAGE_COUNT = intPreferencesKey("cloud_usage_count")
     }
 
     val settings: Flow<T1000Settings> = context.dataStore.data.map { p ->
@@ -83,6 +89,7 @@ class SettingsRepository @Inject constructor(
             cloudEnabled = p[Keys.CLOUD_ENABLED] ?: false,
             cloudBaseUrl = p[Keys.CLOUD_BASE_URL] ?: "https://openrouter.ai/api/v1",
             cloudModel = p[Keys.CLOUD_MODEL] ?: "",
+            cloudRequestsPerDayLimit = p[Keys.CLOUD_DAILY_LIMIT] ?: 60,
         )
     }
 
@@ -97,5 +104,31 @@ class SettingsRepository @Inject constructor(
         it[Keys.CLOUD_ENABLED] = enabled
         it[Keys.CLOUD_BASE_URL] = baseUrl.trim().trimEnd('/')
         it[Keys.CLOUD_MODEL] = model.trim()
+    }
+
+    suspend fun setCloudDailyRequestLimit(limit: Int) = context.dataStore.edit {
+        it[Keys.CLOUD_DAILY_LIMIT] = limit.coerceIn(1, 1000)
+    }
+
+    suspend fun reserveCloudRequest(limit: Int): Boolean {
+        val today = LocalDate.now(ZoneOffset.UTC).toString()
+        var accepted = false
+        context.dataStore.edit { preferences ->
+            val previousDay = preferences[Keys.CLOUD_USAGE_DAY]
+            val previousCount = if (previousDay == today) preferences[Keys.CLOUD_USAGE_COUNT] ?: 0 else 0
+            val next = CloudDailyQuota.nextCount(today, previousDay, previousCount, limit)
+            preferences[Keys.CLOUD_USAGE_DAY] = today
+            preferences[Keys.CLOUD_USAGE_COUNT] = next ?: previousCount.coerceAtLeast(0)
+            if (next != null) accepted = true
+        }
+        return accepted
+    }
+
+    internal object CloudDailyQuota {
+        fun nextCount(todayUtc: String, storedDayUtc: String?, storedCount: Int, limit: Int): Int? {
+            val count = if (todayUtc == storedDayUtc) storedCount.coerceAtLeast(0) else 0
+            val safeLimit = limit.coerceIn(1, 1000)
+            return if (count >= safeLimit) null else count + 1
+        }
     }
 }

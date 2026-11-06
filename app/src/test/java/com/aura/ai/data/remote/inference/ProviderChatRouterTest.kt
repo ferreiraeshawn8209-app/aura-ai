@@ -78,6 +78,22 @@ class ProviderChatRouterTest {
     }
 
     @Test
+    fun dailyQuotaSkipKeepsLocalAvailableAndReportsLimit() = runBlocking {
+        val cloud = FakeBackend("must not run")
+        val local = FakeBackend("local answer")
+        val result = ProviderChatRouter(cloud, local).complete(
+            localCall,
+            cloud = null,
+            cloudUnavailableReason = "Daily cloud request limit reached.",
+        )
+
+        assertEquals("local", result.provider)
+        assertEquals("Daily cloud request limit reached.", result.fallbackReason)
+        assertEquals(0, cloud.calls)
+        assertEquals(1, local.calls)
+    }
+
+    @Test
     fun callerCancellationIsNotConvertedIntoFallback() = runBlocking {
         val cloud = FakeBackend(failure = CancellationException("caller stopped"))
         val local = FakeBackend("must not run")

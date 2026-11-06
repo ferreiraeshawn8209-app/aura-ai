@@ -198,4 +198,5 @@ class SettingsViewModel @Inject constructor(
         if (enabled) WakeWordService.start(context) else WakeWordService.stop(context)
     }
     fun setVoiceReplies(enabled: Boolean) = viewModelScope.launch { settings.setVoiceReplies(enabled) }
+    fun setCloudDailyRequestLimit(limit: Int) = viewModelScope.launch { settings.setCloudDailyRequestLimit(limit) }
 }

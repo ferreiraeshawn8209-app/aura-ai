@@ -167,8 +167,9 @@ class ProviderChatRouter @Inject constructor(
     suspend fun complete(
         local: ChatCompletionCall,
         cloud: ChatCompletionCall?,
+        cloudUnavailableReason: String? = null,
     ): ChatCompletionResult {
-        var fallbackReason: String? = null
+        var fallbackReason: String? = cloudUnavailableReason
         if (cloud != null) {
             if (cloud.model.isBlank() || cloud.baseUrl.isNullOrBlank() || cloud.apiKey.isNullOrBlank()) {
                 fallbackReason = "Cloud provider settings are incomplete."

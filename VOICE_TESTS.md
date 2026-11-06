@@ -56,3 +56,9 @@ Do not mark pending checks as passing until tested on the actual phone. The user
 
 - Cloud/local routing, WhatsApp draft tool, tests, and updated project docs committed as 45eaf56dc6caf629927c6ba0e23319e2f2351d11 (Add cloud fallback and WhatsApp draft actions) on integration/aura-voice-consolidation.
 - Prior spoken-action gate is b93d67d after rebasing on the latest remote audit commits. Branch has not been merged to main. The debug APK is not installed; Honor tests remain pending.
+## 2026-11-06 — Daily cloud quota regression checks
+
+- Added tests for daily UTC quota increment, cap enforcement, date rollover and bounds, plus router fallback to local when the quota is reached.
+- Full Gradle command (:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug) passed in 12m20s. 35 tests passed, 0 failures/errors/skips, 12 suites. APK assemble passed. git diff --check passed.
+- This is automated JVM/build verification only. No phone test, live cloud provider call, Ollama call, or WhatsApp launch/send was run. No install was performed.
+- APK package/version/signature and SHA-256 are recorded in AI_HANDOVER.md; the handset remains disconnected. Do not treat this as device acceptance.

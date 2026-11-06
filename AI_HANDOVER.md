@@ -237,4 +237,4 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 
 ## Branch publication — 2026-11-06
 
-- GitHub accepted both commits. `f5655fa` contains the new action tools/tests and `eaeba65c9d484846c8c1f6c3dc116b483ff5b61b` contains the commit-status handover update. Local HEAD and `origin/integration/aura-voice-consolidation` both resolve to `eaeba65c9d484846c8c1f6c3dc116b483ff5b61b`. Production `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. The only untracked path is personal `device-backups/`, excluded from both commits.
+- GitHub accepted the code commit `f5655fa` and commit-status handover commit `eaeba65`. At that verification point, local and remote resolved to `eaeba65c9d484846c8c1f6c3dc116b483ff5b61b`. The publication record was then committed as `9ec975a` and pushed successfully. Production `main` remains `4b48185e9f110764938f10548f80a29acda674f7`; personal `device-backups/` was excluded.

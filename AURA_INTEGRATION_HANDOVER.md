@@ -220,3 +220,8 @@ The existing voice subsystem now has an optional ElevenLabs cloud TTS provider a
 Regression history: initial test run exposed three Android JSONObject stub failures; changed request and response JSON handling to the project's kotlinx.serialization implementation. Corrected a missing typed put import after a compile failure. A subsequent KSP run hit low C: disk space; cleared only verified repo-local generated intermediates/cache/temp directories while preserving outputs, source, backups and user data. Focused tests then passed. Final app+voice tests and debug assembly passed in 5m21s: 41 tests, zero failures/errors/skips across 14 suites. APK verification and hash are recorded in AI_HANDOVER.md.
 
 Not installed; Honor disconnected by instruction. No real-device audio, wake, interruption, transcript, Ollama/cloud, or WhatsApp acceptance is claimed. Continue on integration/aura-voice-consolidation; do not merge main. device-backups/ excluded.
+
+
+## Commit record — 2026-11-06
+
+Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional ElevenLabs voice provider) on integration/aura-voice-consolidation. It includes provider code, tests, and project records. Main unchanged; device-backups/ was excluded.

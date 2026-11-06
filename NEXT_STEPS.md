@@ -121,3 +121,8 @@ PC-to-Ollama GET `/api/tags` works when bypassing the configured proxy and lists
 3. Test Tap to Speak, Yo, yo, yo wake, transcript capture, repeated turns, interruption, voice output and recognizer recovery on the physical phone.
 4. Separately configure provider credentials and validate cloud TTS/reasoning and local Ollama fallback/recovery. Review the WhatsApp draft tool on device; sending remains a user action.
 5. Never install while disconnected, claim device acceptance from JVM tests, merge to main, or stage device-backups/.
+
+
+## Commit record — 2026-11-06
+
+Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional ElevenLabs voice provider) on integration/aura-voice-consolidation. It includes provider code, tests, and project records. Main unchanged; device-backups/ was excluded.

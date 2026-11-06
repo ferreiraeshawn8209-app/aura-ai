@@ -104,3 +104,8 @@ A PC-side direct (no proxy) GET to `http://192.168.8.18:11434/api/tags` returned
 - Focused JVM suite for the ElevenLabs transport passed: voice names/gender/accent mapping, preserved provider voice ID, speech request path/body/auth header, absent-key no-request behavior, and provider error redaction. No real API key or provider request was used.
 - Full app and voice-library unit test suites and debug APK assemble passed: 41 tests, 0 failures, 0 errors, 0 skipped across 14 suites. APK signature verification passed. Details and APK hash are in AI_HANDOVER.md.
 - No audio playback, voice preview, Austrian accent, microphone, wake, conversation, barge-in, local Ollama, or cloud inference test occurred on a phone. The Honor is disconnected and no APK was installed.
+
+
+## Commit record — 2026-11-06
+
+Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional ElevenLabs voice provider) on integration/aura-voice-consolidation. It includes provider code, tests, and project records. Main unchanged; device-backups/ was excluded.

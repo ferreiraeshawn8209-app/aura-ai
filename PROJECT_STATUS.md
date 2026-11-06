@@ -130,3 +130,8 @@ The recognizer lifecycle repair is pushed. At verification, origin/integration/a
 - Verification: focused transport tests passed; full app and voice-library unit suites plus debug APK assemble passed. Result: 41 tests, 0 failures/errors/skips, 14 suites; BUILD SUCCESSFUL in 5m21s. APK SHA-256 95EC076E0F424A8C76CB30BAB3BC067F630C6217524F32624366573390B70DE2; package com.aura.ai v1.0.0/code 1; signer unchanged. Details in AI_HANDOVER.md.
 - No install or real-device test. The Honor remains disconnected by request. Existing chat routing/WhatsApp draft behavior was not changed or newly live-tested.
 - Main remains unchanged. Continue on integration/aura-voice-consolidation; device-backups/ stays untracked and excluded.
+
+
+## Commit record — 2026-11-06
+
+Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional ElevenLabs voice provider) on integration/aura-voice-consolidation. It includes provider code, tests, and project records. Main unchanged; device-backups/ was excluded.

@@ -114,3 +114,8 @@ GitHub accepted the speech lifecycle implementation commit e3d86b3215ca67a88f595
 - The APK was not installed. Honor is disconnected as requested. No microphone, wake phrase, live transcript, voice preview, speech interruption, Ollama, cloud reasoning, or WhatsApp device acceptance is claimed from this change. Existing app package, database, user settings, backups and default voice were preserved. Main was not modified.
 - Branch: integration/aura-voice-consolidation. Pre-change HEAD: 498e494a526c6e0f5679950c23b505d6906df1d8. Implementation commit ID will be recorded below after commit. Personal device-backups/ remains untracked and excluded.
 - Next: after Honor reconnects, verify APK package/signature and back up app data before requesting install approval; configure an owner-controlled ElevenLabs key, load voices, select the intended voice and preview on device; then separately verify repeated spoken turns, wake, interruptions, Android TTS fallback behavior, local Ollama/cloud reasoning and WhatsApp draft review. Do not merge to main.
+
+
+## Commit record — 2026-11-06
+
+Implementation commit: 3eb89d5cdb1b8c634797c971dcc43527188b317e (Add optional ElevenLabs voice provider) on integration/aura-voice-consolidation. It includes provider code, tests, and project records. Main unchanged; device-backups/ was excluded.

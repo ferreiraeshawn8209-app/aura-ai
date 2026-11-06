@@ -48,3 +48,8 @@ This work is confined to the integration branch. The user approved and received 
 ## Fresh automated rerun — 2026-11-05
 
 - Forced `:app:testDebugUnitTest :aura-voice:testDebugUnitTest --rerun-tasks`: passed in 10m02s; 50 tasks executed. Reports: 22 tests passed, 0 failures/errors/skips across 8 suites. The separate app assemble task succeeded earlier but was up-to-date. No phone install or device acceptance.
+
+
+## Commit record — 2026-11-05
+
+- Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.

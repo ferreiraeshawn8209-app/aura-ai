@@ -143,3 +143,8 @@ Spoken acknowledgement change: `09cf455` (`Speak one pre-action acknowledgment f
 ## Fresh test rerun — 2026-11-05
 
 - `:app:testDebugUnitTest :aura-voice:testDebugUnitTest --rerun-tasks` was forced and completed `BUILD SUCCESSFUL` in 10m02s, 50 actionable tasks executed. JUnit reports: 22 passed, 0 failures/errors/skips across 8 suites. Existing debug APK assembly task had succeeded as up-to-date; APK was not installed.
+
+
+## Commit record — 2026-11-05
+
+- Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.

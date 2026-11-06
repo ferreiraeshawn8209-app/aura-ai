@@ -14,3 +14,8 @@ Repository: `ferreiraeshawn8209-app/aura-ai`; branch: `integration/aura-voice-co
 
 - Forced fresh app and voice-library unit tests: `:app:testDebugUnitTest :aura-voice:testDebugUnitTest --rerun-tasks` completed `BUILD SUCCESSFUL` in 10m02s (50 actionable tasks executed). JUnit XML confirms 22 passed, 0 failures, 0 errors, 0 skipped across 8 suites.
 - Separate `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` also completed successfully before the rerun; its 75 tasks were up-to-date. APK identity/hash/signing details remain as above; no install.
+
+
+## Commit record — 2026-11-05
+
+- Code and test commit: `ec7a31235bcc62f664267a9c7505608e98784805` (`Gate spoken actions on acknowledgement completion`) on `integration/aura-voice-consolidation`. Production `main` unchanged. `device-backups/` remains untracked and was excluded.

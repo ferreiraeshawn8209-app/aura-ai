@@ -2,6 +2,12 @@
 
 Updated: 2026-11-05
 
+## Android action tools build check — 2026-11-06
+
+- Voice-related regression suites were included in the full offline app/voice run: 64 tests total, 0 failures/errors/skips across 21 suites. APK assembly passed; package/signature/hash are recorded in `AI_HANDOVER.md`.
+- No Honor/ADB test was run. Wake phrase, mic lifecycle, transcript accuracy, TTS, continuous conversation and interruption remain device-acceptance items; this build result does not verify them.
+- The added phone/SMS actions only prepare Android UI for user confirmation. Their real device intent targets have not yet been checked on the Honor.
+
 ## Automated checks (2026-11-05)
 
 | Check | Result |

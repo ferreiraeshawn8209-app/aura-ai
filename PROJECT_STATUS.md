@@ -1,7 +1,15 @@
 # Aura project status
 
-Updated: 2026-11-05
+Updated: 2026-11-06
 Branch: `integration/aura-voice-consolidation`
+
+## Current verified status — 2026-11-06
+
+- The existing Aura app now exposes `open_app`, HTTP(S)-only `open_website`, user-reviewed `prepare_phone_call`, and user-reviewed `prepare_sms` tools to its active agent registry. Existing WhatsApp draft action is retained. Calls and messages are not placed/sent automatically.
+- Tests/build: focused action-validation tests passed; full app + voice-library suites and debug APK assembly passed offline: 64 tests, 0 failures/errors/skips across 21 suites. `git diff --check` passed. Online Gradle dependency resolution initially failed due Windows disk space; offline build from cached dependencies passed without deleting files.
+- APK: `app/build/outputs/apk/debug/app-debug.apk`, package `com.aura.ai`, version 1.0.0/code 1, SHA-256 `9cbb5714d088c8e134e8c7044ff48b99194971adbafae1aa6f7b1a959d5a1a2e`; v2 signature valid with existing debug signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. APK is not installed.
+- Honor disconnected as requested. Real device UI/action and voice acceptance are pending; do not infer success from unit/build tests. Cloud/Ollama live failover/recovery still needs live configured providers and device/network checks. Austrian voice remains unconfigured. No database, permissions, package identity, personal data, or main branch changes.
+- Personal `device-backups/` remains untracked and excluded.
 
 ## Current delivery
 

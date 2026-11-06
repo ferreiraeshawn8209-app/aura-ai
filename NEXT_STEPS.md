@@ -1,5 +1,11 @@
 # Aura: remote-first development queue (2026-11-05)
 
+## Current queue update — 2026-11-06
+
+- Added agent tools for opening an installed app or web page and preparing a call/SMS draft. Automated tests and APK assembly pass; APK remains uninstalled while the Honor is disconnected.
+- Continue device-independent code work on the existing integration branch. Revisit voice-turn reliability and backend routing, then test after reconnect: app/browser/dialer/SMS/WhatsApp intents, wake and repeated conversation, interruption, phone-to-PC Ollama, and live cloud fallback/recovery.
+- Do not install without the previously required package/signature check, app-data backup, and explicit build approval. Do not merge `main`.
+
 **Owner unavailable for phone/PC testing. Do not block software development on device access.** Work on `integration/aura-voice-consolidation`; do not merge `main` without approval. Preserve app data, recordings, models, voice choice, and checkpoints.
 
 ## Mandatory execution order: AUDIT AND INTEGRATION FIRST

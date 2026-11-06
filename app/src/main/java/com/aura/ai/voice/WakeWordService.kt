@@ -20,6 +20,7 @@ import com.aura.ai.MainActivity
 import com.aura.ai.R
 import com.aura.ai.AuraApplication
 import com.aura.ai.voice.wake.WakePhraseMatcher
+import com.aura.ai.voice.wake.WakeWordRequestGate
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,6 +39,7 @@ class WakeWordService : LifecycleService() {
     private val handler = Handler(Looper.getMainLooper())
     private var stopping = false
     private var consecutiveErrors = 0
+    private val requestGate = WakeWordRequestGate()
     private val restart = Runnable { if (!stopping) startRecognizer() }
 
     override fun onCreate() {
@@ -72,11 +74,37 @@ class WakeWordService : LifecycleService() {
     }
 
     private fun startRecognizer() {
-        if (!SpeechRecognizer.isRecognitionAvailable(this) || listening) return
+        if (stopping || listening) return
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            scheduleRestart(SpeechRecognizer.ERROR_CLIENT)
+            return
+        }
+
         listening = true
-        recognizer = SpeechRecognizer.createSpeechRecognizer(this).apply {
-            setRecognitionListener(WakeListener())
-            startListening(recognizerIntent())
+        val requestId = requestGate.begin()
+        val next = try {
+            SpeechRecognizer.createSpeechRecognizer(this)
+        } catch (_: SecurityException) {
+            requestGate.invalidate()
+            listening = false
+            stopSelf()
+            return
+        } catch (_: RuntimeException) {
+            restartSoon(requestId, SpeechRecognizer.ERROR_CLIENT)
+            return
+        }
+
+        recognizer = next
+        try {
+            next.setRecognitionListener(WakeListener(requestId))
+            next.startListening(recognizerIntent())
+        } catch (_: SecurityException) {
+            requestGate.invalidate()
+            listening = false
+            destroyRecognizer()
+            stopSelf()
+        } catch (_: RuntimeException) {
+            restartSoon(requestId, SpeechRecognizer.ERROR_CLIENT)
         }
     }
 
@@ -87,15 +115,20 @@ class WakeWordService : LifecycleService() {
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
     }
 
-    private fun restartSoon(error: Int? = null) {
+    private fun restartSoon(requestId: Long, error: Int? = null) {
+        if (!requestGate.isCurrent(requestId)) return
+        requestGate.invalidate()
+        destroyRecognizer()
+        listening = false
+        scheduleRestart(error)
+    }
+
+    private fun scheduleRestart(error: Int?) {
         if (stopping) return
         if (error == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
             stopSelf()
             return
         }
-        recognizer?.destroy()
-        recognizer = null
-        listening = false
         handler.removeCallbacks(restart)
         consecutiveErrors = if (error == null) 0 else (consecutiveErrors + 1).coerceAtMost(5)
         val delayMs = if (error == null) 800L else (1000L * (1 shl (consecutiveErrors - 1))).coerceAtMost(16_000L)
@@ -111,7 +144,7 @@ class WakeWordService : LifecycleService() {
         startActivity(launch)
     }
 
-    private inner class WakeListener : RecognitionListener {
+    private inner class WakeListener(private val requestId: Long) : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) {}
         override fun onBeginningOfSpeech() {}
         override fun onRmsChanged(rmsdB: Float) {}
@@ -119,7 +152,7 @@ class WakeWordService : LifecycleService() {
         override fun onEndOfSpeech() {}
         override fun onEvent(eventType: Int, params: Bundle?) {}
 
-        override fun onError(error: Int) = restartSoon(error)
+        override fun onError(error: Int) = restartSoon(requestId, error)
 
         override fun onPartialResults(partialResults: Bundle?) {
             // Wait for a final utterance: triggering on the partial wake phrase
@@ -127,25 +160,41 @@ class WakeWordService : LifecycleService() {
         }
 
         override fun onResults(results: Bundle?) {
+            if (!requestGate.isCurrent(requestId)) return
             val transcript = results
                 ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 ?.firstOrNull(WakePhraseMatcher::matches)
             if (transcript != null) {
+                requestGate.invalidate()
+                listening = false
                 onPhraseDetected(transcript)
                 stopSelf()
             } else {
-                restartSoon()
+                restartSoon(requestId)
             }
         }
     }
 
     override fun onDestroy() {
         stopping = true
+        requestGate.invalidate()
         handler.removeCallbacks(restart)
-        recognizer?.destroy()
-        recognizer = null
+        destroyRecognizer()
         listening = false
         super.onDestroy()
+    }
+
+    private fun destroyRecognizer() {
+        val active = recognizer ?: return
+        recognizer = null
+        try {
+            active.cancel()
+        } catch (_: RuntimeException) {
+        }
+        try {
+            active.destroy()
+        } catch (_: RuntimeException) {
+        }
     }
 
     companion object {

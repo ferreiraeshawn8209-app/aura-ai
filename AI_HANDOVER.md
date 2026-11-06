@@ -189,3 +189,13 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 ## Publication record — 2026-11-06
 
 Implementation commit `6e2a221` and handover record commit `ac8c9bc` were pushed successfully to `origin/integration/aura-voice-consolidation` (`f99bd10..ac8c9bc`). `main` was not changed. The only untracked path is personal `device-backups/`, excluded from both commits and the push.
+
+## Wake recognizer stale-callback recovery — 2026-11-06
+
+- Hardened the existing `WakeWordService` restart loop. Each recognizer now has a request generation; callbacks from prior recognizers cannot trigger another restart or launch Aura after replacement/stop. Service teardown invalidates callbacks before cancel/destroy. Recognizer creation/listener/start runtime failures now retry with the existing capped backoff; revoked mic permission stops the listener rather than retrying forever.
+- Added `WakeWordRequestGate` and two unit tests covering replacement and stop invalidation. Changed `app/src/main/java/com/aura/ai/voice/WakeWordService.kt`; added `app/src/main/java/com/aura/ai/voice/wake/WakeWordRequestGate.kt` and `app/src/test/java/com/aura/ai/voice/wake/WakeWordRequestGateTest.kt`.
+- Verification: `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` — `BUILD SUCCESSFUL` in 7m29s, 75 tasks (14 executed, 61 up-to-date). JUnit XML totals: 58 tests, 0 failures, 0 errors, 0 skipped, 20 suites. `git diff --check` passed. Existing Compose, Moshi and test-API deprecation warnings remain.
+- APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,862,525 bytes; package `com.aura.ai`, version 1.0.0/code 1; SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4`. `apksigner verify --verbose --print-certs` passed with v2; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed.
+- No ADB/device/provider action was taken. Wake phrase capture, service survival, ASR/TTS, full-duplex interruption, Ollama/cloud networking and WhatsApp are still not verified on Honor. This change guards stale callbacks but does not replace Android SpeechRecognizer with a dedicated acoustic hotword engine.
+- Branch `integration/aura-voice-consolidation`, starting HEAD `f3406fb911134796fb7356cb08288dd548d0ad5d`; `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. Exclude `device-backups/`. Commit/publication details to be appended after committing.
+- Next: commit and publish source/tests with the handover; keep APK uninstalled. When Honor reconnects, verify app identity and back up existing data before asking approval for this exact APK, then test repeated wake starts/stops and a full spoken turn. Also perform real provider fallback/recovery and WhatsApp draft checks.

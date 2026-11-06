@@ -141,3 +141,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added tests: a stable distinct partial interrupts after confirmation; likely TTS echo is ignored; a new user phrase after echo is accepted; contractions and similar phrases are normalized; simultaneous listen/speak publishes the combined state; ordinary listen still interrupts TTS.
 - APK assembled and v2 signature verified: `com.aura.ai` v1.0.0/code 1, SHA-256 `D9607C66F0835DFD73E1F77FA813BA1463A8E5405C46603A8411426E704048FE`, signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Not installed.
 - Real device: no ADB performed per instruction. Wake capture, actual ASR transcript, full-duplex audio, TTS echo, interruption latency, local/cloud network calls, and WhatsApp launch remain untested on Honor.
+
+## Wake recognizer lifecycle/build verification — 2026-11-06
+
+- New JVM tests confirm that starting a replacement wake request and invalidating a stopped request reject old callbacks.
+- Full app/voice test and APK build passed: 58 tests / 20 suites, no failures, errors or skipped tests. APK v2 signature verified; SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4`.
+- No ADB or physical wake/microphone test was run. This verifies callback-generation logic, not actual wake phrase detection, background-service survival, speech recognition quality or audio behavior.

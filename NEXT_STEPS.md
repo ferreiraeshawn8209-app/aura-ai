@@ -159,3 +159,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Keep the fresh APK at `app/build/outputs/apk/debug/app-debug.apk` uninstalled (SHA-256 `D9607C66F0835DFD73E1F77FA813BA1463A8E5405C46603A8411426E704048FE`). Do not use ADB while the phone is disconnected.
 3. Once Honor reconnects, back up accessible Aura data and confirm package/version/signer before obtaining approval to install this exact APK. Then test continuous turns and barge-in while a longer reply is speaking.
 4. Verify cloud-first operation, Ollama fallback/recovery, and WhatsApp draft opening with actual configured services/device. None was live-tested during this build.
+
+## Wake listener follow-up — 2026-11-06
+
+1. Commit and publish wake recognizer generation guard/tests and the updated handover on `integration/aura-voice-consolidation`; never stage `device-backups/`.
+2. Keep APK SHA-256 `A242340DC1003BE359FC52F66638FC0884A284DF265A4F09E363054589BABFA4` uninstalled until the Honor reconnects and package/signature/data backup checks are complete, followed by explicit approval.
+3. On-device, verify stale callback recovery, repeated wake start/stop, ASR transcript, spoken answer, interruption, Ollama/cloud fallback and WhatsApp draft. The current run only proves unit/build behavior.

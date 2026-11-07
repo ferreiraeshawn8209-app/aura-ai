@@ -464,3 +464,12 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - Fresh local debug APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,703,885 bytes, SHA-256 `D755ADDBD94D23A707016DF23421CE9BA7B579CBF64F2CB4A9A86BD3BBF6B716`. Package `com.aura.ai`, version 1.0.0/code 1. `apksigner verify --print-certs` passed; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
 - Important provenance: this build came from the local dirty worktree at HEAD `a3e5c1cc79f78dd916c584833704f812efd84bcb`, containing additional uncommitted voice/style/settings changes. The router and test commits are on the remote integration branch, but local Git metadata access is blocked, so this APK is not certified as an exact clean remote-tip build. Do not install until local/remote state is reconciled and the exact source artifact is verified.
 - Honor remains disconnected. No real-device voice, wake, interruption, Ollama, cloud, or WhatsApp test/installation was performed. Main unchanged.
+
+
+## Exact acknowledgement build verification — 2026-11-07
+
+- Confirmed the existing action acknowledgement is exactly `I'll be back`; ordinary questions retain their direct-response route.
+- Rebuilt and reran `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug`: `BUILD SUCCESSFUL` in 9m19s. Latest reports contain 101 tests, 0 failures, errors, or skips (voice-library tests were up-to-date from the prior full suite).
+- APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,815,582 bytes, SHA-256 `29BC3FA4F5C1E4255CED20C7685BF8C8FD68156757CC63A38C8FB4075D81FCF9`; package `com.aura.ai`, version 1.0.0/code 1. Signature passed; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
+- This artifact was built from the synchronized local branch tip plus uncommitted ElevenLabs style-control edits. It is not an exact clean remote-tip artifact. No install; Honor remains disconnected. Austrian accent/voice playback, live Ollama/cloud routing, wake, barge-in, WhatsApp and real-device conversation remain unverified.
+- The cloud cancellation guard and regression test are committed on the integration branch. Local style-control changes remain uncommitted and were not staged. Do not merge to `main`.

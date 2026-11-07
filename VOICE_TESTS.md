@@ -211,3 +211,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Automated policy coverage: 3 tests passed. Valid confidence `< 0.45` blocks only agent-action utterances; confident action and ordinary chat pass through; missing/out-of-range scores do not cause guessed classification. Full app/voice run: 97 tests across 33 suites, all passed; APK assembled and signature/package checked, not installed.
 - Honor test pending because no ADB device is connected. Specifically verify transcript/clarification, no action invocation on low-confidence utterance, listening resume, and no repeat prompt on a confident instruction. Then calibrate the threshold against actual Android confidence values.
 - Source and verification notes are in pushed integration commit `8efb987ea687283edfbd71aff6d11bc86fa70294`; production `main` was not changed.
+
+
+## Cloud cancellation regression — 2026-11-07
+
+- Added test `callerTimeoutDoesNotStartLocalFallbackAfterCancellation` and a router guard using the parent coroutine activity state.
+- Result: NOT RUN. Gradle compilation previously failed because disk space was exhausted; current free space is 967 MB. No test pass is claimed.
+- Device: Honor disconnected. No voice, Ollama/cloud, interruption, wake, or WhatsApp real-device run in this checkpoint.

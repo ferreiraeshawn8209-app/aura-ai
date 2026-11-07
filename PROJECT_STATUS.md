@@ -330,3 +330,9 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Automated checks: 97 tests across 33 app/voice suites passed (0 failures/errors/skips); offline debug APK build and signature/package verification passed. APK SHA-256: `DDC6A445B95E760D118F0D77E0D463DA0E84F93B3232E079F3FD57296530B4B0`; not installed.
 - Honor disconnected: device ASR confidence distribution and end-to-end action prevention are unverified. 0.45 is not calibrated and needs phone evaluation. No new WhatsApp, voice, Ollama/cloud fallback, wake, or interruption capability is claimed.
 - Current branch `integration/aura-voice-consolidation`; source and records committed/pushed as `8efb987ea687283edfbd71aff6d11bc86fa70294`. Remote head was verified. `main` and user data remain untouched; `device-backups/` was excluded.
+
+
+## Provider cancellation regression check — 2026-11-07
+
+- Added a local-only regression test for a caller timeout during cloud inference. It did not reach test execution because Gradle failed during `:app:compileDebugKotlin` with `There is not enough space on the disk`; the C: drive then reported 0 bytes free. No production fix or new APK was produced.
+- Preserve the in-progress, uncommitted voice/settings edits in the local worktree. The cancellation test change is also uncommitted. Free disk space before another build, then inspect and test the existing edits before committing anything.

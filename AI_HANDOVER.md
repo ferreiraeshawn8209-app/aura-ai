@@ -501,3 +501,9 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - Before update, private app-data backup `device-backups/com.aura.ai-pre-wake-diagnostic-20261107.tar` (822,784 bytes; SHA-256 `4E8A290A49EE69F23D78F6DA23A592A6CA7B2C6AB19E9B23D0816F1B71D6865B`) was created. Installed package/signature matched; `adb install -r` returned Success with no uninstall/data clear. Pulled installed base APK hash exactly matched the built APK. Backups are excluded from Git.
 - Device remained at lock screen during the check; no post-update transcript, Qwen chat-generation, TTS, wake, interruption, or multi-turn pass is claimed. User was asked to unlock and capture the new `Wake heard:` line and spoken response.
 - Local workspace branch `integration/aura-voice-consolidation`, HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; protected local Git metadata was not mutated. No merge to main.
+
+
+## Source commit reference — 2026-11-07
+
+- Wake transcript visibility implementation, its unit tests, and build/install verification records are in commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8` on `integration/aura-voice-consolidation`.
+- The debug APK is installed in place on the Honor after the verified app-data backup. Automated tests/build passed; actual spoken transcript and response are still awaiting an unlocked-phone retest. `main` is unchanged.

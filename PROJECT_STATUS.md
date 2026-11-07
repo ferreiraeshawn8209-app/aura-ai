@@ -379,3 +379,9 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Wake-triggered text now appears in the Agent diagnostic before model handling. This exposes what wake ASR heard; acoustic accuracy remains unverified.
 - Automated tests/build: 106 passed, 0 failures/errors/skips. Updated `com.aura.ai` in place after backup and package/signature verification; user data was not cleared.
 - Honor remains locked during post-install verification. Spoken transcript, Qwen answer, TTS, wake, interruption, and multi-turn acceptance are pending.
+
+
+## Source commit reference — 2026-11-07
+
+- Wake transcript visibility implementation, its unit tests, and build/install verification records are in commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8` on `integration/aura-voice-consolidation`.
+- The debug APK is installed in place on the Honor after the verified app-data backup. Automated tests/build passed; actual spoken transcript and response are still awaiting an unlocked-phone retest. `main` is unchanged.

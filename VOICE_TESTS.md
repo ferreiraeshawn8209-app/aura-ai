@@ -253,3 +253,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added local display of the full raw wake transcript and two unit tests. This improves transcript observability only.
 - 106 app/voice tests passed; debug APK build, signer and package verification passed. Updated the original app in place after app-data backup.
 - Honor remained locked; no live acceptance was claimed. Exact transcript and spoken answer await owner retest.
+
+
+## Source commit reference — 2026-11-07
+
+- Wake transcript visibility implementation, its unit tests, and build/install verification records are in commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8` on `integration/aura-voice-consolidation`.
+- The debug APK is installed in place on the Honor after the verified app-data backup. Automated tests/build passed; actual spoken transcript and response are still awaiting an unlocked-phone retest. `main` is unchanged.

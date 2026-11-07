@@ -321,3 +321,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 1. Unlock Honor, open original `com.aura.ai`, say “Yo, yo, yo, what is five plus five?” once, then record the `Wake heard:` line and spoken answer.
 2. Use the raw transcript to target any ASR correction. Then verify Qwen generation through Aura, one follow-up and an interruption.
 3. Keep device acceptance pending until these checks pass; keep integration changes off main and exclude backups.
+
+
+## Source commit reference — 2026-11-07
+
+- Wake transcript visibility implementation, its unit tests, and build/install verification records are in commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8` on `integration/aura-voice-consolidation`.
+- The debug APK is installed in place on the Honor after the verified app-data backup. Automated tests/build passed; actual spoken transcript and response are still awaiting an unlocked-phone retest. `main` is unchanged.

@@ -336,3 +336,11 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 
 - Added a local-only regression test for a caller timeout during cloud inference. It did not reach test execution because Gradle failed during `:app:compileDebugKotlin` with `There is not enough space on the disk`; the C: drive then reported 0 bytes free. No production fix or new APK was produced.
 - Preserve the in-progress, uncommitted voice/settings edits in the local worktree. The cancellation test change is also uncommitted. Free disk space before another build, then inspect and test the existing edits before committing anything.
+
+
+## Current continuation checkpoint — 2026-11-07
+
+- Cloud router now distinguishes caller cancellation from a provider timeout before falling back to Ollama. Regression test added. Integration branch commits: `904b6bbd011ee9a139981bcc15e3d9e045443218` (router) and `9666bba3575c6a3d8a66706259702026b6a515b4` (test).
+- Test/build status: NOT RUN/PENDING. C: has 967 MB free after the prior Gradle compile failed for insufficient disk. No fresh APK. Do not treat this patch as verified.
+- Device status: Honor disconnected by user request. No install or real-device test. Existing cloud/local routing and WhatsApp draft capability still need live acceptance; this patch does not add new WhatsApp behavior.
+- Next: recover disk space, sync the local checkout carefully (uncommitted voice/style work and backups remain), run targeted and full tests/build, then do phone tests only after reconnection and approval. Main is unchanged.

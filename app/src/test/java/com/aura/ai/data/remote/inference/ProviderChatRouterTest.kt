@@ -3,7 +3,10 @@ package com.aura.ai.data.remote.inference
 import com.aura.ai.data.remote.ollama.OllamaChatMessage
 import java.io.IOException
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -103,6 +106,25 @@ class ProviderChatRouterTest {
 
         assertTrue(result.exceptionOrNull() is CancellationException)
         assertFalse(local.calls > 0)
+    }
+
+    @Test
+    fun callerTimeoutDoesNotStartLocalFallbackAfterCancellation() = runBlocking {
+        val cloud = object : ChatCompletionBackend {
+            override suspend fun complete(call: ChatCompletionCall): String {
+                delay(500)
+                return "late cloud answer"
+            }
+        }
+        val local = FakeBackend("must not run")
+        val result = runCatching {
+            withTimeout(50) {
+                ProviderChatRouter(cloud, local).complete(localCall, cloudCall)
+            }
+        }
+
+        assertTrue(result.exceptionOrNull() is TimeoutCancellationException)
+        assertEquals(0, local.calls)
     }
 
     private class FakeBackend(

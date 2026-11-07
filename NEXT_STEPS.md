@@ -275,3 +275,12 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 
 - Pause new Gradle builds until C: has several GB free; the focused test compile consumed the available space and failed before test execution. Preserve the existing APK, backups, and concurrent voice/settings edits.
 - After space is restored, sync the local checkout to the published branch, inspect the in-progress voice/style changes, rerun the caller-timeout regression test, apply the `ensureActive` cancellation guard only after reviewing its diff, then run app/voice tests and a fresh APK build. Do not install while the Honor is disconnected.
+
+
+## Resume after disk recovery — 2026-11-07
+
+1. Free several GB on C: without deleting app data, databases, models, recordings, backups, or source. Preserve the previously built APK.
+2. Fetch/synchronize `integration/aura-voice-consolidation` from GitHub. Local Git metadata is protected outside the permitted workspace; do not replace the checkout or discard uncommitted voice/settings changes.
+3. Run the focused `ProviderChatRouterTest.callerTimeoutDoesNotStartLocalFallbackAfterCancellation`, then app + aura-voice tests and `:app:assembleDebug`. Verify the produced APK package, signing certificate and SHA-256. Report failures accurately.
+4. When Honor reconnects, back up existing app data and verify package/signature compatibility before installing any approved build; then run voice/wake/interruption and live Ollama/cloud tests. WhatsApp remains a review-before-send draft.
+5. Keep `main` unchanged.

@@ -473,3 +473,15 @@ The publication confirmation is recorded as commit `d95ec2a` and was also pushed
 - APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,815,582 bytes, SHA-256 `29BC3FA4F5C1E4255CED20C7685BF8C8FD68156757CC63A38C8FB4075D81FCF9`; package `com.aura.ai`, version 1.0.0/code 1. Signature passed; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
 - This artifact was built from the synchronized local branch tip plus uncommitted ElevenLabs style-control edits. It is not an exact clean remote-tip artifact. No install; Honor remains disconnected. Austrian accent/voice playback, live Ollama/cloud routing, wake, barge-in, WhatsApp and real-device conversation remain unverified.
 - The cloud cancellation guard and regression test are committed on the integration branch. Local style-control changes remain uncommitted and were not staged. Do not merge to `main`.
+
+
+## Honor Ollama endpoint and recognition retest — 2026-11-07
+
+- On the Honor, the original `com.aura.ai` app had a loopback Ollama URL that cannot reach the Windows PC. Updated settings normalization to migrate legacy `127.0.0.1` alongside known emulator/loopback URLs, while preserving user-entered LAN URLs. Settings copy now reflects the configured Base URL instead of claiming a fixed address. Added three endpoint-policy tests.
+- Device configuration was saved as `http://192.168.8.18:11434`; Aura Settings returned ONLINE and found `qwen3:1.7b` and `qwen3:4b-q4_K_M`. This verifies `/api/tags` discovery only, not chat generation.
+- App and voice test reports contained 104 tests with zero failures/errors/skips. Debug APK assembly succeeded after an initial D8 disk-space failure; only failed generated dex intermediates were removed.
+- APK installed in place after backup, package/signature verification: `com.aura.ai` v1.0.0/code 1; SHA-256 `AA123E89EFA64194EC66D439B54F2888DCA5E86D541157612A16E5417DAA7759`; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`. Pre-update app-data archive SHA-256 `811FCD9129E26C14797A50C4EDDD8CA9BC4A7926233DC54670515501ED72A64C`; existing app was updated with `adb install -r`, not uninstalled or cleared.
+- Owner then reported an incorrect transcript. ADB confirmed the original app was foreground and the separate debug package absent. The exact transcript/confidence was not captured before the phone returned to the lock screen. Treat recognition as failed and unresolved; no ASR tuning based on guesswork. No post-update voice pass is claimed.
+- Local checkout branch `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; no local Git metadata mutation. Keep private `device-backups/` out of Git. Main remains unchanged.
+
+Next: capture the exact diagnostic transcript/confidence on the unlocked original app, then fix the measured recognition issue; verify Qwen generation through Aura, spoken answer, second turn, wake, interruption, and voice consistency.

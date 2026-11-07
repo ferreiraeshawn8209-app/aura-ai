@@ -65,15 +65,12 @@ class SettingsRepository @Inject constructor(
     }
 
     val settings: Flow<T1000Settings> = context.dataStore.data.map { p ->
-        // Older builds saved the Android-emulator-only host and a cloud-tagged
-        // Gemma default. Those values cannot work from a physical phone. Map
-        // only those known legacy defaults; keep any user-entered endpoint/model.
-        val storedUrl = p[Keys.BASE_URL]
-        val normalizedUrl = when (storedUrl?.trim()?.trimEnd('/')?.lowercase()) {
-            "http://10.0.2.2:11434", "http://0.0.0.0:11434", "http://localhost:11434" ->
-                T1000Settings.DEFAULT_OLLAMA_URL
-            else -> storedUrl ?: T1000Settings.DEFAULT_OLLAMA_URL
-        }
+        // These loopback/emulator-only values cannot reach the PC Ollama server
+        // from a physical phone. Keep any non-loopback, user-entered endpoint.
+        val normalizedUrl = OllamaEndpointPolicy.normalize(
+            storedUrl = p[Keys.BASE_URL],
+            defaultUrl = T1000Settings.DEFAULT_OLLAMA_URL,
+        )
         val storedModel = p[Keys.MODEL]
         val normalizedModel = if (storedModel == "gemma3:1b-cloud") {
             T1000Settings.DEFAULT_MODEL
@@ -138,5 +135,17 @@ class SettingsRepository @Inject constructor(
             val safeLimit = limit.coerceIn(1, 1000)
             return if (count >= safeLimit) null else count + 1
         }
+    }
+}
+
+internal object OllamaEndpointPolicy {
+    fun normalize(storedUrl: String?, defaultUrl: String): String = when (
+        storedUrl?.trim()?.trimEnd('/')?.lowercase()
+    ) {
+        "http://10.0.2.2:11434",
+        "http://0.0.0.0:11434",
+        "http://localhost:11434",
+        "http://127.0.0.1:11434" -> defaultUrl
+        else -> storedUrl ?: defaultUrl
     }
 }

@@ -359,3 +359,10 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Action acknowledgement is exactly `I'll be back` in the tested local build. Full app/voice tests: 101 passed, 0 failures/errors/skips; APK assembly succeeded in 9m19s.
 - APK SHA-256 `29BC3FA4F5C1E4255CED20C7685BF8C8FD68156757CC63A38C8FB4075D81FCF9`; package `com.aura.ai` v1.0.0/code 1 and signature verified. Artifact includes local uncommitted ElevenLabs style-control changes and is not a clean remote-tip build. Not installed.
 - Honor disconnected. Device voice/wake/interruption/Ollama/cloud/WhatsApp checks remain pending. Main unchanged.
+
+
+## Honor verification — 2026-11-07
+
+- Fixed loopback Ollama URL migration and made Settings copy show the saved Base URL. On Honor, `http://192.168.8.18:11434` tested ONLINE and exposed both installed Qwen models; generation remains unverified.
+- Automated app + voice suites: 104 passed, 0 failures/errors/skips. Debug APK package, signer and hash were checked; it was backed up and installed in place without data clear.
+- Latest spoken test is a reported incorrect transcript on original `com.aura.ai`; exact transcript/confidence could not be captured before device lock. Voice acceptance is not passed. Main unchanged.

@@ -84,8 +84,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
             item {
                 Section("Ollama connection") {
                     Text(
-                            "Aura uses your Ollama server. This phone is configured to reach your PC at 192.168.8.18. " +
-                            "If your PC's network address changes, update the Base URL here.",
+                            "Aura uses the Ollama server at ${settings.ollamaBaseUrl}. " +
+                            "On your home Wi-Fi, set this to your PC's current network address if it changes.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

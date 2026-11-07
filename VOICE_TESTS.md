@@ -232,3 +232,11 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug`: passed; 101 tests, 0 failures/errors/skips; APK package and signature checks passed.
 - APK SHA-256 `29BC3FA4F5C1E4255CED20C7685BF8C8FD68156757CC63A38C8FB4075D81FCF9`. Action acknowledgement text is exact `I'll be back`.
 - Built from local branch plus uncommitted style-control changes; not installed. Honor disconnected. Real device voice/accent, wake, interruption, local/cloud and WhatsApp tests remain pending.
+
+
+## Honor recognition retest — 2026-11-07
+
+- **FAIL / diagnosis incomplete:** owner reports incorrect transcript after the wake phrase.
+- ADB showed original package `com.aura.ai` foreground, separate debug app absent. Exact words, confidence, response latency, model answer, and spoken answer were not captured before the phone locked.
+- Ollama model discovery passed for `qwen3:1.7b` and `qwen3:4b-q4_K_M` at `http://192.168.8.18:11434`; this is not chat-generation verification. App/voice unit suites passed (104, zero failures/errors/skips); APK in-place install signature/package/hash were verified after backup.
+- Next test: capture the Agent screen's exact `Recognized (language, confidence): transcript` diagnostic, then assess the ASR result. No recognition settings were changed without evidence.

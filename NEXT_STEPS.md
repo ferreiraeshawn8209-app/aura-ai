@@ -300,3 +300,11 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Build/sign/hash a clean artifact from a committed branch revision; the current locally built APK includes uncommitted style-control changes and remains uninstalled.
 3. When Honor reconnects, back up app data, check package/signature compatibility and run the device voice, wake, transcript, interruption, Ollama/cloud recovery and WhatsApp-draft tests. No device success is implied by JVM tests.
 4. Keep `main` unchanged.
+
+
+## Honor retest — 2026-11-07
+
+1. Get the exact recognized words and confidence from the original `com.aura.ai` app; owner reported an incorrect transcript, and the phone locked before ADB could capture it.
+2. Correct the measured speech-recognition failure, run app/voice tests and rebuild. Do not call wake activation or Ollama `/api/tags` success a complete voice pass.
+3. Verify a spoken question reaches Qwen, returns the correct text and speaks it, then test a follow-up, interruption and wake resume.
+4. Keep all changes on `integration/aura-voice-consolidation`; preserve app data and private `device-backups/`; do not merge to main.

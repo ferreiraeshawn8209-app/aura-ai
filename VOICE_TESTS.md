@@ -240,3 +240,9 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - ADB showed original package `com.aura.ai` foreground, separate debug app absent. Exact words, confidence, response latency, model answer, and spoken answer were not captured before the phone locked.
 - Ollama model discovery passed for `qwen3:1.7b` and `qwen3:4b-q4_K_M` at `http://192.168.8.18:11434`; this is not chat-generation verification. App/voice unit suites passed (104, zero failures/errors/skips); APK in-place install signature/package/hash were verified after backup.
 - Next test: capture the Agent screen's exact `Recognized (language, confidence): transcript` diagnostic, then assess the ASR result. No recognition settings were changed without evidence.
+
+## Publication metadata — 2026-11-07
+
+- Source and test changes, plus the Honor verification record, were published to this integration branch in commit `74848b6029db3368b01f27cb8dda997d12695740`. Files: `SettingsRepository.kt`, `SettingsScreen.kt` (Ollama endpoint text), `OllamaEndpointPolicyTest.kt`, and all four continuity documents. Main was not changed; device backups were excluded.
+- The commit records 104 passing unit tests and a verified in-place APK install. The owner's latest recognition result is still failed and exact transcript capture is pending; no device voice pass is claimed.
+- Workspace branch remains `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; local Git metadata is protected, so no local branch mutation was performed.

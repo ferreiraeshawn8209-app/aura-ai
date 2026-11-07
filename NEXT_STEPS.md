@@ -308,3 +308,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Correct the measured speech-recognition failure, run app/voice tests and rebuild. Do not call wake activation or Ollama `/api/tags` success a complete voice pass.
 3. Verify a spoken question reaches Qwen, returns the correct text and speaks it, then test a follow-up, interruption and wake resume.
 4. Keep all changes on `integration/aura-voice-consolidation`; preserve app data and private `device-backups/`; do not merge to main.
+
+## Publication metadata — 2026-11-07
+
+- Source and test changes, plus the Honor verification record, were published to this integration branch in commit `74848b6029db3368b01f27cb8dda997d12695740`. Files: `SettingsRepository.kt`, `SettingsScreen.kt` (Ollama endpoint text), `OllamaEndpointPolicyTest.kt`, and all four continuity documents. Main was not changed; device backups were excluded.
+- The commit records 104 passing unit tests and a verified in-place APK install. The owner's latest recognition result is still failed and exact transcript capture is pending; no device voice pass is claimed.
+- Workspace branch remains `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; local Git metadata is protected, so no local branch mutation was performed.

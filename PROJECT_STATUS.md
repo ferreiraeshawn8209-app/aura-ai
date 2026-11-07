@@ -424,3 +424,10 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Current-head build/test verification is pending: the wrapper lock is inaccessible; direct offline Gradle failed at `:app:checkDebugAarMetadata` with a null-path error before tests. No APK was generated for current head.
 - Device: ADB disconnected. Owner reports incorrect transcript; exact recognized words/confidence not captured. No new install or device acceptance.
 - Next: inspect CI for current head; get a successful build of current branch, reconnect Honor, obtain approval for that build, back up app data and verify package/signature, then capture transcript/confidence and test voice follow-through. Do not merge to main or include `device-backups/`.
+
+
+## CI follow-up — 2026-11-07
+
+- Workflow for source commit `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` failed before steps: job `128326059219`, `steps: null`, no log URL. Documentation run `42346867212` likewise failed before steps. The cause is not exposed; tests/build were not verified by CI.
+- Local current-branch Gradle check remains blocked before tests. Earlier 112 pass reports and the pre-publication APK are recorded, but do not verify merged commit `db11eed`.
+- Phone remains disconnected; inaccurate recognition is unresolved.

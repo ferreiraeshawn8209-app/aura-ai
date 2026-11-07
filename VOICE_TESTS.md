@@ -295,3 +295,8 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Local artifact SHA-256 `9F7A8D184147C017A21AEB43FEB2C8C2577A1070E7CF6FDAF5661DB5C116C71D` is package `com.aura.ai` v1.0.0/code 1 and signature-valid; it is not verified as a build of current remote head and was not installed.
 - Current-turn Gradle rerun failed before test execution at `:app:checkDebugAarMetadata` due a Gradle null-path exception in offline dependency resolution. ADB lists no device. Owner reports incorrect transcript; exact recognized text/confidence remain unknown.
 - No wake, recognition, TTS, interruption, Ollama/cloud, or copy-button behavior was device-tested for the published commit. Continue to mark voice acceptance as incomplete.
+
+
+## CI verification gap — 2026-11-07
+
+- GitHub Actions run `42346749653` for source commit `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` failed before any job step; job returned no steps or logs. No automated voice/build result was produced for that commit.

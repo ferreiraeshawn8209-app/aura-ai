@@ -366,3 +366,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 4. When the Honor reconnects, obtain approval for that exact build, back up existing app data, verify package/signature, and install in place without uninstalling or clearing data.
 5. Capture the exact `Wake heard:` and `Recognized` transcript/confidence for “Yo, yo, yo, what is five plus five?” then test spoken response, second turn, wake recovery and interruption.
 6. Do not merge into `main`. Keep private backups excluded.
+
+
+## CI follow-up — 2026-11-07
+
+- CI for `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` failed before executing a step and exposed no log; cause unknown. Do not count it as an app/test failure or success.
+- Obtain a clean local or CI build before installing current branch. Phone checks are still pending.

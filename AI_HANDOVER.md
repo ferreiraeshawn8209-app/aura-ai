@@ -548,3 +548,10 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - Current-turn build attempt used the installed Gradle 8.11.1 distribution directly because the wrapper lock under the protected user Gradle home denied access. With the workspace cache in offline mode, `:app:checkDebugAarMetadata` failed before tests with Gradle's `ModuleVersionResolveException.getMessage` null-path NPE. No new build or tests resulted. A first invocation also failed at PowerShell argument parsing before Gradle tasks started. Do not count either as test results for `db11eed`.
 - ADB listed no devices. The owner's latest report is “incorrect transcript”; the actual recognized text and confidence were not captured. No install or phone test was made. Do not claim this code fixed transcription.
 - Next: check CI for `db11eed`; obtain a successful build of this exact branch revision; then, after the Honor reconnects and explicit approval for that exact build, back up the existing app data and verify package/signature before in-place installation. Capture the visible `Wake heard:` and `Recognized` diagnostics, then test repeated conversation and interruptions. Keep main unchanged.
+
+
+## CI result for published voice update — 2026-11-07
+
+- GitHub Actions run `42346749653` for source commit `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` completed with failure. Job `128326059219` reported `steps: null` and no log URL; the connector could not provide step output. The follow-up documentation commit run `42346867212` failed the same way (job `128326410760`, no steps/logs). Cause is unknown; neither run provides evidence that compilation or tests began.
+- This confirms the current branch still lacks a completed CI verification. Keep the source commit, but do not treat either failed run as a code test failure or pass.
+- Current refs: integration branch is being updated with this record; production `main` remains `4b48185e9f110764938f10548f80a29acda674f7`. No merge/deploy/install occurred.

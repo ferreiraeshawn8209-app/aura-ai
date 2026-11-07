@@ -225,3 +225,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Focused test: `ProviderChatRouterTest.callerTimeoutDoesNotStartLocalFallbackAfterCancellation` — PASSED.
 - Full `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` — PASSED; 101 tests, 0 failures/errors/skips, 34 XML reports. APK package/signature verification passed; SHA-256 `D755ADDBD94D23A707016DF23421CE9BA7B579CBF64F2CB4A9A86BD3BBF6B716`.
 - The build was from a dirty local checkout with additional uncommitted settings/voice edits, not a verified clean remote tip. Phone disconnected; all acoustic, wake, interruption and live provider tests pending. No installation performed.
+
+
+## Exact acknowledgement rebuild — 2026-11-07
+
+- `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug`: passed; 101 tests, 0 failures/errors/skips; APK package and signature checks passed.
+- APK SHA-256 `29BC3FA4F5C1E4255CED20C7685BF8C8FD68156757CC63A38C8FB4075D81FCF9`. Action acknowledgement text is exact `I'll be back`.
+- Built from local branch plus uncommitted style-control changes; not installed. Honor disconnected. Real device voice/accent, wake, interruption, local/cloud and WhatsApp tests remain pending.

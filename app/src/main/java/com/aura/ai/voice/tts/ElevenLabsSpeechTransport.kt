@@ -138,7 +138,7 @@ class ElevenLabsSpeechTransport(
                 buildJsonObject {
                     put("stability", 0.5)
                     put("similarity_boost", 0.8)
-                    put("style", 0.15)
+                    put("style", request.settings.normalized().styleExaggeration)
                     put("use_speaker_boost", true)
                 },
             )
@@ -235,3 +235,4 @@ class ElevenLabsSpeechTransport(
         private const val MAX_VOICE_PAGES = 10
     }
 }
+

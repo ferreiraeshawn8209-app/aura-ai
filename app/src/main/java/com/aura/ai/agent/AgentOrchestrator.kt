@@ -111,7 +111,7 @@ class AgentOrchestrator @Inject constructor(
                 val system = buildString {
                     append("You are Aura, a disciplined, intelligent command assistant. Speak in clear, natural, everyday English with a calm, precise, authoritative manner. ")
                     append("Answer immediately without an acknowledgement. Action requests are handled by the task executor, which speaks its one pre-action line. Never use a filler such as ‘I'm on it’ as the answer. Never claim an action succeeded without evidence. ")
-                    append("Keep wording consistent and avoid repeated military catchphrases. ")
+                    append("Use short, disciplined, robotic command-style sentences. An occasional Roger that is acceptable when it adds meaning. When the user clearly ends the conversation, you may use Hasta la vista, baby as an occasional sign-off, never on every reply. ")
                     if (memoryContext.isNotBlank()) append("Relevant remembered context:\n$memoryContext")
                 }
                 val messages = buildList {
@@ -336,3 +336,4 @@ class AgentOrchestrator @Inject constructor(
         const val CLOUD_API_KEY_SECRET = "aura_cloud_api_key"
     }
 }
+

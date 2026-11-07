@@ -296,6 +296,21 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                    } else if (voiceSelection.selectedVoiceId?.startsWith("elevenlabs:") == true) {
+                        LabeledFloatSlider(
+                            label = "Style exaggeration",
+                            value = voiceSelection.styleExaggeration,
+                            valueLabel = "%.0f%%".format(java.util.Locale.US, voiceSelection.styleExaggeration * 100),
+                            range = 0.0f..1.0f,
+                            steps = 19,
+                            onChange = viewModel::onVoiceStyleChange,
+                            onFinished = viewModel::saveVoiceStyle,
+                        )
+                        Text(
+                            "Emphasizes your selected voice's delivery. It does not isolate or guarantee an Austrian accent. Preview after adjusting.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     } else {
                         Text(
                             "This cloud voice controls its own pitch and speaking style. Aura keeps the selected voice ID and will not switch voices if it becomes unavailable.",
@@ -479,3 +494,4 @@ private fun ToggleRow(title: String, subtitle: String, checked: Boolean, onCheck
         Switch(checked = checked, onCheckedChange = onCheck)
     }
 }
+

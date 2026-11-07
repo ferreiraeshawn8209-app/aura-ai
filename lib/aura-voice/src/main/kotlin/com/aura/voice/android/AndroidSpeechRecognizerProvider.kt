@@ -170,6 +170,7 @@ class AndroidSpeechRecognizerProvider(
     private fun emitResult(results: Bundle?, isFinal: Boolean, requestId: Long) {
         if (!isCurrent(requestId)) return
         val transcripts = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+        val transcript = transcripts?.firstOrNull().orEmpty()
         val confidence = results
             ?.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES)
             ?.firstOrNull()
@@ -177,10 +178,18 @@ class AndroidSpeechRecognizerProvider(
         emit(
             requestId,
             SpeechRecognitionResult(
-                transcript = transcripts?.firstOrNull().orEmpty(),
+                transcript = transcript,
                 confidence = confidence,
                 languageTag = null,
                 isFinal = isFinal,
+                alternatives = transcripts
+                    .orEmpty()
+                    .asSequence()
+                    .map(String::trim)
+                    .filter { it.isNotEmpty() && it != transcript }
+                    .distinct()
+                    .take(3)
+                    .toList(),
             ),
             finish = isFinal,
         )
@@ -285,3 +294,4 @@ class AndroidSpeechRecognizerProvider(
         else -> VoiceErrorCode.UNKNOWN
     }
 }
+

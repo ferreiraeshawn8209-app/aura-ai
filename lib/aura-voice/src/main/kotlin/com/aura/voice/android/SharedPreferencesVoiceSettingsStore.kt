@@ -25,6 +25,7 @@ class SharedPreferencesVoiceSettingsStore(
             .ifBlank { java.util.Locale.getDefault().toLanguageTag() },
         speakingRate = preferences.getFloat(KEY_RATE, 1.0f),
         pitch = preferences.getFloat(KEY_PITCH, 1.0f),
+        styleExaggeration = preferences.getFloat(KEY_STYLE, 0.15f),
     ).normalized()
 
     override fun save(settings: VoiceSettings) {
@@ -35,6 +36,7 @@ class SharedPreferencesVoiceSettingsStore(
             .putString(KEY_LANGUAGE, settings.languageTag)
             .putFloat(KEY_RATE, settings.speakingRate)
             .putFloat(KEY_PITCH, settings.pitch)
+            .putFloat(KEY_STYLE, settings.normalized().styleExaggeration)
             .apply()
     }
 
@@ -45,5 +47,6 @@ class SharedPreferencesVoiceSettingsStore(
         const val KEY_LANGUAGE = "language_tag"
         const val KEY_RATE = "speaking_rate"
         const val KEY_PITCH = "pitch"
+        const val KEY_STYLE = "style_exaggeration"
     }
 }

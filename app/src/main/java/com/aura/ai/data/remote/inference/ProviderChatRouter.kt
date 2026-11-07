@@ -181,7 +181,8 @@ class ProviderChatRouter @Inject constructor(
                     breaker.succeeded()
                     return ChatCompletionResult(answer, "cloud")
                 } catch (timeout: TimeoutCancellationException) {
-                    // A cloud-owned timeout may fall back; caller cancellation must abort the request.
+                    // A timeout owned by the cloud backend is eligible for local fallback,
+                    // but a timeout/cancellation from the caller must abort the whole request.
                     currentCoroutineContext().ensureActive()
                     fallbackReason = "Cloud provider timed out."
                     breaker.failed()
@@ -245,3 +246,4 @@ private suspend fun Call.awaitResponse(): Response = suspendCancellableCoroutine
         }
     })
 }
+

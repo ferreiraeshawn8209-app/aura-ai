@@ -8,10 +8,13 @@ import javax.inject.Singleton
 /** Buffers a wake event until the chat view model is ready to receive it. */
 @Singleton
 class WakeWordEvents @Inject constructor() {
-    private val channel = Channel<String?>(capacity = Channel.BUFFERED)
+    data class Event(val transcript: String?, val confidence: Float?, val alternatives: List<String>)
+
+    private val channel = Channel<Event>(capacity = Channel.BUFFERED)
     val events = channel.receiveAsFlow()
 
-    fun dispatch(transcript: String? = null) {
-        channel.trySend(transcript)
+    fun dispatch(transcript: String? = null, confidence: Float? = null, alternatives: List<String> = emptyList()) {
+        channel.trySend(Event(transcript, confidence, alternatives))
     }
 }
+

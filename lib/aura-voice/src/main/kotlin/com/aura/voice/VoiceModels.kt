@@ -53,6 +53,8 @@ data class SpeechRecognitionResult(
     val languageTag: String?,
     val isFinal: Boolean,
     val error: VoiceError? = null,
+    /** Alternate hypotheses from Android, for a local diagnostic only. */
+    val alternatives: List<String> = emptyList(),
 )
 
 data class VoiceDescriptor(
@@ -77,10 +79,12 @@ data class VoiceSettings(
     val languageTag: String = Locale.getDefault().toLanguageTag(),
     val speakingRate: Float = 1.0f,
     val pitch: Float = 1.0f,
+    val styleExaggeration: Float = 0.15f,
 ) {
     fun normalized(): VoiceSettings = copy(
         speakingRate = speakingRate.coerceIn(0.1f, 4.0f),
         pitch = pitch.coerceIn(0.1f, 4.0f),
+        styleExaggeration = if (styleExaggeration.isFinite()) styleExaggeration.coerceIn(0.0f, 1.0f) else 0.15f,
     )
 }
 
@@ -118,3 +122,4 @@ data class VoiceOperationResult(
             VoiceOperationResult(VoiceOperationStatus.REJECTED, error)
     }
 }
+

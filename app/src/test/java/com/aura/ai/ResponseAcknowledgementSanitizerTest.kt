@@ -12,7 +12,14 @@ class ResponseAcknowledgementSanitizerTest {
     }
 
     @Test
+    fun removesFullNewAcknowledgementWithoutLeavingSentenceFragments() {
+        assertEquals("The app is open.", ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement("I'll be back with an answer. The app is open."))
+        assertEquals("", ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement("I'll be back with an answer."))
+    }
+
+    @Test
     fun preservesOrdinaryAnswers() {
         assertEquals("Ten.", ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement("Ten."))
     }
 }
+

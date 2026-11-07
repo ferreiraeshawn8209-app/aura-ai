@@ -22,4 +22,12 @@ class SpeechCommandConfidencePolicyTest {
         assertFalse(SpeechCommandConfidencePolicy.shouldAskForRepeat(-1f, isActionRequest = true))
         assertFalse(SpeechCommandConfidencePolicy.shouldAskForRepeat(1.1f, isActionRequest = true))
     }
+
+    @Test
+    fun wakeCommandGuardRequestsRepeatForUncertainActionsButNotQuestions() {
+        assertTrue(WakeCommandConfidencePolicy.shouldAskForRepeat("open WhatsApp", 0.2f))
+        assertFalse(WakeCommandConfidencePolicy.shouldAskForRepeat("what is five plus five?", 0.2f))
+        assertFalse(WakeCommandConfidencePolicy.shouldAskForRepeat("open WhatsApp", 0.9f))
+    }
 }
+

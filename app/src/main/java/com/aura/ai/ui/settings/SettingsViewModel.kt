@@ -41,6 +41,7 @@ data class VoiceSelectionUiState(
     val selectedVoiceId: String? = null,
     val androidVoiceSelected: Boolean = true,
     val pitch: Float = 1.0f,
+    val styleExaggeration: Float = 0.15f,
     val speakingRate: Float = 1.0f,
     val loading: Boolean = false,
     val message: String? = null,
@@ -77,6 +78,7 @@ class SettingsViewModel @Inject constructor(
             selectedVoiceId = voice.voiceSettings().voiceId,
             androidVoiceSelected = voice.voiceSettings().provider == VoiceProviderType.ANDROID,
             pitch = voice.voiceSettings().pitch,
+            styleExaggeration = voice.voiceSettings().styleExaggeration,
             speakingRate = voice.voiceSettings().speakingRate,
             elevenLabsApiKeyConfigured = secureStorage.hasSecret(
                 com.aura.ai.voice.tts.ElevenLabsSpeechTransport.API_KEY_SECRET,
@@ -116,6 +118,7 @@ class SettingsViewModel @Inject constructor(
                     selectedVoiceId = current.voiceId,
                     androidVoiceSelected = current.provider == VoiceProviderType.ANDROID,
                     pitch = current.pitch,
+                    styleExaggeration = current.styleExaggeration,
                     speakingRate = current.speakingRate,
                     loading = false,
                     message = if (voices.isEmpty()) {
@@ -173,6 +176,7 @@ class SettingsViewModel @Inject constructor(
                         selectedVoiceId = voiceId,
                         androidVoiceSelected = selected.provider == VoiceProviderType.ANDROID,
                         pitch = selected.pitch,
+                        styleExaggeration = selected.styleExaggeration,
                         speakingRate = selected.speakingRate,
                         message = "Voice selection saved on this device.",
                     )
@@ -186,6 +190,22 @@ class SettingsViewModel @Inject constructor(
     fun onVoicePitchChange(value: Float) = _voiceSelection.update { it.copy(pitch = value) }
 
     fun onVoiceRateChange(value: Float) = _voiceSelection.update { it.copy(speakingRate = value) }
+
+    fun onVoiceStyleChange(value: Float) = _voiceSelection.update { it.copy(styleExaggeration = value) }
+
+    fun saveVoiceStyle() {
+        val tuned = voice.voiceSettings().copy(
+            styleExaggeration = _voiceSelection.value.styleExaggeration,
+        ).normalized()
+        val result = voice.updateVoiceSettings(tuned)
+        _voiceSelection.update {
+            it.copy(
+                styleExaggeration = if (result.accepted) tuned.styleExaggeration else voice.voiceSettings().styleExaggeration,
+                message = if (result.accepted) "Style exaggeration saved. Preview to hear the change." else
+                    result.error?.message ?: "Could not save style exaggeration.",
+            )
+        }
+    }
 
     fun saveVoiceTuning() {
         val draft = _voiceSelection.value
@@ -207,7 +227,7 @@ class SettingsViewModel @Inject constructor(
 
     fun previewVoice() {
         val result = voice.speak(
-            "All systems operational. Ready for your command.",
+            "Roger that. I'll be back. Hasta la vista, baby.",
             object : SpeechSynthesisListener {
                 override fun onStarted() = Unit
                 override fun onCompleted() = Unit
@@ -293,3 +313,4 @@ class SettingsViewModel @Inject constructor(
 
     fun clearSharedFilesTreeUri() = viewModelScope.launch { settings.setSharedFilesTreeUri(null) }
 }
+

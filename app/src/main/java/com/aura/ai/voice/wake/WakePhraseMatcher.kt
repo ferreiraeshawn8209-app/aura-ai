@@ -4,6 +4,32 @@ package com.aura.ai.voice.wake
 object WakePhraseMatcher {
     private val prefix = Regex("^\\s*yo(?:[\\W_]+)yo(?:[\\W_]+)yo\\b[\\s,.:;!?-]*", RegexOption.IGNORE_CASE)
 
+    data class Match(
+        val transcript: String,
+        val confidence: Float?,
+        val alternatives: List<String> = emptyList(),
+    )
+
+    fun firstMatchingCandidate(transcripts: List<String>?, confidenceScores: FloatArray?): Match? {
+        val match = transcripts
+            ?.withIndex()
+            ?.firstOrNull { (_, transcript) -> matches(transcript) }
+            ?: return null
+        val confidence = confidenceScores
+            ?.getOrNull(match.index)
+            ?.takeIf { it in 0f..1f }
+        val transcript = match.value
+        val alternatives = transcripts
+            .orEmpty()
+            .asSequence()
+            .map { it.trim() }
+            .filter { it.isNotEmpty() && it != transcript }
+            .distinct()
+            .take(3)
+            .toList()
+        return Match(transcript, confidence, alternatives)
+    }
+
     fun commandAfterWake(text: String): String? {
         val match = prefix.find(text) ?: return null
         return text.substring(match.range.last + 1).trim().takeIf(String::isNotEmpty)
@@ -11,3 +37,4 @@ object WakePhraseMatcher {
 
     fun matches(text: String): Boolean = prefix.containsMatchIn(text)
 }
+

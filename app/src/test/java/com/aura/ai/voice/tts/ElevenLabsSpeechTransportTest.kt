@@ -68,6 +68,7 @@ class ElevenLabsSpeechTransportTest {
                         provider = VoiceProviderType.CLOUD,
                         providerId = ElevenLabsSpeechTransport.PROVIDER_ID,
                         voiceId = "elevenlabs:voice-3",
+                        styleExaggeration = 0.7f,
                     ),
                 ),
             ) { result.set(it); complete.countDown() }
@@ -81,6 +82,7 @@ class ElevenLabsSpeechTransportTest {
             val body = Json.parseToJsonElement(request.body.readUtf8()).jsonObject
             assertEquals("All systems operational.", body.getValue("text").jsonPrimitive.contentOrNull)
             assertEquals("eleven_multilingual_v2", body.getValue("model_id").jsonPrimitive.contentOrNull)
+            assertEquals(0.7f, body.getValue("voice_settings").jsonObject.getValue("style").jsonPrimitive.content.toFloat(), 0.0001f)
             assertFalse(request.path!!.contains("secret-test-key"))
         } finally {
             transport.close()
@@ -125,3 +127,4 @@ class ElevenLabsSpeechTransportTest {
         }
     }
 }
+

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -163,6 +166,7 @@ private fun EmptyState(modifier: Modifier) {
 
 @Composable
 private fun MessageBubble(turn: ChatTurn) {
+    val clipboardManager = LocalClipboardManager.current
     val alignment = if (turn.isUser) Alignment.End else Alignment.Start
     Column(Modifier.fillMaxWidth(), horizontalAlignment = alignment) {
         if (!turn.isUser && turn.trace.isNotEmpty()) {
@@ -184,7 +188,7 @@ private fun MessageBubble(turn: ChatTurn) {
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.widthIn(max = 560.dp),
             ) {
-                Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.padding(14.dp)) {
                     if (turn.text.isBlank() && turn.streaming) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(16.dp),
@@ -194,6 +198,19 @@ private fun MessageBubble(turn: ChatTurn) {
                     } else {
                         SelectionContainer {
                             Text(turn.text, style = MaterialTheme.typography.bodyLarge, color = textColor)
+                        }
+                    }
+                    if (turn.text.isNotBlank() && !turn.streaming) {
+                        IconButton(
+                            onClick = { clipboardManager.setText(AnnotatedString(turn.text)) },
+                            modifier = Modifier.align(Alignment.End).size(32.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.ContentCopy,
+                                contentDescription = "Copy message",
+                                modifier = Modifier.size(16.dp),
+                                tint = textColor,
+                            )
                         }
                     }
                 }
@@ -291,3 +308,4 @@ private fun Composer(
         }
     }
 }
+

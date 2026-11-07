@@ -119,6 +119,16 @@ class WakeWordService : LifecycleService() {
         // to a network service. Android recognizers may ignore this hint.
         putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+        // Retain hypotheses so a misheard wake command can be diagnosed in Aura.
+        putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
+        // Android 13+ recognizers may use this context to recognize Aura's wake
+        // phrase more reliably. Providers that do not support it can ignore it.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            putStringArrayListExtra(
+                RecognizerIntent.EXTRA_BIASING_STRINGS,
+                arrayListOf(getString(R.string.wake_phrase)),
+            )
+        }
     }
 
     private fun createWakeRecognizer(): SpeechRecognizer {
@@ -163,11 +173,13 @@ class WakeWordService : LifecycleService() {
         handler.postDelayed(restart, decision.delayMillis)
     }
 
-    private fun onPhraseDetected(transcript: String) {
+    private fun onPhraseDetected(transcript: String, confidence: Float?, alternatives: List<String>) {
         val launch = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(EXTRA_WOKEN, true)
             putExtra(EXTRA_WAKE_TRANSCRIPT, transcript)
+            confidence?.let { putExtra(EXTRA_WAKE_CONFIDENCE, it) }
+            putStringArrayListExtra(EXTRA_WAKE_ALTERNATIVES, ArrayList(alternatives))
         }
         startActivity(launch)
     }
@@ -197,13 +209,14 @@ class WakeWordService : LifecycleService() {
 
         override fun onResults(results: Bundle?) {
             if (!requestGate.isCurrent(requestId)) return
-            val transcript = results
-                ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                ?.firstOrNull(WakePhraseMatcher::matches)
-            if (transcript != null) {
+            val match = WakePhraseMatcher.firstMatchingCandidate(
+                transcripts = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION),
+                confidenceScores = results?.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES),
+            )
+            if (match != null) {
                 requestGate.invalidate()
                 listening = false
-                onPhraseDetected(transcript)
+                onPhraseDetected(match.transcript, match.confidence, match.alternatives)
                 stopSelf()
             } else {
                 restartSoon(requestId)
@@ -237,6 +250,8 @@ class WakeWordService : LifecycleService() {
         const val NOTIFICATION_ID = 4242
         const val EXTRA_WOKEN = "woken"
         const val EXTRA_WAKE_TRANSCRIPT = "wake_transcript"
+        const val EXTRA_WAKE_CONFIDENCE = "wake_confidence"
+        const val EXTRA_WAKE_ALTERNATIVES = "wake_alternatives"
 
         fun start(context: Context) {
             val intent = Intent(context, WakeWordService::class.java)
@@ -252,3 +267,4 @@ class WakeWordService : LifecycleService() {
         }
     }
 }
+

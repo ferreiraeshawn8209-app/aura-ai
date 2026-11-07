@@ -70,7 +70,13 @@ class MainActivity : ComponentActivity() {
             intent.removeExtra(WakeWordService.EXTRA_WOKEN)
             val transcript = intent.getStringExtra(WakeWordService.EXTRA_WAKE_TRANSCRIPT)
             intent.removeExtra(WakeWordService.EXTRA_WAKE_TRANSCRIPT)
-            wakeWordEvents.dispatch(transcript)
+            val confidence = intent.getFloatExtra(WakeWordService.EXTRA_WAKE_CONFIDENCE, Float.NaN)
+                .takeIf { it in 0f..1f }
+            intent.removeExtra(WakeWordService.EXTRA_WAKE_CONFIDENCE)
+            val alternatives = intent.getStringArrayListExtra(WakeWordService.EXTRA_WAKE_ALTERNATIVES).orEmpty()
+            intent.removeExtra(WakeWordService.EXTRA_WAKE_ALTERNATIVES)
+            wakeWordEvents.dispatch(transcript, confidence, alternatives)
         }
     }
 }
+

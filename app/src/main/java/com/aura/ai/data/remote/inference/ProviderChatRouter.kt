@@ -5,6 +5,8 @@ import com.aura.ai.data.remote.ollama.OllamaChatMessage
 import com.aura.ai.data.remote.ollama.OllamaRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.flow.collect
@@ -179,6 +181,8 @@ class ProviderChatRouter @Inject constructor(
                     breaker.succeeded()
                     return ChatCompletionResult(answer, "cloud")
                 } catch (timeout: TimeoutCancellationException) {
+                    // A cloud-owned timeout may fall back; caller cancellation must abort the request.
+                    currentCoroutineContext().ensureActive()
                     fallbackReason = "Cloud provider timed out."
                     breaker.failed()
                 } catch (cancelled: CancellationException) {

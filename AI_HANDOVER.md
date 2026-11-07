@@ -507,3 +507,11 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 
 - Wake transcript visibility implementation, its unit tests, and build/install verification records are in commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8` on `integration/aura-voice-consolidation`.
 - The debug APK is installed in place on the Honor after the verified app-data backup. Automated tests/build passed; actual spoken transcript and response are still awaiting an unlocked-phone retest. `main` is unchanged.
+
+
+## Current Ollama availability — 2026-11-07
+
+- A direct non-streaming `qwen3:1.7b` request from BEATK to `http://192.168.8.18:11434/api/generate` returned TCP connection refused. Local Ollama is unavailable at this check; earlier Settings `/api/tags` discovery is historical and does not prove current generation.
+- Ollama was not started because the owner previously stopped it to reduce PC load. No cloud key or app setting was changed. Router fallback has unit coverage, but live cloud fallback/device inference remain unverified.
+- Wake-transcript APK installation and test details are in source commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8`. Honor remains locked; wake transcript acceptance is pending. Main unchanged; private backups excluded.
+- Next: unlock Honor and capture `Wake heard:`; when local processing is wanted, start Ollama deliberately and verify both `/api/tags` and one generated response through Aura. Separately verify cloud response while local is offline.

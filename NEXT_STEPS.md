@@ -292,3 +292,11 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Review whether those voice/style settings edits should be committed, then produce and verify an APK from the exact published commit after syncing. Current local test APK is validly signed but not proven to match the remote tip; leave it uninstalled.
 3. On Honor reconnect, back up existing app data, verify signing/package compatibility, then conduct the approved device tests: Tap to Speak/wake phrase, recognition transcript, multi-turn spoken response, interruption, consistent TTS voice, Ollama network/model selection and cloud fallback/recovery, and WhatsApp draft.
 4. Keep `main` unchanged; distinguish automated tests from phone acceptance.
+
+
+## Next after exact-ack build — 2026-11-07
+
+1. Preserve the uncommitted voice/style work in the shared checkout; review and commit only after reconciling it with the synchronized integration branch and keeping the exact `I'll be back` acknowledgement.
+2. Build/sign/hash a clean artifact from a committed branch revision; the current locally built APK includes uncommitted style-control changes and remains uninstalled.
+3. When Honor reconnects, back up app data, check package/signature compatibility and run the device voice, wake, transcript, interruption, Ollama/cloud recovery and WhatsApp-draft tests. No device success is implied by JVM tests.
+4. Keep `main` unchanged.

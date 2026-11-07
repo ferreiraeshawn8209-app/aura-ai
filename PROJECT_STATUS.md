@@ -344,3 +344,11 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Test/build status: NOT RUN/PENDING. C: has 967 MB free after the prior Gradle compile failed for insufficient disk. No fresh APK. Do not treat this patch as verified.
 - Device status: Honor disconnected by user request. No install or real-device test. Existing cloud/local routing and WhatsApp draft capability still need live acceptance; this patch does not add new WhatsApp behavior.
 - Next: recover disk space, sync the local checkout carefully (uncommitted voice/style work and backups remain), run targeted and full tests/build, then do phone tests only after reconnection and approval. Main is unchanged.
+
+
+## Verification follow-up — 2026-11-07
+
+- Focused cloud-caller cancellation test passed. Full app + aura-voice unit tests and debug assembly passed: 101 tests, 0 failures/errors/skips across 34 XML reports; Gradle `BUILD SUCCESSFUL` in 11m16s.
+- APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,703,885 bytes, SHA-256 `D755ADDBD94D23A707016DF23421CE9BA7B579CBF64F2CB4A9A86BD3BBF6B716`; `com.aura.ai` v1.0.0/code 1; signature passed with established debug signer `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
+- APK source was a dirty local checkout at `a3e5c1cc79f78dd916c584833704f812efd84bcb`, including uncommitted voice/settings changes. Git metadata is protected outside the workspace, so exact clean remote-tip provenance is pending reconciliation. APK is not installed.
+- Honor disconnected; all real-device checks remain pending. Do not claim live voice/Ollama/cloud/WhatsApp operation. No main merge.

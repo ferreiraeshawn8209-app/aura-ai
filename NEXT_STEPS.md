@@ -284,3 +284,11 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 3. Run the focused `ProviderChatRouterTest.callerTimeoutDoesNotStartLocalFallbackAfterCancellation`, then app + aura-voice tests and `:app:assembleDebug`. Verify the produced APK package, signing certificate and SHA-256. Report failures accurately.
 4. When Honor reconnects, back up existing app data and verify package/signature compatibility before installing any approved build; then run voice/wake/interruption and live Ollama/cloud tests. WhatsApp remains a review-before-send draft.
 5. Keep `main` unchanged.
+
+
+## After successful local verification — 2026-11-07
+
+1. Reconcile the dirty local worktree with GitHub `integration/aura-voice-consolidation`; local Git metadata lives outside the writable checkout and fetch was denied. Preserve the pending voice/settings edits and `device-backups/`.
+2. Review whether those voice/style settings edits should be committed, then produce and verify an APK from the exact published commit after syncing. Current local test APK is validly signed but not proven to match the remote tip; leave it uninstalled.
+3. On Honor reconnect, back up existing app data, verify signing/package compatibility, then conduct the approved device tests: Tap to Speak/wake phrase, recognition transcript, multi-turn spoken response, interruption, consistent TTS voice, Ollama network/model selection and cloud fallback/recovery, and WhatsApp draft.
+4. Keep `main` unchanged; distinguish automated tests from phone acceptance.

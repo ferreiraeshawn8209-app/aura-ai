@@ -414,3 +414,13 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Latest owner report: wake phrase yields an incorrect transcript; exact transcript/confidence not captured. Phone disconnected; no fresh device test or installation.
 - Current source uses Android `SpeechRecognizer` for wake listening; no Vosk engine/dependency/model found. Dedicated wake-word detection is not verified.
 - Next: free disk space safely, rerun tests/build, reconnect and verify Honor package/signature before approved install, capture the transcript/confidence, then fix and retest the ASR failure. Keep `device-backups/` private and uncommitted.
+
+
+## Latest integration branch update — 2026-11-07
+
+- Source branch head after publication: `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a`; production main unchanged.
+- The branch now carries wake confidence/alternate recognition hypotheses into visible transcript diagnostics, Android 13+ wake bias hint, low-confidence action repeat guard, message copy controls, and related voice/router tests.
+- Local test reports before publication show 95 app tests + 17 voice-library tests passed (0 failures/errors/skips). The existing local APK is `9F7A8D184147C017A21AEB43FEB2C8C2577A1070E7CF6FDAF5661DB5C116C71D`, package `com.aura.ai` v1.0.0/code 1, signer verified. These results are from the pre-publication worktree, not a build of current remote head.
+- Current-head build/test verification is pending: the wrapper lock is inaccessible; direct offline Gradle failed at `:app:checkDebugAarMetadata` with a null-path error before tests. No APK was generated for current head.
+- Device: ADB disconnected. Owner reports incorrect transcript; exact recognized words/confidence not captured. No new install or device acceptance.
+- Next: inspect CI for current head; get a successful build of current branch, reconnect Honor, obtain approval for that build, back up app data and verify package/signature, then capture transcript/confidence and test voice follow-through. Do not merge to main or include `device-backups/`.

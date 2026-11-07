@@ -356,3 +356,13 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 5. Capture the exact speech transcript/confidence and spoken result for “Yo, yo, yo, what is five plus five?” The latest result was an incorrect transcript.
 6. Fix ASR based on captured diagnostic evidence. Separately implement and verify a dedicated wake-word engine; current source uses Android `SpeechRecognizer` and contains no Vosk dependency/model.
 7. Keep all work on `integration/aura-voice-consolidation`; do not merge to `main`.
+
+
+## Immediate continuation — 2026-11-07
+
+1. Inspect GitHub Actions for branch head `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a`. CI did not produce test steps/logs for the preceding cloud-default commit; verify this new run rather than assuming.
+2. Re-run the complete app/voice tests and APK assembly once Gradle can resolve dependencies in a writable cache. The current offline attempt failed at `:app:checkDebugAarMetadata` before tests.
+3. Do not install the older local APK as if it came from the merged branch. Get a fresh package/signature-verified APK from current branch first.
+4. When the Honor reconnects, obtain approval for that exact build, back up existing app data, verify package/signature, and install in place without uninstalling or clearing data.
+5. Capture the exact `Wake heard:` and `Recognized` transcript/confidence for “Yo, yo, yo, what is five plus five?” then test spoken response, second turn, wake recovery and interruption.
+6. Do not merge into `main`. Keep private backups excluded.

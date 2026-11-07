@@ -286,3 +286,12 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Source inspection: wake listening currently uses Android `SpeechRecognizer`; no Vosk dependency, engine, or model was found. Dedicated wake-word detection is unverified.
 - Automated tests for the current cloud-default change did not finish locally because the C: drive reached 0 bytes free. GitHub Actions run `42344494193` and its retry ran no steps and provided no test logs. Earlier passing test counts apply to earlier commits only.
 - Next: after space is available and the Honor reconnects, rebuild, verify/back up before approved in-place installation, capture the actual displayed transcript/confidence and spoken response, then repeat multi-turn and interruption checks.
+
+
+## Published transcript diagnostics — 2026-11-07
+
+- Branch commit `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` carries confidence and alternate recognizer hypotheses into visible wake and conversation diagnostics, plus the low-confidence command guard.
+- Local pre-publication JUnit report files show 95 app + 17 voice-library tests, 0 failures/errors/skips. These results predate the three-way integration commit and are not a fresh test run of that commit.
+- Local artifact SHA-256 `9F7A8D184147C017A21AEB43FEB2C8C2577A1070E7CF6FDAF5661DB5C116C71D` is package `com.aura.ai` v1.0.0/code 1 and signature-valid; it is not verified as a build of current remote head and was not installed.
+- Current-turn Gradle rerun failed before test execution at `:app:checkDebugAarMetadata` due a Gradle null-path exception in offline dependency resolution. ADB lists no device. Owner reports incorrect transcript; exact recognized text/confidence remain unknown.
+- No wake, recognition, TTS, interruption, Ollama/cloud, or copy-button behavior was device-tested for the published commit. Continue to mark voice acceptance as incomplete.

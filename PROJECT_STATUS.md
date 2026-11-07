@@ -323,3 +323,10 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## Speech-recognition watchdog final publication — 2026-11-07
 
 - Final handover commit `a1a3447` is pushed; `git ls-remote` verified remote branch head `a1a34472b12d738ac54d16a84187ef6c77e1c8ef`. `main` unchanged; APK is still uninstalled and phone checks remain pending.
+
+## Spoken action confidence guard — 2026-11-07
+
+- Added a tested guard: valid ASR confidence below 0.45 on agent-action requests triggers a persisted transcript plus repeat request and prevents the unclear utterance from reaching the action agent. Other requests preserve their current routing.
+- Automated checks: 97 tests across 33 app/voice suites passed (0 failures/errors/skips); offline debug APK build and signature/package verification passed. APK SHA-256: `DDC6A445B95E760D118F0D77E0D463DA0E84F93B3232E079F3FD57296530B4B0`; not installed.
+- Honor disconnected: device ASR confidence distribution and end-to-end action prevention are unverified. 0.45 is not calibrated and needs phone evaluation. No new WhatsApp, voice, Ollama/cloud fallback, wake, or interruption capability is claimed.
+- Current branch `integration/aura-voice-consolidation`; starting commit `2f6c76dfdf6376a43d66376698c88ee4814defb3`. Commit and publish the code/records together. Main and user data remain untouched.

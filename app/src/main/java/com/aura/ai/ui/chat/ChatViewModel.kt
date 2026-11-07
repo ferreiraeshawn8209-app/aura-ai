@@ -399,7 +399,15 @@ class ChatViewModel @Inject constructor(
                                 voice.stopSpeaking()
                                 activeAssistantSpeechText = null
                             }
-                            send(result.transcript, spokenInstruction = true)
+                            if (SpeechCommandConfidencePolicy.shouldAskForRepeat(
+                                    confidence = result.confidence,
+                                    isActionRequest = com.aura.ai.agent.ConversationIntent.needsAgentPlan(result.transcript),
+                                )
+                            ) {
+                                reportUnclearActionTranscript(result.transcript, result.confidence)
+                            } else {
+                                send(result.transcript, spokenInstruction = true)
+                            }
                         } else {
                             resumeHandsFreeAfterReply()
                         }
@@ -458,6 +466,42 @@ class ChatViewModel @Inject constructor(
             )
         }
         resumeWakeWordIfEnabled()
+    }
+
+    private fun reportUnclearActionTranscript(transcript: String, confidence: Float?) {
+        val reply = "I heard ‘$transcript’, but the speech recognition confidence was low. Please repeat the command before I act."
+        val userTurn = ChatTurn(id = System.nanoTime(), isUser = true, text = transcript)
+        val assistantTurn = ChatTurn(id = System.nanoTime() + 1, isUser = false, text = reply)
+        _state.update {
+            it.copy(
+                turns = it.turns + userTurn + assistantTurn,
+                listening = false,
+                partialSpeech = "",
+                speechDiagnostic = "Command not executed; transcript confidence was ${(confidence!! * 100).toInt()}%.",
+                banner = "Aura did not execute the command because the transcript may be inaccurate.",
+            )
+        }
+        viewModelScope.launch {
+            persistMessageSafely(transcript, ChatMessage.Role.USER)
+            persistMessageSafely(reply, ChatMessage.Role.ASSISTANT)
+            if (!settings.settings.first().voiceRepliesEnabled) {
+                resumeHandsFreeAfterReply()
+                return@launch
+            }
+            val result = voice.speak(reply, object : SpeechSynthesisListener {
+                override fun onStarted() = Unit
+                override fun onCompleted() = resumeHandsFreeAfterReply()
+                override fun onStopped() = resumeHandsFreeAfterReply()
+                override fun onError(error: VoiceError) {
+                    _state.update { it.copy(banner = error.message) }
+                    resumeHandsFreeAfterReply()
+                }
+            })
+            if (!result.accepted) {
+                _state.update { it.copy(banner = result.error?.message ?: "Aura could not speak the repeat request.") }
+                resumeHandsFreeAfterReply()
+            }
+        }
     }
 
     private fun resumeWakeWordIfEnabled() {

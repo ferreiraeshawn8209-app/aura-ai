@@ -263,3 +263,8 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 ## Speech-recognition watchdog publication confirmed — 2026-11-07
 
 - Remote integration head is `a1a34472b12d738ac54d16a84187ef6c77e1c8ef`; implementation and final handover are both published. Keep main unchanged and device acceptance pending.
+
+## Low-confidence action guard — 2026-11-07
+
+- After phone reconnects, check the visible transcript and repeat request for a low-confidence spoken action, confirm the agent was not invoked, then test confident action and ordinary chat. Measure Honor ASR confidence before adjusting the current 0.45 threshold.
+- Continue implementation work without ADB: inspect and complete cloud-first/local-Ollama fallback and supported WhatsApp intents/actions; add unit coverage and build checks. No installation until the exact APK is approved. Keep `main` unchanged.

@@ -267,3 +267,13 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Ollama was not started because the owner previously stopped it to reduce PC load. No cloud key or app setting was changed. Router fallback has unit coverage, but live cloud fallback/device inference remain unverified.
 - Wake-transcript APK installation and test details are in source commit `04e5cc1f3092de6b824cef5b7c9dccd91b7e03b8`. Honor remains locked; wake transcript acceptance is pending. Main unchanged; private backups excluded.
 - Next: unlock Honor and capture `Wake heard:`; when local processing is wanted, start Ollama deliberately and verify both `/api/tags` and one generated response through Aura. Separately verify cloud response while local is offline.
+
+
+## Cloud-first preference and CI test gate — 2026-11-07
+
+- Changed `T1000Settings` so an unset Cloud preference defaults on, matching the owner's online-first goal. An explicitly saved Cloud-off preference remains respected by DataStore. Cloud calls still require a configured URL, model, and encrypted key; existing daily request cap and Ollama fallback are unchanged.
+- Added a unit test asserting the default and updated GitHub Actions Android workflow to run app tests, voice-module tests, and debug APK assembly on branch updates.
+- Local verification attempt for this change: `:app:testDebugUnitTest :aura-voice:testDebugUnitTest` failed before tests completed after 7m12s because C: ran out of disk. Gradle failed at `:app:bundleDebugClassesToRuntimeJar`; Windows reported 0 bytes free. The previous 112-test/ APK success predates this preference change and does not verify it. No APK for this change was produced.
+- Latest reported Honor test remains incorrect transcription; exact recognized words/confidence remain unavailable. Honor is not connected, so there is no phone verification.
+- The remote integration branch was read at `33829ebc09ad9995bddcfe951747ff9fd2bc29dc`. This commit only changes the settings default/test/CI gate and this record; main remains unchanged. Local working tree still has earlier uncommitted voice/UI changes and is four commits behind that remote revision at the last local status check. Private backups remain excluded.
+- Next: wait for GitHub Actions to run the expanded verification on this commit; do not claim it passed until the workflow reports success. To build locally, the owner must free several GB on C:; no files/caches/data were deleted. Then reconnect the Honor, request approval for the exact fresh APK, back up and verify package/signature before in-place install, and capture exact transcript/confidence plus spoken answer.

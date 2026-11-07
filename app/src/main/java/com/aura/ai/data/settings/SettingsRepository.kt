@@ -31,7 +31,7 @@ data class T1000Settings(
     val autonomyEnabled: Boolean = true,
     val wakeWordEnabled: Boolean = false,
     val voiceRepliesEnabled: Boolean = true,
-    val cloudEnabled: Boolean = false,
+    val cloudEnabled: Boolean = DEFAULT_CLOUD_ENABLED,
     val cloudBaseUrl: String = "https://openrouter.ai/api/v1",
     val cloudModel: String = "",
     val cloudRequestsPerDayLimit: Int = 60,
@@ -40,6 +40,7 @@ data class T1000Settings(
     companion object {
         const val DEFAULT_OLLAMA_URL = "http://192.168.8.18:11434"
         const val DEFAULT_MODEL = "qwen3:1.7b"
+        const val DEFAULT_CLOUD_ENABLED = true
     }
 }
 
@@ -85,7 +86,7 @@ class SettingsRepository @Inject constructor(
             autonomyEnabled = p[Keys.AUTONOMY] ?: true,
             wakeWordEnabled = p[Keys.WAKE] ?: false,
             voiceRepliesEnabled = p[Keys.VOICE] ?: true,
-            cloudEnabled = p[Keys.CLOUD_ENABLED] ?: false,
+            cloudEnabled = p[Keys.CLOUD_ENABLED] ?: T1000Settings.DEFAULT_CLOUD_ENABLED,
             cloudBaseUrl = p[Keys.CLOUD_BASE_URL] ?: "https://openrouter.ai/api/v1",
             cloudModel = p[Keys.CLOUD_MODEL] ?: "",
             cloudRequestsPerDayLimit = p[Keys.CLOUD_DAILY_LIMIT] ?: 60,

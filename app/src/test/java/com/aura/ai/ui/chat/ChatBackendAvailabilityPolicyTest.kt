@@ -4,8 +4,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import com.aura.ai.data.settings.T1000Settings
 
 class ChatBackendAvailabilityPolicyTest {
+    @Test
+    fun cloudIsEnabledByDefaultToPreferOnlineReasoning() {
+        assertTrue(T1000Settings().cloudEnabled)
+    }
+
     @Test
     fun composerRemainsAvailableWhenHistoryLoadsEvenWithoutABackend() {
         assertFalse(ChatBackendAvailabilityPolicy.canSubmit(historyLoaded = false))

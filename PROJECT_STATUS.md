@@ -372,3 +372,10 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Source and test changes, plus the Honor verification record, were published to this integration branch in commit `74848b6029db3368b01f27cb8dda997d12695740`. Files: `SettingsRepository.kt`, `SettingsScreen.kt` (Ollama endpoint text), `OllamaEndpointPolicyTest.kt`, and all four continuity documents. Main was not changed; device backups were excluded.
 - The commit records 104 passing unit tests and a verified in-place APK install. The owner's latest recognition result is still failed and exact transcript capture is pending; no device voice pass is claimed.
 - Workspace branch remains `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; local Git metadata is protected, so no local branch mutation was performed.
+
+
+## Wake transcript diagnostic — 2026-11-07
+
+- Wake-triggered text now appears in the Agent diagnostic before model handling. This exposes what wake ASR heard; acoustic accuracy remains unverified.
+- Automated tests/build: 106 passed, 0 failures/errors/skips. Updated `com.aura.ai` in place after backup and package/signature verification; user data was not cleared.
+- Honor remains locked during post-install verification. Spoken transcript, Qwen answer, TTS, wake, interruption, and multi-turn acceptance are pending.

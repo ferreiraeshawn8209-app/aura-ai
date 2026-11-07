@@ -246,3 +246,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Source and test changes, plus the Honor verification record, were published to this integration branch in commit `74848b6029db3368b01f27cb8dda997d12695740`. Files: `SettingsRepository.kt`, `SettingsScreen.kt` (Ollama endpoint text), `OllamaEndpointPolicyTest.kt`, and all four continuity documents. Main was not changed; device backups were excluded.
 - The commit records 104 passing unit tests and a verified in-place APK install. The owner's latest recognition result is still failed and exact transcript capture is pending; no device voice pass is claimed.
 - Workspace branch remains `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; local Git metadata is protected, so no local branch mutation was performed.
+
+
+## Wake diagnostic build — 2026-11-07
+
+- Added local display of the full raw wake transcript and two unit tests. This improves transcript observability only.
+- 106 app/voice tests passed; debug APK build, signer and package verification passed. Updated the original app in place after app-data backup.
+- Honor remained locked; no live acceptance was claimed. Exact transcript and spoken answer await owner retest.

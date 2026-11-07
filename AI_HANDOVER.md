@@ -491,3 +491,13 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - Source and test changes, plus the Honor verification record, were published to this integration branch in commit `74848b6029db3368b01f27cb8dda997d12695740`. Files: `SettingsRepository.kt`, `SettingsScreen.kt` (Ollama endpoint text), `OllamaEndpointPolicyTest.kt`, and all four continuity documents. Main was not changed; device backups were excluded.
 - The commit records 104 passing unit tests and a verified in-place APK install. The owner's latest recognition result is still failed and exact transcript capture is pending; no device voice pass is claimed.
 - Workspace branch remains `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; local Git metadata is protected, so no local branch mutation was performed.
+
+
+## Wake transcript diagnostic build/install — 2026-11-07
+
+- Wake-triggered utterances now retain the full recognition transcript in the Agent diagnostic line before the command tail is sent to the model. Files: `app/src/main/java/com/aura/ai/ui/chat/ChatViewModel.kt`, new `WakeTranscriptDiagnostic.kt`, and new `app/src/test/java/com/aura/ai/ui/chat/WakeTranscriptDiagnosticTest.kt`. This improves diagnosis visibility; it is not a claim that acoustic recognition accuracy itself is fixed.
+- Automated verification on BEATK: offline app + aura-voice unit tests and debug assembly completed BUILD SUCCESSFUL in 7m17s; 106 tests, 0 failures/errors/skips. Existing Moshi Kapt deprecation warning only.
+- APK `app/build/outputs/apk/debug/app-debug.apk`: 20,824,770 bytes; SHA-256 `1D2DDE7F3F4B90A5732D06E4C027C42A5C32393DE2A92ACCE681225C152A80C8`; package `com.aura.ai`, version 1.0.0/code 1; signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3` verified.
+- Before update, private app-data backup `device-backups/com.aura.ai-pre-wake-diagnostic-20261107.tar` (822,784 bytes; SHA-256 `4E8A290A49EE69F23D78F6DA23A592A6CA7B2C6AB19E9B23D0816F1B71D6865B`) was created. Installed package/signature matched; `adb install -r` returned Success with no uninstall/data clear. Pulled installed base APK hash exactly matched the built APK. Backups are excluded from Git.
+- Device remained at lock screen during the check; no post-update transcript, Qwen chat-generation, TTS, wake, interruption, or multi-turn pass is claimed. User was asked to unlock and capture the new `Wake heard:` line and spoken response.
+- Local workspace branch `integration/aura-voice-consolidation`, HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; protected local Git metadata was not mutated. No merge to main.

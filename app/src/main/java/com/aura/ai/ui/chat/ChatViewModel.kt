@@ -317,17 +317,20 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun activateFromWakeWord(transcript: String?) {
-        startHandsFreeSession(command = transcript?.let(com.aura.ai.voice.wake.WakePhraseMatcher::commandAfterWake))
+        startHandsFreeSession(
+            command = transcript?.let(com.aura.ai.voice.wake.WakePhraseMatcher::commandAfterWake),
+            wakeTranscript = transcript,
+        )
     }
 
-    private fun startHandsFreeSession(command: String? = null) {
+    private fun startHandsFreeSession(command: String? = null, wakeTranscript: String? = null) {
         WakeWordService.stop(context)
         _state.update {
             it.copy(
                 handsFreeSession = true,
                 listening = command.isNullOrBlank(),
                 partialSpeech = "",
-                speechDiagnostic = "",
+                speechDiagnostic = WakeTranscriptDiagnostic.describe(wakeTranscript),
                 banner = null,
             )
         }

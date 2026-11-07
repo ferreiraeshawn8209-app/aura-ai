@@ -210,3 +210,4 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 
 - Automated policy coverage: 3 tests passed. Valid confidence `< 0.45` blocks only agent-action utterances; confident action and ordinary chat pass through; missing/out-of-range scores do not cause guessed classification. Full app/voice run: 97 tests across 33 suites, all passed; APK assembled and signature/package checked, not installed.
 - Honor test pending because no ADB device is connected. Specifically verify transcript/clarification, no action invocation on low-confidence utterance, listening resume, and no repeat prompt on a confident instruction. Then calibrate the threshold against actual Android confidence values.
+- Source and verification notes are in pushed integration commit `8efb987ea687283edfbd71aff6d11bc86fa70294`; production `main` was not changed.

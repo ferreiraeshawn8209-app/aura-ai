@@ -268,3 +268,4 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 
 - After phone reconnects, check the visible transcript and repeat request for a low-confidence spoken action, confirm the agent was not invoked, then test confident action and ordinary chat. Measure Honor ASR confidence before adjusting the current 0.45 threshold.
 - Continue implementation work without ADB: inspect and complete cloud-first/local-Ollama fallback and supported WhatsApp intents/actions; add unit coverage and build checks. No installation until the exact APK is approved. Keep `main` unchanged.
+- This change and its test/handover records were committed and pushed as `8efb987ea687283edfbd71aff6d11bc86fa70294`; remote branch head verified. `device-backups/` remains excluded.

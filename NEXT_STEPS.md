@@ -269,3 +269,9 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 - After phone reconnects, check the visible transcript and repeat request for a low-confidence spoken action, confirm the agent was not invoked, then test confident action and ordinary chat. Measure Honor ASR confidence before adjusting the current 0.45 threshold.
 - Continue implementation work without ADB: inspect and complete cloud-first/local-Ollama fallback and supported WhatsApp intents/actions; add unit coverage and build checks. No installation until the exact APK is approved. Keep `main` unchanged.
 - This change and its test/handover records were committed and pushed as `8efb987ea687283edfbd71aff6d11bc86fa70294`; remote branch head verified. `device-backups/` remains excluded.
+
+
+## Provider cancellation regression check — 2026-11-07
+
+- Pause new Gradle builds until C: has several GB free; the focused test compile consumed the available space and failed before test execution. Preserve the existing APK, backups, and concurrent voice/settings edits.
+- After space is restored, sync the local checkout to the published branch, inspect the in-progress voice/style changes, rerun the caller-timeout regression test, apply the `ensureActive` cancellation guard only after reviewing its diff, then run app/voice tests and a fresh APK build. Do not install while the Honor is disconnected.

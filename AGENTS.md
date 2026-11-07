@@ -8,3 +8,8 @@
 - Separate automated tests/builds from actual phone acceptance. Never claim a wake phrase, microphone, voice, interruption, Ollama, cloud, or WhatsApp feature passed unless it was tested on the actual device/provider.
 - If ADB is unavailable, continue safe code review, implementation, automated tests, and APK builds. Do not install or claim real-device success until the phone reconnects and package/signature compatibility is verified.
 - Keep provider keys in Android Keystore-backed secure storage; never log or commit their values. Keep local-model and cloud-provider behavior configurable and fail honestly when unavailable.
+
+
+## Verified voice-engine status — 2026-11-07
+
+- The current source uses Android `SpeechRecognizer` in a restart loop for wake detection. A repository search did not find a Vosk dependency, implementation, or model. Do not describe Vosk wake-word detection as implemented; track it as incomplete until the engine and model are present and a device test passes.

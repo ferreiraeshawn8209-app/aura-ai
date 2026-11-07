@@ -345,3 +345,14 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 - Latest reported Honor test remains incorrect transcription; exact recognized words/confidence remain unavailable. Honor is not connected, so there is no phone verification.
 - The remote integration branch was read at `33829ebc09ad9995bddcfe951747ff9fd2bc29dc`. This commit only changes the settings default/test/CI gate and this record; main remains unchanged. Local working tree still has earlier uncommitted voice/UI changes and is four commits behind that remote revision at the last local status check. Private backups remain excluded.
 - Next: wait for GitHub Actions to run the expanded verification on this commit; do not claim it passed until the workflow reports success. To build locally, the owner must free several GB on C:; no files/caches/data were deleted. Then reconnect the Honor, request approval for the exact fresh APK, back up and verify package/signature before in-place install, and capture exact transcript/confidence plus spoken answer.
+
+
+## Next verified actions — 2026-11-07
+
+1. Free several GB on C: using the owner's choice; do not remove project data, APKs, backups, models, or Gradle caches without explicit approval.
+2. Rerun `:app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug` for current branch head `42c6b8851620f8007ab5e6a1f86906226c0c2278`. Current cloud-default change is not test-verified and has no fresh APK.
+3. Investigate why GitHub Actions run `42344494193` failed before steps; both attempts have no step logs, so source tests did not run there.
+4. Reconnect Honor. Before installing an approved build, back up app data and verify package ID/signature; never uninstall or clear app data.
+5. Capture the exact speech transcript/confidence and spoken result for “Yo, yo, yo, what is five plus five?” The latest result was an incorrect transcript.
+6. Fix ASR based on captured diagnostic evidence. Separately implement and verify a dedicated wake-word engine; current source uses Android `SpeechRecognizer` and contains no Vosk dependency/model.
+7. Keep all work on `integration/aura-voice-consolidation`; do not merge to `main`.

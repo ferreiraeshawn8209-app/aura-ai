@@ -277,3 +277,12 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Latest reported Honor test remains incorrect transcription; exact recognized words/confidence remain unavailable. Honor is not connected, so there is no phone verification.
 - The remote integration branch was read at `33829ebc09ad9995bddcfe951747ff9fd2bc29dc`. This commit only changes the settings default/test/CI gate and this record; main remains unchanged. Local working tree still has earlier uncommitted voice/UI changes and is four commits behind that remote revision at the last local status check. Private backups remain excluded.
 - Next: wait for GitHub Actions to run the expanded verification on this commit; do not claim it passed until the workflow reports success. To build locally, the owner must free several GB on C:; no files/caches/data were deleted. Then reconnect the Honor, request approval for the exact fresh APK, back up and verify package/signature before in-place install, and capture exact transcript/confidence plus spoken answer.
+
+
+## Latest voice evidence — 2026-11-07
+
+- Honor test: owner reports an incorrect transcript after saying “Yo, yo, yo, what is five plus five?” Exact transcript and confidence were not captured. Treat this as a failed/indeterminate recognition acceptance check, not a pass.
+- Device/ADB is disconnected. No retest, install, microphone, wake, TTS, or interruption verification was performed in this session.
+- Source inspection: wake listening currently uses Android `SpeechRecognizer`; no Vosk dependency, engine, or model was found. Dedicated wake-word detection is unverified.
+- Automated tests for the current cloud-default change did not finish locally because the C: drive reached 0 bytes free. GitHub Actions run `42344494193` and its retry ran no steps and provided no test logs. Earlier passing test counts apply to earlier commits only.
+- Next: after space is available and the Honor reconnects, rebuild, verify/back up before approved in-place installation, capture the actual displayed transcript/confidence and spoken response, then repeat multi-turn and interruption checks.

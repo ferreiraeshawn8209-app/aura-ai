@@ -403,3 +403,14 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Latest reported Honor test remains incorrect transcription; exact recognized words/confidence remain unavailable. Honor is not connected, so there is no phone verification.
 - The remote integration branch was read at `33829ebc09ad9995bddcfe951747ff9fd2bc29dc`. This commit only changes the settings default/test/CI gate and this record; main remains unchanged. Local working tree still has earlier uncommitted voice/UI changes and is four commits behind that remote revision at the last local status check. Private backups remain excluded.
 - Next: wait for GitHub Actions to run the expanded verification on this commit; do not claim it passed until the workflow reports success. To build locally, the owner must free several GB on C:; no files/caches/data were deleted. Then reconnect the Honor, request approval for the exact fresh APK, back up and verify package/signature before in-place install, and capture exact transcript/confidence plus spoken answer.
+
+
+## Current verification state — 2026-11-07
+
+- Integration branch: `integration/aura-voice-consolidation`, current code commit `42c6b8851620f8007ab5e6a1f86906226c0c2278`; main unchanged.
+- Cloud preference now defaults to enabled when not previously set. A saved explicit off value remains off. Cloud still requires a provider URL, model, and encrypted API key. This change has not passed tests or a fresh APK build.
+- Local Gradle verification stopped because C: had 0 bytes free; failure occurred before the test tasks completed. The prior 112 passing tests belong to an earlier code revision.
+- CI run `42344494193` and one retry ended before any workflow steps/logs ran. No CI test result is available.
+- Latest owner report: wake phrase yields an incorrect transcript; exact transcript/confidence not captured. Phone disconnected; no fresh device test or installation.
+- Current source uses Android `SpeechRecognizer` for wake listening; no Vosk engine/dependency/model found. Dedicated wake-word detection is not verified.
+- Next: free disk space safely, rerun tests/build, reconnect and verify Honor package/signature before approved install, capture the transcript/confidence, then fix and retest the ASR failure. Keep `device-backups/` private and uncommitted.

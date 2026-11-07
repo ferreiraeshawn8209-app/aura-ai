@@ -352,3 +352,10 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - APK: `app/build/outputs/apk/debug/app-debug.apk`, 20,703,885 bytes, SHA-256 `D755ADDBD94D23A707016DF23421CE9BA7B579CBF64F2CB4A9A86BD3BBF6B716`; `com.aura.ai` v1.0.0/code 1; signature passed with established debug signer `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
 - APK source was a dirty local checkout at `a3e5c1cc79f78dd916c584833704f812efd84bcb`, including uncommitted voice/settings changes. Git metadata is protected outside the workspace, so exact clean remote-tip provenance is pending reconciliation. APK is not installed.
 - Honor disconnected; all real-device checks remain pending. Do not claim live voice/Ollama/cloud/WhatsApp operation. No main merge.
+
+
+## Exact acknowledgement build verification — 2026-11-07
+
+- Action acknowledgement is exactly `I'll be back` in the tested local build. Full app/voice tests: 101 passed, 0 failures/errors/skips; APK assembly succeeded in 9m19s.
+- APK SHA-256 `29BC3FA4F5C1E4255CED20C7685BF8C8FD68156757CC63A38C8FB4075D81FCF9`; package `com.aura.ai` v1.0.0/code 1 and signature verified. Artifact includes local uncommitted ElevenLabs style-control changes and is not a clean remote-tip build. Not installed.
+- Honor disconnected. Device voice/wake/interruption/Ollama/cloud/WhatsApp checks remain pending. Main unchanged.

@@ -86,7 +86,7 @@ class SkillRepository @Inject constructor(
     suspend fun recordUse(id: Long, succeeded: Boolean) {
         val skill = skillDao.getSkillById(id) ?: return
         val marker = if (succeeded) "success" else "failure"
-        skillDao.updateSkill(skill.copy(evaluationData = "{\\"lastOutcome\\":\\"$marker\\"}", updatedTimestamp = System.currentTimeMillis()))
+        skillDao.updateSkill(skill.copy(evaluationData = "{\"lastOutcome\":\"$marker\"}", updatedTimestamp = System.currentTimeMillis()))
     }
 
     suspend fun evolve(parent: SkillEntity, newProcedureJson: String): Long =

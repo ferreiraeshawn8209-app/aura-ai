@@ -8,6 +8,7 @@ workflows:
     scripts:
       - name: Verify repository and Gradle configuration
         script: |
+          sh scripts/restore-wrapper.sh
           echo "Checking repository layout and Gradle configuration..."
 
           # Ensure Gradle wrapper exists (attempt to regenerate it if missing by installing system Gradle)
@@ -97,7 +98,7 @@ workflows:
         script: |
           set -euo pipefail
           echo "Starting assembleDebug (this will fail the build if Gradle/Android SDK are misconfigured)"
-          ./gradlew --no-daemon clean assembleDebug --stacktrace
+          ./gradlew --no-daemon clean testDebugUnitTest assembleDebug --stacktrace
 
     artifacts:
       - app/build/outputs/**/*.apk

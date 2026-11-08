@@ -62,6 +62,7 @@ class SettingsRepository @Inject constructor(
     }
 
     suspend fun setBaseUrl(url: String) = context.dataStore.edit { it[Keys.BASE_URL] = url.trim().trimEnd('/') }
+    suspend fun clearModel() = context.dataStore.edit { it.remove(Keys.MODEL) }
     suspend fun setModel(model: String) = context.dataStore.edit { it[Keys.MODEL] = model }
     suspend fun setTimeout(seconds: Int) = context.dataStore.edit { it[Keys.TIMEOUT] = seconds.coerceIn(10, 600) }
     suspend fun setTemperature(value: Int) = context.dataStore.edit { it[Keys.TEMPERATURE] = value.coerceIn(0, 100) }

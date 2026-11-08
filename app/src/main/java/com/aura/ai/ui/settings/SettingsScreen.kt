@@ -62,7 +62,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 Section("Ollama connection") {
                     Text(
                         "T1000 runs entirely on your own Ollama server — no cloud. Point it at the host running `ollama serve`. " +
-                            "Use 10.0.2.2 for an emulator reaching your computer, or the LAN IP of the machine on a real device.",
+                            "Use 10.0.2.2 for an emulator reaching your computer, or the LAN IP of the machine on a real device. For USB, run adb reverse tcp:11434 tcp:11434 on your PC and use http://127.0.0.1:11434.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

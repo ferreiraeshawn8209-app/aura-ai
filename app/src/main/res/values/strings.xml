@@ -12,7 +12,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="error_no_api_key">Ollama is not configured. Start Ollama and verify the configured server URL.</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
-    <string name="aura_greeting">Hi, I'm T1000. I can understand requests, plan tasks, use tools, and learn from verified results. How can I help?</string>
+    <string name="aura_greeting">Hi, I\'m T1000. I can understand requests, plan tasks, use tools, and learn from verified results. How can I help?</string>
     <string name="typing_indicator">AURA is thinking…</string>
     <string name="you_label">You</string>
     <string name="aura_label">AURA</string>

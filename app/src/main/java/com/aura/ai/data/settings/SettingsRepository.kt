@@ -11,23 +11,18 @@ import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 import java.time.LocalDate
 import java.time.ZoneOffset
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "t1000_settings")
 
-/**
- * User-configurable runtime settings. The Ollama endpoint and model can be
- * changed here without rebuilding the app, satisfying the "configurable without
- * rebuilding" requirement.
- */
 data class T1000Settings(
     val ollamaBaseUrl: String = DEFAULT_OLLAMA_URL,
     val selectedModel: String? = DEFAULT_MODEL,
     val requestTimeoutSeconds: Int = 120,
-    val temperature: Int = 70, // stored as 0..100, divided by 100 at call time
+    val temperature: Int = 70,
     val autonomyEnabled: Boolean = true,
     val wakeWordEnabled: Boolean = false,
     val voiceRepliesEnabled: Boolean = true,
@@ -36,6 +31,8 @@ data class T1000Settings(
     val cloudModel: String = "",
     val cloudRequestsPerDayLimit: Int = 60,
     val sharedFilesTreeUri: String? = null,
+    /** Raw speech text remains on-screen only when the user explicitly opts in. */
+    val speechDiagnosticsEnabled: Boolean = false,
 ) {
     companion object {
         const val DEFAULT_OLLAMA_URL = "http://192.168.8.18:11434"
@@ -63,21 +60,13 @@ class SettingsRepository @Inject constructor(
         val CLOUD_USAGE_DAY = stringPreferencesKey("cloud_usage_day_utc")
         val CLOUD_USAGE_COUNT = intPreferencesKey("cloud_usage_count")
         val SHARED_FILES_TREE_URI = stringPreferencesKey("shared_files_tree_uri")
+        val SPEECH_DIAGNOSTICS = booleanPreferencesKey("speech_diagnostics_enabled")
     }
 
     val settings: Flow<T1000Settings> = context.dataStore.data.map { p ->
-        // These loopback/emulator-only values cannot reach the PC Ollama server
-        // from a physical phone. Keep any non-loopback, user-entered endpoint.
-        val normalizedUrl = OllamaEndpointPolicy.normalize(
-            storedUrl = p[Keys.BASE_URL],
-            defaultUrl = T1000Settings.DEFAULT_OLLAMA_URL,
-        )
+        val normalizedUrl = OllamaEndpointPolicy.normalize(p[Keys.BASE_URL], T1000Settings.DEFAULT_OLLAMA_URL)
         val storedModel = p[Keys.MODEL]
-        val normalizedModel = if (storedModel == "gemma3:1b-cloud") {
-            T1000Settings.DEFAULT_MODEL
-        } else {
-            storedModel ?: T1000Settings.DEFAULT_MODEL
-        }
+        val normalizedModel = if (storedModel == "gemma3:1b-cloud") T1000Settings.DEFAULT_MODEL else storedModel ?: T1000Settings.DEFAULT_MODEL
         T1000Settings(
             ollamaBaseUrl = normalizedUrl,
             selectedModel = normalizedModel,
@@ -91,6 +80,7 @@ class SettingsRepository @Inject constructor(
             cloudModel = p[Keys.CLOUD_MODEL] ?: "",
             cloudRequestsPerDayLimit = p[Keys.CLOUD_DAILY_LIMIT] ?: 60,
             sharedFilesTreeUri = p[Keys.SHARED_FILES_TREE_URI],
+            speechDiagnosticsEnabled = p[Keys.SPEECH_DIAGNOSTICS] ?: false,
         )
     }
 
@@ -101,19 +91,18 @@ class SettingsRepository @Inject constructor(
     suspend fun setAutonomy(enabled: Boolean) = context.dataStore.edit { it[Keys.AUTONOMY] = enabled }
     suspend fun setWakeWord(enabled: Boolean) = context.dataStore.edit { it[Keys.WAKE] = enabled }
     suspend fun setVoiceReplies(enabled: Boolean) = context.dataStore.edit { it[Keys.VOICE] = enabled }
+    suspend fun setSpeechDiagnosticsEnabled(enabled: Boolean) = context.dataStore.edit { it[Keys.SPEECH_DIAGNOSTICS] = enabled }
+
     suspend fun setCloudSettings(enabled: Boolean, baseUrl: String, model: String) = context.dataStore.edit {
         it[Keys.CLOUD_ENABLED] = enabled
         it[Keys.CLOUD_BASE_URL] = baseUrl.trim().trimEnd('/')
         it[Keys.CLOUD_MODEL] = model.trim()
     }
 
-    suspend fun setCloudDailyRequestLimit(limit: Int) = context.dataStore.edit {
-        it[Keys.CLOUD_DAILY_LIMIT] = limit.coerceIn(1, 1000)
-    }
+    suspend fun setCloudDailyRequestLimit(limit: Int) = context.dataStore.edit { it[Keys.CLOUD_DAILY_LIMIT] = limit.coerceIn(1, 1000) }
 
     suspend fun setSharedFilesTreeUri(uri: String?) = context.dataStore.edit {
-        if (uri.isNullOrBlank()) it.remove(Keys.SHARED_FILES_TREE_URI)
-        else it[Keys.SHARED_FILES_TREE_URI] = uri
+        if (uri.isNullOrBlank()) it.remove(Keys.SHARED_FILES_TREE_URI) else it[Keys.SHARED_FILES_TREE_URI] = uri
     }
 
     suspend fun reserveCloudRequest(limit: Int): Boolean {
@@ -133,20 +122,14 @@ class SettingsRepository @Inject constructor(
     internal object CloudDailyQuota {
         fun nextCount(todayUtc: String, storedDayUtc: String?, storedCount: Int, limit: Int): Int? {
             val count = if (todayUtc == storedDayUtc) storedCount.coerceAtLeast(0) else 0
-            val safeLimit = limit.coerceIn(1, 1000)
-            return if (count >= safeLimit) null else count + 1
+            return if (count >= limit.coerceIn(1, 1000)) null else count + 1
         }
     }
 }
 
 internal object OllamaEndpointPolicy {
-    fun normalize(storedUrl: String?, defaultUrl: String): String = when (
-        storedUrl?.trim()?.trimEnd('/')?.lowercase()
-    ) {
-        "http://10.0.2.2:11434",
-        "http://0.0.0.0:11434",
-        "http://localhost:11434",
-        "http://127.0.0.1:11434" -> defaultUrl
+    fun normalize(storedUrl: String?, defaultUrl: String): String = when (storedUrl?.trim()?.trimEnd('/')?.lowercase()) {
+        "http://10.0.2.2:11434", "http://0.0.0.0:11434", "http://localhost:11434", "http://127.0.0.1:11434" -> defaultUrl
         else -> storedUrl ?: defaultUrl
     }
 }

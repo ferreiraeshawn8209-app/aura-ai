@@ -8,6 +8,11 @@ import org.junit.Test
 
 class SpokenActionGateTest {
     @Test
+    fun spokenActionAcknowledgementIsTheExactRequiredSentence() {
+        assertEquals("I'll be back.", SpokenActionGate.ACKNOWLEDGEMENT_TEXT)
+    }
+
+    @Test
     fun acknowledgementFinishesBeforeActionStarts() = runBlocking {
         val order = mutableListOf<String>()
         val result = SpokenActionGate.run(

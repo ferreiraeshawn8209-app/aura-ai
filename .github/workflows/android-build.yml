@@ -7,13 +7,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
-      - name: Build debug APK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses > /dev/null || true
+      - name: Test and build Aura debug APK
         run: |
           chmod +x gradlew
           ./gradlew :app:testDebugUnitTest :aura-voice:testDebugUnitTest :app:assembleDebug --stacktrace
+      - name: Upload Aura debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-ai-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14

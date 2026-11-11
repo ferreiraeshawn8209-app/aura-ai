@@ -597,3 +597,10 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - Awaiting owner-reported real-device test for “Yo, yo, yo, what is five plus five?”; transcript, spoken answer, multi-turn flow, interruption, voice identity, and Ollama/cloud routing are not yet verified in this session.
 - Repo state: `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`, dirty and four commits behind tracking ref. Git metadata is protected; no local commit/push attempted. `main` unchanged. Existing source edits and backup files preserved.
 - Next: obtain the exact transcript and spoken result from the live test; if wrong or silent, capture logs/transcript diagnostics before changing code. Keep further device changes on the same app/package and preserve the backup.
+
+
+## Follow-up connectivity check — 2026-11-12
+
+- Honor remains visible over Wireless debugging and `com.aura.ai/.MainActivity` is the foreground activity.
+- From the PC, a TCP probe to `192.168.8.18:11434` briefly succeeded; the subsequent Ollama `/api/tags` HTTP request was refused (`WinError 10061`). Treat Ollama as unavailable/intermittent at this check. No model generation request was sent and no service/firewall settings were changed.
+- The owner’s live “Yo, yo, yo, what is five plus five?” result is still pending. This check does not verify phone-to-PC reachability, Qwen inference, or voice response.

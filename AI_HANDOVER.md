@@ -604,3 +604,13 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - Honor remains visible over Wireless debugging and `com.aura.ai/.MainActivity` is the foreground activity.
 - From the PC, a TCP probe to `192.168.8.18:11434` briefly succeeded; the subsequent Ollama `/api/tags` HTTP request was refused (`WinError 10061`). Treat Ollama as unavailable/intermittent at this check. No model generation request was sent and no service/firewall settings were changed.
 - The owner’s live “Yo, yo, yo, what is five plus five?” result is still pending. This check does not verify phone-to-PC reachability, Qwen inference, or voice response.
+
+
+## Owner voice retest and backend recheck — 2026-11-12
+
+- Owner reported saying “Yo, yo, yo, what is five plus five?” and hearing “I'm on it,” followed by “I'm not sure what you're asking.” This is a failed conversational result; do not mark wake-to-answer as passing.
+- Package attribution is uncertain: immediately after the report, ADB showed `com.aura.ai.debug/.MainActivity` in the foreground. Android audio and `WakeWordService` log lines also name `com.aura.ai.debug`. Therefore this spoken result cannot be attributed to the newly installed original `com.aura.ai` APK. The separate debug app was not modified or reinstalled.
+- Latest PC Ollama check recovered: `http://127.0.0.1:11434/api/tags` and `http://192.168.8.18:11434/api/tags` both returned `qwen3:1.7b` and `qwen3:4b-q4_K_M`. `ollama list` also succeeded. No inference/generation request was sent; this proves PC API/model discovery only, not Honor-to-PC inference or Aura fallback.
+- ADB confirms the Honor remains connected. No code changed and no automated tests were run in this follow-up. The prior APK install/backup and 114-test/build verification remain documented separately.
+- Branch: `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; source tree dirty, four commits behind its tracking ref, local Git metadata protected. No source commit or main merge. Existing app data backup remains preserved.
+- Next: test from the original `com.aura.ai` app specifically (not `com.aura.ai.debug`), capture its visible wake/recognized transcript and answer, then verify one follow-up. If that app also says “I'm on it” then fails, use its package-filtered logs and captured transcript to trace the model request and acknowledgement path. Separately test Honor-to-PC reachability without starting a model generation until requested.

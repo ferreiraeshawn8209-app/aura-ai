@@ -614,3 +614,12 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - ADB confirms the Honor remains connected. No code changed and no automated tests were run in this follow-up. The prior APK install/backup and 114-test/build verification remain documented separately.
 - Branch: `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`; source tree dirty, four commits behind its tracking ref, local Git metadata protected. No source commit or main merge. Existing app data backup remains preserved.
 - Next: test from the original `com.aura.ai` app specifically (not `com.aura.ai.debug`), capture its visible wake/recognized transcript and answer, then verify one follow-up. If that app also says “I'm on it” then fails, use its package-filtered logs and captured transcript to trace the model request and acknowledgement path. Separately test Honor-to-PC reachability without starting a model generation until requested.
+
+
+## Isolated original-app retest setup and Honor-to-Ollama network check — 2026-11-12
+
+- Owner reported the transcript showed only “what is.” Before isolation, ADB showed `com.aura.ai.debug` foreground and both `com.aura.ai.debug/.voice.WakeWordService` and original `com.aura.ai/.voice.WakeWordService` active. The speech result while both were active is not a valid single-app acceptance test.
+- Temporarily force-stopped only the debug app process to release its competing microphone listener; no uninstall or data clear. Then launched the original app. Verified `com.aura.ai/.MainActivity` is foreground, original `WakeWordService` remains active, and no debug app process or debug wake service remains.
+- Verified Honor-to-PC Ollama HTTP reachability from the device itself: Android `/system/bin/curl` fetched `http://192.168.8.18:11434/api/tags` successfully. It returned `qwen3:1.7b` and `qwen3:4b-q4_K_M`. ICMP ping got no reply, but HTTP works. This proves API/model discovery from Honor; no inference was generated and the app’s request/model selection is not yet verified.
+- The isolated original-app wake/answer retest is pending owner response. No code changed and no automated tests ran during this check.
+- Next: collect the exact transcript and spoken answer from the original app while it is the only listener; if the transcript remains clipped, capture its diagnostic line and package-filtered recognizer/network logs before adjusting recognition behavior. Test one Qwen generation through Aura only after the owner reports this voice check.

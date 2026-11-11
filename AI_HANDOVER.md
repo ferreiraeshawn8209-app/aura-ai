@@ -577,3 +577,11 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - PC web read-only check: pnpm typecheck passed; 42 existing tests, 41 passed and 1 failed. The failing test expects one-word overlap not to be classified as echo: isLikelySpeechEcho("I'm on it.", "it") returned true. Root PC source was not edited because that folder has no valid project Git checkout/remote; existing instructions require preserving it until repository setup is restored.
 - Branch/source publication: Android local checkout is integration/aura-voice-consolidation at d5d0fe92ca890c964685403aee0fcafd3fe30fd6, dirty and four commits behind local tracking ref; Git metadata is protected, so this source change remains local/uncommitted. This GitHub entry records validation only; it does not claim the code was pushed. No main change; backups untouched.
 - Next: reconnect Honor and obtain approval for this exact APK, back up and verify the installed original package/signer, then verify transcript, spoken answer, follow-up and one-word interruption. Restore the PC project's correct checkout before modifying its failing policy.
+
+
+## Owner approval and wireless reconnect pending — 2026-11-12
+
+- The owner explicitly approved installing the exact local APK SHA-256 A569AFF2DE044B74520351EB4D9D485156346BF36C301FFDD8D6909EF812D022 (package com.aura.ai).
+- At the approval check, adb devices -l and adb mdns services showed no connected/discoverable Honor. adb start-server did not change discovery.
+- No backup/install/device test has occurred. The install approval remains valid for this exact APK; proceed only once the Honor is visible, after backing up the existing com.aura.ai data and verifying the installed package and signer. Do not uninstall or clear data.
+- The owner selected Wireless debugging. Requested the Honor's one-time pairing IP:port and pairing code, or confirmation that both devices use the same Wi-Fi.

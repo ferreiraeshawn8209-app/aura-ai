@@ -585,3 +585,15 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - At the approval check, adb devices -l and adb mdns services showed no connected/discoverable Honor. adb start-server did not change discovery.
 - No backup/install/device test has occurred. The install approval remains valid for this exact APK; proceed only once the Honor is visible, after backing up the existing com.aura.ai data and verifying the installed package and signer. Do not uninstall or clear data.
 - The owner selected Wireless debugging. Requested the Honor's one-time pairing IP:port and pairing code, or confirmation that both devices use the same Wi-Fi.
+
+
+## Honor reconnect and approved APK install — 2026-11-12
+
+- Owner replied “try again”; ADB discovery succeeded without requiring the one-time pairing code. Connected Honor serial: `adb-AYAV6R3707021141-9Vd6ZA._adb-tls-connect._tcp` (product CRT-NX1, device HNCRT-M2).
+- Before update, backed up existing `com.aura.ai` private data to `device-backups/com.aura.ai-preupdate-20261112-A569AFF2.tar` (SHA-256 `5C34F6A38FB9EA78844A9E8078269D59FA6264D465BAE83BDC72C0DBC02581A2`). Archive includes databases, DataStore preferences and voice/settings preferences. No app data was cleared.
+- Pre-install package and signing certificate were verified compatible. Installed the explicitly approved APK in place with `adb install -r`; result: `Success`. No uninstall, reset, or action on `com.aura.ai.debug`.
+- Post-install package remains `com.aura.ai`, version `1.0.0` / code `1`; installed base APK SHA-256 is `A569AFF2DE044B74520351EB4D9D485156346BF36C301FFDD8D6909EF812D022`, matching the approved build. Signer remains the original `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
+- Existing databases and preferences remain present; Aura launched successfully. Android reports microphone permission allowed while foreground and the app process is running. This confirms launch/mic availability only; it does not prove the wake phrase or speech pipeline works.
+- Awaiting owner-reported real-device test for “Yo, yo, yo, what is five plus five?”; transcript, spoken answer, multi-turn flow, interruption, voice identity, and Ollama/cloud routing are not yet verified in this session.
+- Repo state: `integration/aura-voice-consolidation`, local HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`, dirty and four commits behind tracking ref. Git metadata is protected; no local commit/push attempted. `main` unchanged. Existing source edits and backup files preserved.
+- Next: obtain the exact transcript and spoken result from the live test; if wrong or silent, capture logs/transcript diagnostics before changing code. Keep further device changes on the same app/package and preserve the backup.

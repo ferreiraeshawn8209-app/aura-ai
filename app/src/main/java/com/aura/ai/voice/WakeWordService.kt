@@ -23,6 +23,7 @@ import com.aura.ai.voice.wake.WakePhraseMatcher
 import com.aura.ai.voice.wake.WakeRecognizerPolicy
 import com.aura.ai.voice.wake.WakeRestartPolicy
 import com.aura.ai.voice.wake.WakeWordRequestGate
+import com.aura.voice.SpeechLanguageFallbackPolicy
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -42,6 +43,7 @@ class WakeWordService : LifecycleService() {
     private var stopping = false
     private var forceSystemRecognizer = false
     private var activeRecognizerOnDevice = false
+    private var wakeLanguageTag = "en-ZA"
     private var consecutiveErrors = 0
     private val requestGate = WakeWordRequestGate()
     private val restart = Runnable { if (!stopping) startRecognizer() }
@@ -114,10 +116,11 @@ class WakeWordService : LifecycleService() {
 
     private fun recognizerIntent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-ZA")
-        // Prefer local standby recognition to avoid sending ambient wake audio
-        // to a network service. Android recognizers may ignore this hint.
-        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, wakeLanguageTag)
+        // Prefer on-device standby recognition when available. If the selected
+        // language is rejected, the service retries another English locale with
+        // the system recognizer; Android may then use its network engine.
+        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, activeRecognizerOnDevice)
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         // Retain hypotheses so a misheard wake command can be diagnosed in Aura.
         putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
@@ -195,6 +198,20 @@ class WakeWordService : LifecycleService() {
         override fun onError(error: Int) {
             val languageUnsupported = error == SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED ||
                 error == SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE
+            if (languageUnsupported) {
+                val fallback = SpeechLanguageFallbackPolicy.nextLanguage(wakeLanguageTag)
+                if (fallback != null) {
+                    android.util.Log.w(TAG, "Speech language $wakeLanguageTag unavailable; retrying with $fallback")
+                    wakeLanguageTag = fallback
+                } else {
+                    android.util.Log.e(TAG, "Speech language unavailable for all configured English fallbacks")
+                    requestGate.invalidate()
+                    listening = false
+                    destroyRecognizer()
+                    stopSelf()
+                    return
+                }
+            }
             if (WakeRecognizerPolicy.shouldFallbackAfterLanguageError(activeRecognizerOnDevice, languageUnsupported)) {
                 forceSystemRecognizer = true
                 activeRecognizerOnDevice = false
@@ -247,6 +264,7 @@ class WakeWordService : LifecycleService() {
     }
 
     companion object {
+        private const val TAG = "WakeWordService"
         const val NOTIFICATION_ID = 4242
         const val EXTRA_WOKEN = "woken"
         const val EXTRA_WAKE_TRANSCRIPT = "wake_transcript"

@@ -635,3 +635,12 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - Device voice remains failing/unresolved: during the isolated original-app test the owner reported transcript “I”; no final answer was reported. A later check found the debug app in front, so no voice acceptance pass is claimed.
 - Local checkout: `integration/aura-voice-consolidation`, HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`, dirty and four commits behind; local Git metadata is protected. This tested source/records commit is for the integration branch only; `main` is unchanged.
 - Next: obtain approval for this exact APK before installing; test original Aura with debug stopped, capture full transcript and spoken answer, then verify follow-up, interruption and an actual Qwen response through Aura.
+
+
+## Branch publication and test attribution — 2026-11-12
+
+- Published the verified source, tests, and status records to `integration/aura-voice-consolidation` in commit `915b3f9e37525653bd5063a2e76eba04e797cbb2`, parent `c338ec22b325a1befd54daee68e7290ba8dd723d`. The commit includes 36 changed paths. The main branch was not changed.
+- The commit's only reported CI status is a successful Vercel check; no Android build/test CI result is available. Android validation is the local Gradle/JUnit/APK result documented above.
+- After the owner's reply that the visible transcript was only “i,” a fresh ADB/logcat check showed `com.aura.ai.debug` using audio input and emitting wake-recognition logs. Thus the user's “i” result cannot be attributed to the original `com.aura.ai` app. The original-app voice test remains unverified and must be repeated with the debug app stopped and original Aura visibly foreground.
+- Fresh APK SHA-256 `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471` is signed compatibly for `com.aura.ai`, but is not installed. The earlier exact-build approval was for A569…; obtain approval for BA1F… before installation. Preserve both app data sets.
+- Next: isolate original Aura, obtain owner approval for the exact fresh APK, back up existing original-app data, verify package/signature, then install in place and test transcript, final spoken answer, second turn and interruption. Separately test actual Ollama inference through Aura; `/api/tags` reachability alone is not inference verification.

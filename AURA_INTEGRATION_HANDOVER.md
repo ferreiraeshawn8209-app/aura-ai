@@ -336,3 +336,10 @@ This is a documentation-only record based on local checkout `C:\Users\shawn\Desk
 - No APK was assembled or installed. The exact owner-approved APK hash `3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D3D38576F7B952` remains unavailable, and the Honor is absent from ADB. No backup, signing check, install, phone UI test, or real-device voice acceptance occurred. Do not substitute `com.aura.ai.debug` or the unsigned release APK.
 - Local Git remains `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no configured remote. No source code was committed or pushed, and `main` is unchanged.
 - Next: verify the new Builder setting through a real original Aura install (exact approved APK or fresh approval for a new signed build), then run a short Qwen 4B build with at least 180 seconds, confirm saved timeout after relaunch, generated HTML, preview and export. Keep those device checks unverified until performed.
+
+
+## Builder timeout guidance correction — 2026-11-12
+
+- Updated local `AppBuilderFailureMessage` so timeout errors direct users to the Builder’s new “Build time limit” control instead of the unrelated global chat request-timeout setting. Updated the existing focused assertion.
+- Re-ran the focused Builder policy test and full `:app:testDebugUnitTest` suite after the change. Full suite passed **755 tests, 0 failures/errors/skips**. No APK assembly or device test was run.
+- Local code remains uncommitted on `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`; no local remote. This handover commit contains no implementation source and does not change `main`.

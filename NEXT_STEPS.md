@@ -380,3 +380,12 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 2. Keep debug stopped; test original `com.aura.ai` alone and capture full transcript plus spoken answer.
 3. Verify a second turn and interruption separately.
 4. Test a real Qwen response through Aura. Honor /api/tags works, but inference and Aura model selection are not verified.
+
+
+## Immediate — ASR locale fallback
+
+1. Obtain explicit approval for exact APK SHA `8402932206749EAC09C0EDA6F92268E4004F633C35D4189EF104F315D7FAC3BE` before install.
+2. Back up current original Aura private data, verify `com.aura.ai` and signing certificate, then install in place without clearing data.
+3. Keep `com.aura.ai.debug` disabled unless owner requests re-enable. Test wake, transcript locale/words, spoken answer, follow-up and interruption in original Aura.
+4. Test an actual Qwen generation through Aura; separately test cloud fallback/recovery if credentials are configured.
+5. Record observed results; do not mark voice complete from unit tests alone.

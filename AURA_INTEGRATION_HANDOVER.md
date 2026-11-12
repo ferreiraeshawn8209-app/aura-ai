@@ -286,3 +286,11 @@ No source code or APK was pushed or installed in this documentation-only update.
 - `adb devices -l` returned no devices. No backup, installed package/signer comparison, installation, or draft persistence test was performed. This is an unavailable-artifact/device blocker, not a failed app test.
 - Local code, APKs, phone data, and production main were not changed. Local checkout remains `codex/aura-original` at `471ef9d`, without a configured remote.
 - Next: reconnect the Honor and restore the exact approved APK (or request approval for a newly built exact hash), verify package and signing certificate, make and verify a fresh app-data backup, then update Aura in place and test drafts across closing/reopening. Do not install the separate `.debug` app or unsigned release artifact.
+
+
+## Builder draft persistence test improvement — 2026-11-12
+
+- Local test source was strengthened at `android/app/src/test/java/com/aura/ai/data/settings/AppBuilderPromptPersistenceTest.kt` to recreate the Preferences DataStore after closing its scope, verify the saved prompt after reopening, clear it, then verify the cleared state after another recreation.
+- Attempted the focused test using installed and cached Gradle 8.11.1; both failed before project configuration because Windows native services could not load `native-platform.dll`. This checkout's `android/` directory also lacks the Gradle wrapper and root `settings.gradle(.kts)`; only `app/build.gradle.kts` is present. The new test is therefore unverified and no APK was built.
+- Local source is on `codex/aura-original` at `471ef9d`, no remote; this test edit is uncommitted and not pushed as code. The exact owner-approved install APK `3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D3D38576F7B952` remains unavailable locally, and ADB reports no Honor. No backup, install, or device test occurred; no other APK was substituted.
+- Next: restore the verified full Android Gradle root/wrapper, run the focused persistence test and regression suite, then reconnect the Honor and verify APK package/signature and data backup before the approved in-place install/draft-reopen test. Any new APK hash requires fresh approval.

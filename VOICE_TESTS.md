@@ -307,3 +307,11 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Added a tested incomplete-fragment guard; Aura continues listening and merges the next segment rather than sending “I” or “what is” as a full request.
 - Focused policy test passed (3); full app/shared-voice report totals: 99 + 18, zero failures/errors/skips; APK assembly passed.
 - Device result: owner reported transcript “I” and no final spoken answer. This is a fail/unresolved, not device acceptance. Fresh APK SHA-256 `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471` remains uninstalled.
+
+
+## Android language-pack failure — 2026-11-12
+
+- Original Aura's device logs exposed SpeechRecognizer error 12 while requesting `en-ZA` (Android documents this as language not supported by that recognizer). The prior on-device/system fallback repeated the same locale.
+- Added ASR fallback `en-ZA` → `en-GB` → `en-US`; wake and conversational recognition report the language used in transcript diagnostics. TTS voice is unchanged.
+- Unit/build results: app 99 + shared voice 21 tests, zero failures/errors/skips; APK assembled and signature verified. New APK SHA-256 `8402932206749EAC09C0EDA6F92268E4004F633C35D4189EF104F315D7FAC3BE`, not installed.
+- The debug package is disabled (not removed); existing original and debug data are retained. Device test on the new fallback APK is pending exact-build owner approval.

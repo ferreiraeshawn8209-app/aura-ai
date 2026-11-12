@@ -358,3 +358,10 @@ This update reflects work in the local Windows checkout at C:\\Users\\shawn\\Des
 - No source commit or push was made from the local checkout because it has no configured remote. This handover update is documentation-only on integration/aura-voice-consolidation; production main is unchanged.
 
 Next: complete the focused Android compile/JUnit test without a prolonged uncontrolled build, have the owner foreground original Aura and provide the live phrase result, then build/hash/signature-check an APK and request approval for that exact new hash before any backup or in-place install.
+
+
+## Honor foreground recheck — 2026-11-13
+
+- A fresh ADB check now shows the Honor connected and original Aura top-resumed as com.aura.ai.debug/com.aura.ai.MainActivity. This supersedes the preceding observation that Chrome was foreground.
+- No owner-run test phrase/result has arrived yet. Wake recognition, transcript, local-model answer, selected-voice playback, continuous listening and interruption therefore remain unverified on the phone. No test prompt or action was initiated by the agent; app data/settings were not changed and no APK was installed.
+- Local docs were updated. The Android focused Gradle test remains incomplete; only the standalone 5-assertion policy smoke passed. No production merge.

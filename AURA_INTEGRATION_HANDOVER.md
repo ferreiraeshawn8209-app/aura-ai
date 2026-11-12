@@ -343,3 +343,18 @@ This is a documentation-only record based on local checkout `C:\Users\shawn\Desk
 - Updated local `AppBuilderFailureMessage` so timeout errors direct users to the Builder’s new “Build time limit” control instead of the unrelated global chat request-timeout setting. Updated the existing focused assertion.
 - Re-ran the focused Builder policy test and full `:app:testDebugUnitTest` suite after the change. Full suite passed **755 tests, 0 failures/errors/skips**. No APK assembly or device test was run.
 - Local code remains uncommitted on `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`; no local remote. This handover commit contains no implementation source and does not change `main`.
+
+
+## Local Aura continuation — wake acknowledgement policy — 2026-11-13
+
+This update reflects work in the local Windows checkout at C:\\Users\\shawn\\Desktop\\T1000-main. The local checkout is on codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 and has no configured Git remote. Its source changes are not included in this GitHub branch; this entry records evidence only.
+
+- Changed the local original Aura wake acknowledgement path to use a bounded timeout based on the currently selected voice engine (native 3 seconds, network voice 5 seconds). If playback fails, Aura reports the selected-voice failure in its state/notification and then continues command recognition; no replacement voice is selected by this path.
+- Standalone Kotlin check: compiled the exact WakeAcknowledgementPolicy.kt source using cached Kotlin 2.2.10 and executed five assertions. Result: PASS 5/5 (native/network timeout, successful completion, trimmed provider failure, and default failure text).
+- Android integration verification remains incomplete: the root Gradle focused test reached :app:compileDebugKotlin but remained active for roughly 30 minutes; it was stopped before test execution to limit PC load. No Android JUnit assertion or APK build ran. Existing 761-test Android suite, PC typecheck and 22/22 Node tests predate this change.
+- Honor is reachable by Wireless ADB. The original app resolves as com.aura.ai.debug/com.aura.ai.MainActivity. A direct launch was issued, but the latest top-resumed activity check showed Chrome rather than Aura, so no fresh phone transcript/voice answer was verified. No test utterance, message, setting change, backup, or install occurred.
+- Owner-approved APK SHA 3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D3D38576F7B952 is not present in the local checkout. No other APK was substituted or installed.
+- Local files changed: Speaker.kt, WakeWordService.kt, new WakeAcknowledgementPolicy.kt, new WakeAcknowledgementPolicyTest.kt, plus AI_HANDOVER.md, PROJECT_STATUS.md, VOICE_TESTS.md and NEXT_STEPS.md. git diff --check passed (exit 0; line-ending warnings only). The app integration test and actual device voice behavior remain unverified.
+- No source commit or push was made from the local checkout because it has no configured remote. This handover update is documentation-only on integration/aura-voice-consolidation; production main is unchanged.
+
+Next: complete the focused Android compile/JUnit test without a prolonged uncontrolled build, have the owner foreground original Aura and provide the live phrase result, then build/hash/signature-check an APK and request approval for that exact new hash before any backup or in-place install.

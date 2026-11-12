@@ -9,6 +9,7 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import com.aura.voice.SpeechInputConfig
+import com.aura.voice.SpeechLanguageFallbackPolicy
 import com.aura.voice.SpeechRecognitionListener
 import com.aura.voice.SpeechRecognitionProvider
 import com.aura.voice.SpeechRecognitionResult
@@ -25,9 +26,12 @@ class AndroidSpeechRecognizerProvider(
     private val mainHandler = Handler(Looper.getMainLooper())
     private val requestGate = RecognitionRequestGate()
     private var recognizer: SpeechRecognizer? = null
+    private var activeLanguageTag: String? = null
     private var listener: SpeechRecognitionListener? = null
     private var timeoutRunnable: Runnable? = null
     private var timeoutRequestId: Long? = null
+    private var fallbackForLanguageTag: String? = null
+    private var fallbackLanguageTag: String? = null
     @Volatile private var released = false
 
     override val type = VoiceProviderType.ANDROID
@@ -65,53 +69,11 @@ class AndroidSpeechRecognizerProvider(
                 return@post
             }
 
-            val next = try {
-                SpeechRecognizer.createSpeechRecognizer(appContext)
-            } catch (_: SecurityException) {
-                deliverFailure(
-                    requestId,
-                    VoiceErrorCode.AUDIO_PERMISSION_DENIED,
-                    "Microphone permission is required.",
-                )
-                return@post
-            } catch (_: RuntimeException) {
-                deliverFailure(
-                    requestId,
-                    VoiceErrorCode.AUDIO_UNAVAILABLE,
-                    "Could not create Android speech recognition.",
-                )
-                return@post
+            if (fallbackForLanguageTag != config.languageTag) {
+                fallbackForLanguageTag = config.languageTag
+                fallbackLanguageTag = null
             }
-
-            recognizer = next
-            next.setRecognitionListener(recognitionListener(requestId))
-            try {
-                next.startListening(
-                    Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                        putExtra(
-                            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM,
-                        )
-                        putExtra(RecognizerIntent.EXTRA_LANGUAGE, config.languageTag)
-                        putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, config.partialResults)
-                        putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, config.preferOffline)
-                        putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
-                    },
-                )
-                scheduleTimeout(requestId)
-            } catch (_: SecurityException) {
-                deliverFailure(
-                    requestId,
-                    VoiceErrorCode.AUDIO_PERMISSION_DENIED,
-                    "Microphone permission is required.",
-                )
-            } catch (_: RuntimeException) {
-                deliverFailure(
-                    requestId,
-                    VoiceErrorCode.AUDIO_UNAVAILABLE,
-                    "Could not start Android speech recognition.",
-                )
-            }
+            startRecognizer(requestId, config, fallbackLanguageTag ?: config.languageTag)
         }
         return VoiceOperationResult.accepted()
     }
@@ -136,7 +98,46 @@ class AndroidSpeechRecognizerProvider(
         }
     }
 
-    private fun recognitionListener(requestId: Long) = object : RecognitionListener {
+    private fun startRecognizer(
+        requestId: Long,
+        config: SpeechInputConfig,
+        languageTag: String,
+    ) {
+        if (!isCurrent(requestId)) return
+        activeLanguageTag = languageTag
+        val next = try {
+            SpeechRecognizer.createSpeechRecognizer(appContext)
+        } catch (_: SecurityException) {
+            deliverFailure(requestId, VoiceErrorCode.AUDIO_PERMISSION_DENIED, "Microphone permission is required.")
+            return
+        } catch (_: RuntimeException) {
+            deliverFailure(requestId, VoiceErrorCode.AUDIO_UNAVAILABLE, "Could not create Android speech recognition.")
+            return
+        }
+
+        recognizer = next
+        next.setRecognitionListener(recognitionListener(requestId, config, languageTag))
+        try {
+            next.startListening(
+                Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
+                    putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, config.partialResults)
+                    // A missing offline language pack must not prevent the platform
+                    // recognizer from using its configured network engine.
+                    putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, config.preferOffline && languageTag == config.languageTag)
+                    putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
+                },
+            )
+            scheduleTimeout(requestId)
+        } catch (_: SecurityException) {
+            deliverFailure(requestId, VoiceErrorCode.AUDIO_PERMISSION_DENIED, "Microphone permission is required.")
+        } catch (_: RuntimeException) {
+            deliverFailure(requestId, VoiceErrorCode.AUDIO_UNAVAILABLE, "Could not start Android speech recognition.")
+        }
+    }
+
+    private fun recognitionListener(requestId: Long, config: SpeechInputConfig, languageTag: String) = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) = Unit
         override fun onBeginningOfSpeech() {
             refreshTimeout(requestId)
@@ -148,27 +149,45 @@ class AndroidSpeechRecognizerProvider(
 
         override fun onPartialResults(results: Bundle?) {
             refreshTimeout(requestId)
-            emitResult(results, isFinal = false, requestId = requestId)
+            emitResult(results, isFinal = false, requestId = requestId, languageTag = languageTag)
         }
 
         override fun onResults(results: Bundle?) {
-            emitResult(results, isFinal = true, requestId = requestId)
+            fallbackLanguageTag = languageTag.takeIf { it != config.languageTag }
+            emitResult(results, isFinal = true, requestId = requestId, languageTag = languageTag)
         }
 
         override fun onError(errorCode: Int) {
+            if (errorCode == SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED ||
+                errorCode == SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE
+            ) {
+                val fallback = SpeechLanguageFallbackPolicy.nextLanguage(languageTag)
+                if (fallback != null && isCurrent(requestId)) {
+                    fallbackLanguageTag = fallback
+                    destroyRecognizer()
+                    startRecognizer(requestId, config, fallback)
+                    return
+                }
+            }
             emitFailure(
                 requestId,
                 VoiceError(
                     mapError(errorCode),
-                    "Android SpeechRecognizer error code $errorCode.",
+                    if (errorCode == SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED ||
+                        errorCode == SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE
+                    ) {
+                        "Android speech recognition does not have an available English language pack. Tried the configured language and its supported fallbacks."
+                    } else {
+                        "Android SpeechRecognizer error code $errorCode."
+                    },
                     recoverable = errorCode != SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS,
                 ),
             )
         }
     }
 
-    private fun emitResult(results: Bundle?, isFinal: Boolean, requestId: Long) {
-        if (!isCurrent(requestId)) return
+    private fun emitResult(results: Bundle?, isFinal: Boolean, requestId: Long, languageTag: String) {
+        if (!isCurrent(requestId) || activeLanguageTag != languageTag) return
         val transcripts = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
         val transcript = transcripts?.firstOrNull().orEmpty()
         val confidence = results
@@ -180,7 +199,7 @@ class AndroidSpeechRecognizerProvider(
             SpeechRecognitionResult(
                 transcript = transcript,
                 confidence = confidence,
-                languageTag = null,
+                languageTag = languageTag,
                 isFinal = isFinal,
                 alternatives = transcripts
                     .orEmpty()
@@ -270,6 +289,7 @@ class AndroidSpeechRecognizerProvider(
     private fun destroyRecognizer() {
         val current = recognizer ?: return
         recognizer = null
+        activeLanguageTag = null
         try {
             current.cancel()
         } catch (_: RuntimeException) {

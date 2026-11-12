@@ -37,4 +37,14 @@ class BargeInTranscriptPolicyTest {
         assertTrue(policy.isLikelyEcho("I'm on it now.", "I am on it"))
         assertTrue(policy.isLikelyEcho("All systems operational and ready.", "systems operational and ready"))
     }
+
+    @Test
+    fun doesNotDiscardSingleWordInterruptionJustBecauseAuraSpokeThatWord() {
+        val policy = BargeInTranscriptPolicy()
+        val spokenText = "I'm on it."
+
+        assertFalse(policy.isLikelyEcho(spokenText, "it"))
+        assertFalse(policy.shouldInterrupt("it", spokenText))
+        assertTrue(policy.shouldInterrupt("it", spokenText))
+    }
 }

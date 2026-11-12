@@ -494,4 +494,3 @@ private fun ToggleRow(title: String, subtitle: String, checked: Boolean, onCheck
         Switch(checked = checked, onCheckedChange = onCheck)
     }
 }
-

@@ -22,4 +22,3 @@ class ResponseAcknowledgementSanitizerTest {
         assertEquals("Ten.", ResponseAcknowledgementSanitizer.removeLeadingAcknowledgement("Ten."))
     }
 }
-

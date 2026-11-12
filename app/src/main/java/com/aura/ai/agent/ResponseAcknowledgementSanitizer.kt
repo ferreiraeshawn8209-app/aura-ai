@@ -10,4 +10,3 @@ internal object ResponseAcknowledgementSanitizer {
     fun removeLeadingAcknowledgement(text: String): String =
         text.replaceFirst(leadingAcknowledgement, "").trim()
 }
-

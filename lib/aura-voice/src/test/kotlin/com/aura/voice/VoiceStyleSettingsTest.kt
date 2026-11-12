@@ -20,4 +20,3 @@ class VoiceStyleSettingsTest {
         assertEquals(0.15f, VoiceSettings().styleExaggeration, 0.0f)
     }
 }
-

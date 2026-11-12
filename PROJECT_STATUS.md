@@ -431,3 +431,8 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 - Workflow for source commit `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` failed before steps: job `128326059219`, `steps: null`, no log URL. Documentation run `42346867212` likewise failed before steps. The cause is not exposed; tests/build were not verified by CI.
 - Local current-branch Gradle check remains blocked before tests. Earlier 112 pass reports and the pre-publication APK are recorded, but do not verify merged commit `db11eed`.
 - Phone remains disconnected; inaccurate recognition is unresolved.
+
+
+## 2026-11-12 wake transcript repair
+
+Added a continuation guard for incomplete wake tails. Focused tests (3) passed; full verification reports app 99 + shared voice 18, zero failures/errors/skips; APK assembly passed. Fresh APK SHA-256 `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471`, package `com.aura.ai`, existing signer, not installed. Honor /api/tags works over HTTP and lists both Qwen models; inference is unverified. Owner reports original-app transcript “I”; spoken answer not reported. Voice acceptance remains unresolved.

@@ -244,7 +244,10 @@ private fun Composer(
                     modifier = Modifier.padding(bottom = 8.dp, start = 4.dp),
                 )
             }
-            if (!listening && speechDiagnostic.isNotBlank()) {
+            // Keep the last final recognition result visible after hands-free
+            // listening resumes. Otherwise the diagnostic disappears exactly
+            // when the next turn starts, making misrecognitions hard to report.
+            if (speechDiagnostic.isNotBlank()) {
                 Text(
                     speechDiagnostic,
                     style = MaterialTheme.typography.labelSmall,
@@ -308,4 +311,3 @@ private fun Composer(
         }
     }
 }
-

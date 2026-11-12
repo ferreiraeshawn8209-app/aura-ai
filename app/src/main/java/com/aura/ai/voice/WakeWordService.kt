@@ -267,4 +267,3 @@ class WakeWordService : LifecycleService() {
         }
     }
 }
-

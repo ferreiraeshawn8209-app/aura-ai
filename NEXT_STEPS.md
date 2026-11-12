@@ -372,3 +372,11 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 
 - CI for `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` failed before executing a step and exposed no log; cause unknown. Do not count it as an app/test failure or success.
 - Obtain a clean local or CI build before installing current branch. Phone checks are still pending.
+
+
+## Immediate next steps — 2026-11-12
+
+1. Obtain owner approval before installing fresh APK `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471`; never uninstall or clear app data.
+2. Keep debug stopped; test original `com.aura.ai` alone and capture full transcript plus spoken answer.
+3. Verify a second turn and interruption separately.
+4. Test a real Qwen response through Aura. Honor /api/tags works, but inference and Aura model selection are not verified.

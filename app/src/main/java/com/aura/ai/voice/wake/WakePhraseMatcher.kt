@@ -37,4 +37,3 @@ object WakePhraseMatcher {
 
     fun matches(text: String): Boolean = prefix.containsMatchIn(text)
 }
-

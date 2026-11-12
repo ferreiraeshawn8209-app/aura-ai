@@ -294,4 +294,3 @@ class AndroidSpeechRecognizerProvider(
         else -> VoiceErrorCode.UNKNOWN
     }
 }
-

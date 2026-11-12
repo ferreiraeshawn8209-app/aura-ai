@@ -113,7 +113,7 @@ class ChatViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            wakeWordEvents.events.collect { activateFromWakeWord(it) }
+            wakeWordEvents.events.collect { activateFromWakeWord(it.transcript, it.confidence, it.alternatives) }
         }
     }
 
@@ -316,21 +316,36 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun activateFromWakeWord(transcript: String?) {
+    private fun activateFromWakeWord(transcript: String?, confidence: Float?, alternatives: List<String>) {
         startHandsFreeSession(
             command = transcript?.let(com.aura.ai.voice.wake.WakePhraseMatcher::commandAfterWake),
             wakeTranscript = transcript,
+            wakeConfidence = confidence,
+            wakeAlternatives = alternatives,
         )
     }
 
-    private fun startHandsFreeSession(command: String? = null, wakeTranscript: String? = null) {
+    private fun startHandsFreeSession(
+        command: String? = null,
+        wakeTranscript: String? = null,
+        wakeConfidence: Float? = null,
+        wakeAlternatives: List<String> = emptyList(),
+    ) {
         WakeWordService.stop(context)
+        val needsRepeat = command?.let {
+            WakeCommandConfidencePolicy.shouldAskForRepeat(it, wakeConfidence)
+        } == true
+        val continuationPrefix = command
+            ?.takeIf { !needsRepeat && WakeCommandContinuationPolicy.shouldContinue(it) }
         _state.update {
             it.copy(
                 handsFreeSession = true,
-                listening = command.isNullOrBlank(),
-                partialSpeech = "",
-                speechDiagnostic = WakeTranscriptDiagnostic.describe(wakeTranscript),
+                listening = command.isNullOrBlank() || continuationPrefix != null,
+                partialSpeech = continuationPrefix.orEmpty(),
+                speechDiagnostic = buildString {
+                    append(WakeTranscriptDiagnostic.describe(wakeTranscript, wakeConfidence, wakeAlternatives))
+                    if (continuationPrefix != null) append(" · listening for the rest of the request")
+                },
                 banner = null,
             )
         }
@@ -339,17 +354,24 @@ class ChatViewModel @Inject constructor(
             state.first { it.historyLoaded }
             if (command.isNullOrBlank()) {
                 startListeningTurn()
+            } else if (needsRepeat) {
+                reportUnclearActionTranscript(command, wakeConfidence!!)
+            } else if (continuationPrefix != null) {
+                startListeningTurn(continuationPrefix = continuationPrefix)
             } else {
                 send(command, spokenInstruction = true)
             }
         }
     }
 
-    private fun startListeningTurn(monitorSpeechText: String? = null) {
+    private fun startListeningTurn(
+        monitorSpeechText: String? = null,
+        continuationPrefix: String? = null,
+    ) {
         if (!_state.value.handsFreeSession) return
         monitoringSpeechOutput = !monitorSpeechText.isNullOrBlank()
         listenJob?.cancel()
-        _state.update { it.copy(listening = true, partialSpeech = "") }
+        _state.update { it.copy(listening = true, partialSpeech = continuationPrefix.orEmpty()) }
         val startResult = voice.startListening(
             // Aura's owner speaks South African English. Asking Android for en-US
             // caused avoidable transcript substitutions on this device.
@@ -366,7 +388,7 @@ class ChatViewModel @Inject constructor(
                         monitoringSpeechOutput = false
                         bargeInTranscriptPolicy.reset()
                         _state.update {
-                            val heard = it.partialSpeech.trim()
+                            val heard = it.partialSpeech.trim().ifBlank { continuationPrefix.orEmpty() }
                             it.copy(
                                 listening = false,
                                 partialSpeech = "",
@@ -379,7 +401,7 @@ class ChatViewModel @Inject constructor(
                         } else if (error.recoverable) {
                             recoverableListenFailures = (recoverableListenFailures + 1).coerceAtMost(5)
                             val delayMs = (500L shl (recoverableListenFailures - 1)).coerceAtMost(8_000L)
-                            resumeHandsFreeAfterReply(delayMs)
+                            resumeHandsFreeAfterReply(delayMs, continuationPrefix)
                         }
                     } else if (result.isFinal) {
                         monitoringSpeechOutput = false
@@ -387,11 +409,21 @@ class ChatViewModel @Inject constructor(
                         bargeInTranscriptPolicy.reset()
                         val assistantEcho = !monitorSpeechText.isNullOrBlank() &&
                             bargeInTranscriptPolicy.isLikelyEcho(monitorSpeechText, result.transcript)
+                        val recognized = result.transcript.trim()
+                        val completeTranscript = listOfNotNull(
+                            continuationPrefix?.takeIf(String::isNotBlank),
+                            recognized.takeIf(String::isNotBlank),
+                        ).joinToString(" ")
                         _state.update {
                             it.copy(
                                 listening = false,
                                 partialSpeech = "",
-                                speechDiagnostic = "Recognized (${result.languageTag ?: "en-ZA"}, confidence ${result.confidence?.let { c -> "${(c * 100).toInt()}%" } ?: "not provided"}): ${result.transcript}",
+                                speechDiagnostic = WakeTranscriptDiagnostic.describeConversation(
+                                    transcript = completeTranscript,
+                                    languageTag = result.languageTag,
+                                    confidence = result.confidence,
+                                    alternatives = result.alternatives,
+                                ),
                             )
                         }
                         if (assistantEcho) {
@@ -404,22 +436,28 @@ class ChatViewModel @Inject constructor(
                             }
                             if (SpeechCommandConfidencePolicy.shouldAskForRepeat(
                                     confidence = result.confidence,
-                                    isActionRequest = com.aura.ai.agent.ConversationIntent.needsAgentPlan(result.transcript),
+                                    isActionRequest = com.aura.ai.agent.ConversationIntent.needsAgentPlan(completeTranscript),
                                 )
                             ) {
-                                reportUnclearActionTranscript(result.transcript, result.confidence)
+                                reportUnclearActionTranscript(completeTranscript, result.confidence)
                             } else {
-                                send(result.transcript, spokenInstruction = true)
+                                send(completeTranscript, spokenInstruction = true)
                             }
+                        } else if (continuationPrefix != null) {
+                            _state.update {
+                                it.copy(speechDiagnostic = "Still listening after: ‘$continuationPrefix’")
+                            }
+                            resumeHandsFreeAfterReply(continuationPrefix = continuationPrefix)
                         } else {
                             resumeHandsFreeAfterReply()
                         }
                     } else {
                         _state.update {
-                            it.copy(
-                                partialSpeech = result.transcript,
-                                speechDiagnostic = "Live transcript: ${result.transcript}",
-                            )
+                            val liveTranscript = listOfNotNull(
+                                continuationPrefix?.takeIf(String::isNotBlank),
+                                result.transcript.trim().takeIf(String::isNotBlank),
+                            ).joinToString(" ")
+                            it.copy(partialSpeech = liveTranscript, speechDiagnostic = "Live transcript: $liveTranscript")
                         }
                         if (
                             !monitorSpeechText.isNullOrBlank() &&
@@ -449,7 +487,7 @@ class ChatViewModel @Inject constructor(
             } else if (error?.recoverable == true) {
                 recoverableListenFailures = (recoverableListenFailures + 1).coerceAtMost(5)
                 val delayMs = (500L shl (recoverableListenFailures - 1)).coerceAtMost(8_000L)
-                resumeHandsFreeAfterReply(delayMs)
+                resumeHandsFreeAfterReply(delayMs, continuationPrefix)
             }
         }
     }
@@ -529,11 +567,11 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun resumeHandsFreeAfterReply(delayMs: Long = 350L) {
+    private fun resumeHandsFreeAfterReply(delayMs: Long = 350L, continuationPrefix: String? = null) {
         listenJob?.cancel()
         listenJob = viewModelScope.launch {
             delay(delayMs)
-            startListeningTurn(monitorSpeechText = activeAssistantSpeechText)
+            startListeningTurn(monitorSpeechText = activeAssistantSpeechText, continuationPrefix = continuationPrefix)
         }
     }
 

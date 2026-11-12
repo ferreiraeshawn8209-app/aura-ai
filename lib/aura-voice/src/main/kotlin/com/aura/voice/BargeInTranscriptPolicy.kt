@@ -28,7 +28,10 @@ class BargeInTranscriptPolicy {
         val spoken = normalize(spokenText).split(' ').filter(String::isNotBlank)
         val heard = normalize(transcript).split(' ').filter(String::isNotBlank)
         if (spoken.isEmpty() || heard.isEmpty()) return false
-        if (heard.size == 1) return heard.single().length >= 2 && heard.single() in spoken
+        // A single common word is not enough evidence that the recognizer heard
+        // Aura's speaker. Keep it eligible as a user interruption; the stable
+        // partial guard still requires the same non-echo text twice.
+        if (heard.size == 1) return false
 
         val spokenPhrase = spoken.joinToString(" ")
         val heardPhrase = heard.joinToString(" ")

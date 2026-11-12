@@ -300,3 +300,10 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 ## CI verification gap — 2026-11-07
 
 - GitHub Actions run `42346749653` for source commit `db11eedcbea3ac0affd606a5a7fd994f90fa0b1a` failed before any job step; job returned no steps or logs. No automated voice/build result was produced for that commit.
+
+
+## 2026-11-12 wake-tail continuation
+
+- Added a tested incomplete-fragment guard; Aura continues listening and merges the next segment rather than sending “I” or “what is” as a full request.
+- Focused policy test passed (3); full app/shared-voice report totals: 99 + 18, zero failures/errors/skips; APK assembly passed.
+- Device result: owner reported transcript “I” and no final spoken answer. This is a fail/unresolved, not device acceptance. Fresh APK SHA-256 `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471` remains uninstalled.

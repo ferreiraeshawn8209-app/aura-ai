@@ -122,4 +122,3 @@ data class VoiceOperationResult(
             VoiceOperationResult(VoiceOperationStatus.REJECTED, error)
     }
 }
-

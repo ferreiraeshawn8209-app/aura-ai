@@ -313,4 +313,3 @@ class SettingsViewModel @Inject constructor(
 
     fun clearSharedFilesTreeUri() = viewModelScope.launch { settings.setSharedFilesTreeUri(null) }
 }
-

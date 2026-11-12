@@ -50,4 +50,3 @@ internal object WakeTranscriptDiagnostic {
         return if (otherGuesses.isEmpty()) label else "$label · other guesses: ${otherGuesses.joinToString(" | ")}"
     }
 }
-

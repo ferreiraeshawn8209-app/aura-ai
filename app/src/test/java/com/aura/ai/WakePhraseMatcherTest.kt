@@ -44,4 +44,3 @@ class WakePhraseMatcherTest {
         assertEquals(null, match?.confidence)
     }
 }
-

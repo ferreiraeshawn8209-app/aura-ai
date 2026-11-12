@@ -246,3 +246,8 @@ GitHub origin/integration/aura-voice-consolidation was pushed and verified at 50
 - Latest APK: `com.aura.ai` v1.0.0/code 1, 20,862,522 bytes, SHA-256 `3C5BA73F4582281AC2A27BAEB17B3BD008E68F068566438E876CBDB12CAAD511`; signature verified with existing Android Debug signer SHA-256 `1b9b1ddda2f2df8b0a36c8b479abd809e6ac312cb01b3c59fcc9f375f7a27ef3`.
 - Honor disconnected, APK not installed, phone voice/Ollama/cloud/WhatsApp checks pending. Main unchanged.
 - Final code/test/handover commit `b33b06dd8832893d8f6429b074933f7b0fce2e70` is pushed and verified on `integration/aura-voice-consolidation`; `main` remains unchanged.
+
+
+## 2026-11-12 continuation guard and network check
+
+Aura now continues listening when wake recognition returns an explicit incomplete fragment, then merges the next recognition segment before inference. The 3-case focused policy test passed; full reports show app 99 + shared voice 18, no failures/errors/skips; APK assembly passed. Fresh APK is `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471`, not installed. Honor successfully fetched Ollama /api/tags and found both Qwen models, but no inference was run. Voice test remains unresolved: owner reported “I” and no spoken answer. Do not claim continuous conversation works until retested.

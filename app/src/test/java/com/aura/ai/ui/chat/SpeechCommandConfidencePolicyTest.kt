@@ -30,4 +30,3 @@ class SpeechCommandConfidencePolicyTest {
         assertFalse(WakeCommandConfidencePolicy.shouldAskForRepeat("open WhatsApp", 0.9f))
     }
 }
-

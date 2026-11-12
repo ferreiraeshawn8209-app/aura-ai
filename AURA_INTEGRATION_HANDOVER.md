@@ -310,3 +310,16 @@ The exact approved APK hash `3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D
 - `git diff --check` passed. No APK was assembled or installed. ADB lists no Honor, and exact owner-approved APK SHA `3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D3D38576F7B952` is unavailable locally. No data backup, package/signer comparison, install, microphone, transcript, TTS, interruption, or UI draft reopen test occurred.
 - Local source/test changes remain uncommitted on `codex/aura-original`, HEAD `471ef9d`, with no remote. This documentation update does not publish implementation source. Production main remains unchanged.
 - Next: reconnect Honor, restore the exact approved APK (or obtain approval for a newly built hash), verify package/signing identity, back up app data, then install in place and test draft restoration plus wake/transcript/spoken-answer/follow-up/interruption on-device. Record the actual transcript and audio outcome; JVM tests do not establish device voice reliability.
+
+
+## Local Ollama Builder timeout repair — 2026-11-12
+
+This is a handover-only update based on the local Windows checkout at `C:\Users\shawn\Desktop\T1000-main`; it does not publish source code to this branch.
+
+- Raised the local text inference attempt cap before configured cloud fallback from 45 to 180 seconds in `ProviderChatRouter.kt`, still bounded by the configured request timeout. The shorter voice-specific limits (30 seconds with a backup, 60 seconds local-only) were not changed. Earlier direct PC timing samples were about 58 seconds for Qwen 1.7B and 127 seconds for Qwen 4B on a tiny generation.
+- Added/updated router regression coverage for the configured timeout and Qwen 4B local success without a cloud call.
+- Verification in the local checkout: `ProviderChatRouterTest` 9/9; `AppBuilderProviderPolicyTest` 8/8; full `:app:testDebugUnitTest` 755 passed, 0 failures/errors/skips; `git diff --check` passed. The successful focused run took 5m14s after an interrupted compile attempt; the full suite completed in 1m34s.
+- Automated tests do not verify the live Aura Builder screen or generated file/preview/export. No APK was built or installed in this task.
+- Honor remains absent from ADB. Owner-approved APK SHA `3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D3D38576F7B952` was unavailable; no different artifact was installed. No data backup, package/signer check, draft reopen, microphone, TTS or phone acceptance test occurred. Available debug APK uses `com.aura.ai.debug`, not the original Aura package.
+- Local source remains uncommitted on `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a configured remote. No code was pushed to this integration branch and `main` is unchanged.
+- Next: recover the exact approved APK or obtain approval for a new exact hash; reconnect Honor; verify package/signer and make a data backup before any in-place install. Then test draft persistence and a short local Builder generation through Aura, including file, preview/export and elapsed time. Keep device voice and backend failover acceptance open.

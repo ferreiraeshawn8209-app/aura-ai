@@ -445,3 +445,13 @@ Added a continuation guard for incomplete wake tails. Focused tests (3) passed; 
 - Installed in place using update mode; Android returned Success. Pulled installed base APK and verified it matches approved BA1F… SHA. `com.aura.ai.debug` remains installed but was force-stopped; original Aura was launched and its WakeWordService is active. Existing databases/shared preferences directories remain present; no uninstall or data clear.
 - Live voice acceptance is pending owner retest. Previous transcript “i” was not attributable because ADB/logcat showed `com.aura.ai.debug` held audio input. Do not mark wake recognition or answer flow complete until a clean original-app test reports the transcript and spoken answer.
 - Next: capture that live result, inspect original-package-only logs, then test follow-up/interruption and one actual Qwen generation through Aura. If ASR still clips, use the diagnostic alternatives/confidence to change the recognition strategy; do not claim success from build/tests alone.
+
+
+## Android locale fallback update — 2026-11-12
+
+- Device logs showed Android SpeechRecognizer error 12 for requested locale `en-ZA`; Android defines 12 as requested language not supported by that recognizer. The old wake fallback kept requesting the same unsupported locale.
+- Published a deterministic ASR fallback: `en-ZA` → `en-GB` → `en-US`; wake listening falls back from on-device to system recognition and relaxes offline-only mode on fallback. Transcript diagnostics now include the locale used. The TTS/Austrian voice configuration is unchanged.
+- Code commits: `10414666cc2473eaafdc7df8118be4becc1cb865` (wake service), `21e69a85b7f980d19c6d30d0929598a724a7ef64` (Android recognizer), `3365106a11f87449307806f4fcf8473f97910ffb` (policy), `49e5e272fdefee701591bf11f765594d84271ab1` (tests).
+- Verification: full Gradle test/build succeeded in 12m38s; app 99 tests + voice library 21 tests, zero failures/errors/skips; APK assembly and signature verification passed. APK `com.aura.ai` v1.0.0/code 1, SHA-256 `8402932206749EAC09C0EDA6F92268E4004F633C35D4189EF104F315D7FAC3BE`.
+- Owner explicitly asked to retain the original Aura and stop the duplicate opening. The separate `com.aura.ai.debug` package is disabled for the current Android user, not uninstalled; its data is preserved. Original `com.aura.ai` is the active app. No app data was cleared.
+- Current phone remains on the previously approved BA1F… APK; the 840293… APK awaits approval for its exact hash before installation. Real-device validation of the fallback fix is pending.

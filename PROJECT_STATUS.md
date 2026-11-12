@@ -436,3 +436,12 @@ The voice-monitor implementation is `6e2a221`; final test-results handover is `a
 ## 2026-11-12 wake transcript repair
 
 Added a continuation guard for incomplete wake tails. Focused tests (3) passed; full verification reports app 99 + shared voice 18, zero failures/errors/skips; APK assembly passed. Fresh APK SHA-256 `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471`, package `com.aura.ai`, existing signer, not installed. Honor /api/tags works over HTTP and lists both Qwen models; inference is unverified. Owner reports original-app transcript “I”; spoken answer not reported. Voice acceptance remains unresolved.
+
+
+## 2026-11-12 approved build install
+
+- Source commit `915b3f9e37525653bd5063a2e76eba04e797cbb2` is published to `integration/aura-voice-consolidation`; main is unchanged. Android local tests/build passed (app 99, shared voice 18, zero failures/errors/skips); no Android CI result is available.
+- Owner approved the exact fresh APK SHA-256 `BA1F1E4F17640D83DE43E8208A5A2B94EED4886EB21EEE4E71BA951E5EFA7471`. Existing app data was backed up immediately before update to `device-backups/com.aura.ai-preupdate-20261112-BA1F.tar` (1,036,288 bytes, SHA-256 `2A30FFC8E80FB427916F849C131E3BFAE38F1926E2FF358CEB172B8EDAC29808`), and previous base APK preserved (A569… SHA). Both old and new APKs verified as `com.aura.ai`, version 1.0.0/code 1, same signing certificate.
+- Installed in place using update mode; Android returned Success. Pulled installed base APK and verified it matches approved BA1F… SHA. `com.aura.ai.debug` remains installed but was force-stopped; original Aura was launched and its WakeWordService is active. Existing databases/shared preferences directories remain present; no uninstall or data clear.
+- Live voice acceptance is pending owner retest. Previous transcript “i” was not attributable because ADB/logcat showed `com.aura.ai.debug` held audio input. Do not mark wake recognition or answer flow complete until a clean original-app test reports the transcript and spoken answer.
+- Next: capture that live result, inspect original-package-only logs, then test follow-up/interruption and one actual Qwen generation through Aura. If ASR still clips, use the diagnostic alternatives/confidence to change the recognition strategy; do not claim success from build/tests alone.

@@ -389,3 +389,16 @@ Latest code change adds a race guard for the asynchronous wake restart. It was r
 3. Keep `com.aura.ai.debug` disabled unless owner requests re-enable. Test wake, transcript locale/words, spoken answer, follow-up and interruption in original Aura.
 4. Test an actual Qwen generation through Aura; separately test cloud fallback/recovery if credentials are configured.
 5. Record observed results; do not mark voice complete from unit tests alone.
+
+
+## CRITICAL APP IDENTITY CORRECTION — 2026-11-12
+
+This section supersedes any earlier handover statements claiming `com.aura.ai` is the original Aura or that `com.aura.ai.debug` is the duplicate.
+
+- On the Honor, package metadata verified: `com.aura.ai.debug` is labeled “Aura AI” and matches the original Aura app; `com.aura.ai` is labeled “T1000.” The installed Aura APK was pulled for identity inspection, not modified. User context identifies the Aura AI icon as the original Terminator-skull app.
+- Root workspace `T1000-main/android/app` has namespace `com.aura.ai`, debug applicationId suffix `.debug`, and app label “Aura AI”; this matches the installed original Aura package.
+- The GitHub integration branch `ferreiraeshawn8209-app/aura-ai:integration/aura-voice-consolidation` has no `android/app` tree. Its `app/build.gradle.kts` builds `com.aura.ai`, and its app label/strings say “T1000.” Therefore this branch is T1000, not the original Aura target. The recently published locale fallback commits apply only to T1000; do not claim or install them as an original Aura fix.
+- Owner asked to retain one app. Phone state was corrected reversibly: `com.aura.ai` (T1000) is disabled for user 0; `com.aura.ai.debug` (Aura AI) is enabled and was launched. Neither was uninstalled; no app data was cleared. Original Aura private data was backed up to `device-backups/com.aura.ai.debug-original-aura-before-isolation-20261112.tar` (14,136,320 bytes, SHA-256 `5DA4C808F9AD33CC627461980161E7EB6ADF867D5B5B0136617B3171A1C7FF04`). T1000 app data and its previous APK backups remain preserved too.
+- The T1000 APK `8402932206749EAC09C0EDA6F92268E4004F633C35D4189EF104F315D7FAC3BE` was installed only into `com.aura.ai` after exact-hash approval, then that T1000 package was disabled per the owner's instruction. It did not update original `com.aura.ai.debug`; no new original Aura APK has been built or installed.
+- Root Git state is not a valid project checkout: `git` resolves to a profile-level empty `master` with no remote. Root `AGENTS.md` requires leaving source intact when history/remote is missing or ambiguous. The original Aura source at `T1000-main/android/app` has not been modified. To continue coding the original safely, first restore/identify its correct Git checkout/remote; do not assume this T1000 integration branch is its source.
+- Main remains unchanged. No real-device voice acceptance was completed for the original Aura, and the published T1000 ASR fix must not be described as fixing Aura.

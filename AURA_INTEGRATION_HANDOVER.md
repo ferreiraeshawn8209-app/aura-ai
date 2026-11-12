@@ -277,3 +277,12 @@ The local Windows checkout's Gradle configuration sets the release application I
 All four Codemagic signing variables (CM_KEYSTORE_PATH, CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, CM_KEY_PASSWORD) are unset in this session, and the configured workspace-local debug keystore path is absent. No release build was run because it would produce another unsigned artifact and overwrite the existing user artifact. No installable update-compatible original Aura APK is currently available. Keep the separate com.aura.ai.debug artifact and the unsigned release artifact off the phone. The owner must restore the original signing key through a secure approved signing workflow; do not request the private key or password in chat. Verify the signer against the actual installed app when the Honor is connected.
 
 No source code or APK was pushed or installed in this documentation-only update. The local checkout is codex/aura-original at 471ef9d with no remote; the Honor remains absent from ADB. Production main remains unchanged.
+
+
+## Approved draft-save APK installation attempt — 2026-11-12
+
+- The owner approved only APK SHA-256 `3FB0AF7496A94E53218BB3BBE7C7AE83056256579D47093445D3D38576F7B952`, conditional on backing up the installed app data and verifying package/signature.
+- That exact APK is absent from the local Android build outputs and top-level Desktop/Downloads APK locations. Available build artifacts have different hashes, including debug `FD5990AE…A059C3FDD` (`com.aura.ai.debug`) and an unsigned `com.aura.ai` release APK. No artifact was substituted.
+- `adb devices -l` returned no devices. No backup, installed package/signer comparison, installation, or draft persistence test was performed. This is an unavailable-artifact/device blocker, not a failed app test.
+- Local code, APKs, phone data, and production main were not changed. Local checkout remains `codex/aura-original` at `471ef9d`, without a configured remote.
+- Next: reconnect the Honor and restore the exact approved APK (or request approval for a newly built exact hash), verify package and signing certificate, make and verify a fresh app-data backup, then update Aura in place and test drafts across closing/reopening. Do not install the separate `.debug` app or unsigned release artifact.

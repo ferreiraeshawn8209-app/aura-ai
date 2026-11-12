@@ -665,3 +665,10 @@ Next: capture the exact diagnostic transcript/confidence on the unlocked origina
 - The fresh 840293… APK has not been installed. It requires explicit approval for this exact hash; previous approval named BA1F…. Real-device voice acceptance remains unresolved. Earlier “i” cannot be attributed because debug app held audio input. After debug was disabled, original logs exposed error 12; the locale-fallback code now needs real-device verification.
 - Local checkout remains branch `integration/aura-voice-consolidation`, HEAD `d5d0fe92ca890c964685403aee0fcafd3fe30fd6`, dirty; local Git metadata is protected. Remote integration branch received the source commits above; main was not changed. Local data backups are excluded from Git.
 - Next: get exact-hash approval, back up data again, verify package/signer and install 840293… in place; then capture the visible transcript and spoken answer from original Aura, test another turn and interruption, and verify an actual Qwen generation through Aura. Cloud fallback remains unverified without a routed failure/recovery test.
+
+
+## GitHub handover references — 2026-11-12
+
+- ASR fix source commits: `10414666cc2473eaafdc7df8118be4becc1cb865`, `21e69a85b7f980d19c6d30d0929598a724a7ef64`, `3365106a11f87449307806f4fcf8473f97910ffb`, `49e5e272fdefee701591bf11f765594d84271ab1`.
+- Companion handover commits: `314d65dc320426afdfaecc17104762f3661899a3`, `9ec46bd7c427815cb7abb13c71975db7b7918ebc`, `a24073f0a0bce31c1c34a67fd8aa55d3312e0998`, `0034f35032230554191b3a166b9cd1698a92e13a`. All were written to `integration/aura-voice-consolidation`; no commit targeted `main`.
+- The exact APK hash `8402932206749EAC09C0EDA6F92268E4004F633C35D4189EF104F315D7FAC3BE` awaits owner's install approval. The latest installed package is still the prior approved BA1F… build. Duplicate debug package remains disabled, not removed.

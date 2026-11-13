@@ -535,3 +535,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Tests exercise provider routing with mocks only. No live cloud call, PC Ollama request, or Honor voice test was performed on this APK. Previous owner speech report described incomplete recognition/usage error; this provider-routing change does not prove transcript accuracy or actual provider connectivity.
 - Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote, with existing user edits. No source was committed/pushed; production `main` unchanged.
 - Next: after approval for B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385, back up app data, install in place without uninstall/clear-data, and verify full transcript, spoken answer, follow-up, interruption, and actual online/local provider routing on the Honor.
+
+
+## Recognition/usage-error evidence recheck — 2026-11-13
+
+- Read-only Honor check: ADB currently sees `com.aura.ai.debug` v1.0.0. Recent filtered logcat (30,000 lines) contained no matching speech-finalization, HTTP 402, provider-fallback, or request-error messages, so it does not establish what the owner's latest spoken request produced. No install, launch, app preference, or data operation was performed.
+- Source trace: `CloudChatRepository` emits `OllamaError.CloudFailure` for non-2xx cloud responses (including HTTP 402). `ProviderChatRouter` tries the next configured route only when `automaticProviderFallback` is enabled; local fallback also requires a configured local model. Existing generic cloud-failure tests do not specifically simulate HTTP 402.
+- No source or test changes were made in this diagnostic pass. The previously completed 781-test suite remains the automated evidence; it is not fresh device speech/provider evidence.
+- Full-sentence recognition is still unverified; the owner's prior report indicates unreliable capture. Final APK SHA-256 `B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385` is not installed. Next: obtain approval for that exact hash, back up and update in place, then capture the transcript/error/provider/response for one live test.
+- Local source checkout is still `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote; no source push/commit, production `main` unchanged.

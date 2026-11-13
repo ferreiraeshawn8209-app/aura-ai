@@ -431,3 +431,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - At the time of a read-only device log sample, ChatGPT was top-resumed. The original Aura background service finalized three Vosk segments (alternative counts 4, 5, and 2), each with `wakePhraseDetected=false`. This shows no wake activation for those audio segments, but it is not a valid test of the owner speaking directly to Aura because another app was foreground.
 - Brought original Aura back to foreground; ActivityManager resolves `com.aura.ai.debug/com.aura.ai.MainActivity`. The screen remains “Ready quietly”; no final command transcript or answer has been logged. Current end-to-end voice result remains pending.
 - No code, data, settings, or permissions changed. Next: end any other voice session, speak the arithmetic phrase directly to Aura, and record visible transcript and spoken result.
+
+
+## Current Honor audio-source state — 2026-11-13
+
+- Latest ActivityManager check shows ChatGPT top-resumed, while Aura's `WakeWordService` remains registered as a foreground service. The recent 3,000 log lines contain no new wake finalization, command recognition, wake-match, or microphone-silencing/restoration event.
+- Earlier segments while ChatGPT was foreground had no wake match; they were not a valid test of a phrase directed to Aura. No current spoken-answer acceptance result is verified.
+- No code, app data, settings, permissions, or installed APK changed in this recheck. Next: switch to original Aura with any other voice session ended, say the test phrase, and capture the transcript/answer.

@@ -471,3 +471,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Current device state: Honor connected, ChatGPT top-resumed. Candidate has not been installed; current approved installation is the earlier 41E build. No new speech attempt was captured. Device-level recognition, conversation, TTS, interruption and provider fallback remain unverified for this change.
 - Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a remote; the source change is not pushed. This is a documentation-only update on `integration/aura-voice-consolidation`; production `main` was not changed.
 - Next: get exact-hash approval for the B2A candidate, make and verify a fresh app-data backup, install in place with `adb install -r`, then test the wake phrase and capture transcript, spoken answer, provider and latency.
+
+## Final and partial ASR transcript filter — 2026-11-13
+
+- Follow-up closed a gap in the previous fix: Android can report an early fragment as a final result, bypassing a filter that only handled partial recovery. Aura now applies the same completeness check to both selected final transcripts and partials. Intentional standalone replies and contextual short answers in an active conversation remain supported.
+- Local source changes: `android/app/src/main/java/com/aura/ai/voice/HandsFreeTranscriptMerger.kt`, `android/app/src/main/java/com/aura/ai/voice/WakeWordService.kt`, `android/app/src/test/java/com/aura/ai/voice/HandsFreeTranscriptMergerTest.kt`.
+- Tests/build: full Android unit suite **773 passed; 0 failures/errors/skips across 176 suites**; `:app:assembleDebug` passed; `git diff --check` passed.
+- Current unsigned-for-install gate: APK SHA-256 `E56181293D683FAC9901E9842D9892A3F9D484415D37AE8AF84303BCAA0BC6E2`; package `com.aura.ai.debug`, version 1.0.0/code 1; apksigner exit 0; signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
+- Honor connected, ChatGPT top-resumed. Candidate is not installed; the earlier 41E build remains installed. No on-device speech result for this fix. Recognition accuracy, spoken answer, multi-turn conversation, interruption, and local/cloud routing remain unverified.
+- Local checkout is `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a configured remote. No source was pushed. This is a documentation-only commit on `integration/aura-voice-consolidation`; production `main` is untouched.
+- Next: obtain exact-hash approval, back up and verify Aura private data, update in place without uninstall/clear-data, then run a real Honor phrase/follow-up/interruption test and capture transcript, answer, provider, and latency.

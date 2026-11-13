@@ -591,3 +591,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Honor remains on approved APK `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`; final B7 build is uninstalled pending exact-hash approval. No app data/settings changed.
 - No source edits. Local Git remains `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote. Production `main` unchanged.
 - Next: after approval for exact B7 SHA, back up and install in place; run one small local inference when owner is ready for model load, then test real cloud failure/local fallback and voice turn-taking.
+
+
+## Honor-to-PC local inference verification — 2026-11-13
+
+- Sent a small non-streaming request from the ADB-connected Honor to `http://192.168.8.18:11434/api/chat` using `qwen3:1.7b`, `think:false`, `num_predict:64`, `keep_alive:0`. The reply was exactly `AURA_LOCAL_OK`; total duration about 11.1s, cold load about 9.9s.
+- An initial 20-token attempt returned empty `content` because the output limit was consumed by Qwen's `thinking` field. That attempt was inconclusive; the follow-up with thinking disabled passed.
+- `ollama ps` immediately afterward showed no loaded model. No APK, Aura setting, or user data was changed.
+- This verifies direct phone-to-PC local inference only, not inference through installed Aura, speech recognition, TTS, wake flow, or cloud fallback.
+- Honor still has approved APK `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`; final B7 APK awaits its own exact-hash approval. Local Git remains `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no local source commit and production `main` unchanged.
+- Next: after exact B7 approval, back up and update in place, then test the full voice/provider flow through Aura itself.

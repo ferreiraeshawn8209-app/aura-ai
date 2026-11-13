@@ -488,3 +488,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Wake/ASR preview text is transient in-memory UI state. It is not a substitute for an accepted, persisted conversation turn. No database/schema change was made.
 - This proves the source path exists, not that the Honor recognized, displayed, or retained a real spoken transcript. Add transcript visibility, persistence after reopening, search, and copy to the device acceptance test after the exact E561 APK is approved and installed.
 - Local docs were updated. No code or app data changed in this trace; production `main` remains untouched.
+
+## Device and saved-history check — 2026-11-13
+
+- ADB still detects the Honor, but the current top-resumed app is the video-editing app `com.camerasideas.trimmer/com.camerasideas.instashot.VideoEditActivity`. Aura was not brought forward; no install, launch, app-data, or settings operation was performed. Installed Aura remains `com.aura.ai.debug` v1.0.0, last updated 2026-11-13 03:15:45.
+- Candidate E561 hash remains `E56181293D683FAC9901E9842D9892A3F9D484415D37AE8AF84303BCAA0BC6E2`; it is not installed and still needs exact-hash approval.
+- JUnit report from the latest full 773-test run shows `ConversationHistoryPolicyTest` passed 5/5. Coverage includes case-insensitive search, blank/no-match search behavior, clipboard ordering/speaker labels, and removal of blank streaming bubbles.
+- This verifies transcript presentation policy, not live speech recognition or physical-device save/search/copy. The complete Honor voice flow remains unverified.

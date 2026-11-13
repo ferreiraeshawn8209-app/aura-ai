@@ -561,3 +561,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - After adding the focused usage-credit fallback test, full `:app:testDebugUnitTest --no-daemon --offline --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process` completed successfully: **782 passed, 0 failures/errors/skips across 176 suites** (1m01s). `git diff --check` passed.
 - This was test-only; APK SHA remains `B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385`. The Honor still runs the earlier approved 41E APK. No new voice/provider test was performed on-device.
 - Exact-hash approval for B7 is still required before backup/install; then verify transcript, speech, follow-up, interruption, and actual provider fallback on the Honor.
+
+
+## PC web companion verification — 2026-11-13
+
+- The existing local Windows companion at http://127.0.0.1:3008/ returned HTTP 200 (30,456 bytes).
+- `pnpm.cmd typecheck` passed. `node --test --test-isolation=none app/simple-arithmetic.test.mjs` passed **22/22**, including transcript history/copy, persistent-memory policy, selected speech locale, wake transcript selection, and browser speech interruption/echo policies.
+- No web source changed. No live browser microphone, audible response, continuous hands-free loop, or acoustic barge-in was exercised; HTTP 200 and unit tests do not prove those runtime behaviors.
+- Android still has 782/782 JVM tests passing. The B7 APK awaits exact-hash approval and remains uninstalled; the Honor remains on approved 41E. Its live spoken recognition/provider behavior is still unverified on the newer source.
+- Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no local source commit or `main` change.
+- Next: test live browser speech when available; after approval for exact B7 APK hash, back up and update Aura in place and test full voice/provider behavior on the Honor.

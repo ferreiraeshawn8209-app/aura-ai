@@ -495,3 +495,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Candidate E561 hash remains `E56181293D683FAC9901E9842D9892A3F9D484415D37AE8AF84303BCAA0BC6E2`; it is not installed and still needs exact-hash approval.
 - JUnit report from the latest full 773-test run shows `ConversationHistoryPolicyTest` passed 5/5. Coverage includes case-insensitive search, blank/no-match search behavior, clipboard ordering/speaker labels, and removal of blank streaming bubbles.
 - This verifies transcript presentation policy, not live speech recognition or physical-device save/search/copy. The complete Honor voice flow remains unverified.
+
+## Windows companion regression recheck — 2026-11-13
+
+- Existing PC preview at `http://127.0.0.1:3008/` returned HTTP 200 (30,456 bytes). This verifies the page serves, not browser audio behavior.
+- `pnpm.cmd typecheck` passed. `node --test --test-isolation=none app/simple-arithmetic.test.mjs` passed **22/22**, covering transcript formatting/memory, voice selection policy, wake phrase joining, barge-in and echo filtering.
+- Read-only code review confirms continuous browser recognition, segment joining after silence, continued command mode after a turn, and speech cancellation for stable non-echo interruption. No additional PC source defect was established or changed.
+- Live browser microphone, audible answer, and acoustic interruption remain untested.
+- Honor remains connected with the video-editing app top-resumed. Candidate E561 hash `E56181293D683FAC9901E9842D9892A3F9D484415D37AE8AF84303BCAA0BC6E2` remains uninstalled pending exact-hash approval. No phone data/settings changed.
+- Local checkout `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote. No application-source change or production-main change in this check.

@@ -449,3 +449,9 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Device state: Honor connected, but top-resumed app was Honor Camera. No new spoken recognition/response was captured. Existing installed 41E build remains; live hands-free remains unverified.
 - Local Git checkout: `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no configured remote. Local source edits remain uncommitted; no unrelated branch or production main was changed. This GitHub update documents evidence only and does not contain source changes.
 - Next: obtain approval for this exact APK hash before a fresh data backup and in-place install; then test one actual spoken phrase in original Aura and confirm the temporary on-screen transcript plus spoken final answer.
+
+### Follow-up regression check — 2026-11-13
+
+- Filtered Android Gradle run for `HandsFreeTranscriptMergerTest`, `WakeWordDetectorTest`, and `WakeTranscriptPreviewPolicyTest`: **25 passed, 0 failed/errors/skipped** (19 + 3 + 3). These validate deterministic transcript/wake policies; they do not exercise a physical microphone.
+- Latest Honor read-only check: device connected, Honor Camera top-resumed. Two Vosk segments logged `wakePhraseDetected=false` while Aura was not foreground; no valid Aura-directed utterance or spoken answer was observed.
+- No new APK install, app setting/data change, or permission change. Candidate hash remains `5E7332DBFD0348083634F1B25598AE0CF16D7F19BABD42821A24391BF40A5A5C` and requires exact-hash install approval.

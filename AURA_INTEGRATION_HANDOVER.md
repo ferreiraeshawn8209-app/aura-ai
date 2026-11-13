@@ -504,3 +504,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Live browser microphone, audible answer, and acoustic interruption remain untested.
 - Honor remains connected with the video-editing app top-resumed. Candidate E561 hash `E56181293D683FAC9901E9842D9892A3F9D484415D37AE8AF84303BCAA0BC6E2` remains uninstalled pending exact-hash approval. No phone data/settings changed.
 - Local checkout `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote. No application-source change or production-main change in this check.
+
+## Approved Honor APK install and smoke check — 2026-11-13
+
+- The owner approved exact Aura APK SHA-256 `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`. The build output at the current workspace path is a different E561 artifact and was not installed. A read-only pull of the Honor's installed `com.aura.ai.debug` base APK matched the exact approved 41E hash, confirming this build was already installed before this task.
+- Created a full private-app-sandbox tar backup at `.gradle-aura-cache/device-backups/aura-data-20261113.tar` (14,197,248 bytes; tar listing validation succeeded). It includes the app sandbox, such as Room databases, preferences, files, and cache. Attempts to enable Windows EFS or alter its ACL were denied; the backup is not encrypted and retains inherited account/SYSTEM/Administrators permissions.
+- APK signature verification passed; signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`. Package is `com.aura.ai.debug`, version 1.0.0/code 1. Reinstalled the exact verified APK in place with `adb install -r` (Success); no uninstall or clear-data command was used.
+- Post-install, first-install time stayed `2026-10-30 01:25:43`; `databases`, `files`, and `shared_prefs` remained present. Aura process started (PID 24098); no matching fatal-exception entry appeared in the recent 300-line logcat sample. This is install/startup smoke evidence only.
+- No source files changed and no automated tests were rerun for this install task. Real wake/ASR/transcript/TTS, multi-turn, interruption, Austrian voice, Ollama, and cloud-fallback behavior remain unverified. The owner must speak the test phrase and report the exact transcript and audible response.
+- Local checkout: branch `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with pre-existing edits and no configured remote. No local source commit/push or production-main change. E561 is still a distinct unapproved/uninstalled artifact.

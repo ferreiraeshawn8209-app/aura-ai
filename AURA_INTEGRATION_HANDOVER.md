@@ -389,3 +389,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - New candidate SHA-256 41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9; package com.aura.ai.debug, version 1.0.0/code 1, verified signer matches the installed Aura app. This candidate has not been installed; the prior approval was for a different APK. A fresh exact-hash approval and data backup are required.
 - Device voice acceptance remains open: no full transcript/answer or new-candidate microphone result is verified. Next: obtain approval for this exact hash, back up, update in place, then test wake phrase, full sentence, spoken local Qwen answer, provider route, a second turn and interruption. Main was not changed.
 - Local checkout: codex/aura-original, HEAD 471ef9d4c34bc62758908b9efe1f5dff2af54941, no configured remote; no local source commit. This GitHub write updates only this handover on integration/aura-voice-consolidation.
+
+
+## Honor test-state recheck — 2026-11-13
+
+- ADB detects the Honor CRT-NX1, but ActivityManager reports ChatGPT foreground rather than Aura. The sampled last 2,500 device log lines contain no new Aura speech-recognition/provider events, and the owner has not supplied a result from the latest attempted phrase. Understanding is therefore still unverified.
+- Installed original Aura remains `com.aura.ai.debug` v1.0.0, last updated 2026-11-13 02:14:24, matching the previously approved `0AB97E6B…EDFA99` build. Candidate SHA-256 `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9` was rechecked, but it is not installed; the earlier approval does not cover this artifact.
+- No source, app data, settings, permissions, or installed APK changed during this check. No tests were run. The candidate's prior automated verification (767 Android unit tests and debug assembly) is recorded above; real-device voice acceptance is still pending.
+- Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no Git remote and pre-existing user changes preserved. This update is documentation-only on the integration branch; production `main` was not changed.
+- Next: after exact-hash approval, make and verify a fresh private-data backup, update Aura in place, then capture the complete transcript, spoken answer, model route and latency. Do not treat the wake acknowledgement as task completion.

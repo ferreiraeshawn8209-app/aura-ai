@@ -461,3 +461,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Ran `:app:testDebugUnitTest --no-daemon --max-workers=1`: **770 tests across 176 suites passed, 0 failures/errors/skips**. This is automated JVM evidence, not physical-device speech acceptance.
 - `git diff --check` passed with existing Windows LF/CRLF warnings. No APK install, app-data/setting change, or permission change occurred.
 - Exact candidate remains `5E7332DBFD0348083634F1B25598AE0CF16D7F19BABD42821A24391BF40A5A5C`; it is not installed pending approval for this exact hash. The Honor's latest foreground app was Camera, so no spoken test was captured.
+
+
+## Android ASR partial-fragment guard — 2026-11-13
+
+- Local code change in the original Aura Android checkout rejects incomplete/arbitrary single-word live ASR partials after recognizer failure, while preserving intentional standalone replies and meaningful one-word answers during an active conversation. It is a defensive fix consistent with the owner's “first word only” reports; the causal link is not yet confirmed on the Honor.
+- Changed local files: `android/app/src/main/java/com/aura/ai/voice/HandsFreeTranscriptMerger.kt`, `android/app/src/main/java/com/aura/ai/voice/WakeWordService.kt`, and `android/app/src/test/java/com/aura/ai/voice/HandsFreeTranscriptMergerTest.kt`.
+- Verification: full Android JVM suite **772 tests passed, 0 failures/errors/skips in 176 suites**; debug assembly succeeded. Fresh candidate `B2A19831BF3CE16B8AA3F175228A9CA61CE58DD093042B1C5AB43BCDECA80F36`, package `com.aura.ai.debug`, version 1.0.0/code 1, signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
+- Current device state: Honor connected, ChatGPT top-resumed. Candidate has not been installed; current approved installation is the earlier 41E build. No new speech attempt was captured. Device-level recognition, conversation, TTS, interruption and provider fallback remain unverified for this change.
+- Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a remote; the source change is not pushed. This is a documentation-only update on `integration/aura-voice-consolidation`; production `main` was not changed.
+- Next: get exact-hash approval for the B2A candidate, make and verify a fresh app-data backup, install in place with `adb install -r`, then test the wake phrase and capture transcript, spoken answer, provider and latency.

@@ -417,3 +417,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Opened original Aura MainActivity. Listener was stopped after update; tapped its existing Resume control. Screenshot now shows “Ready quietly. Say ‘Yo, yo, yo.’” and green ready status. This verifies resumed listener, not successful recognition.
 - Existing HTTP 402 on screen is persisted conversation history; no fresh prompt was submitted after update. A read-only log monitor is running for the next spoken test. No end-to-end voice acceptance pass yet.
 - No app source changed in this install. Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; previous edits preserved. Production main untouched. Next: capture exact transcript, spoken answer and provider latency for one phrase; then test second turn and interruption if the first full turn succeeds.
+
+
+## Post-install foreground and live-test check — 2026-11-13
+
+- The phone had returned to ChatGPT while the initial post-install monitor ran. Brought the original Aura activity `com.aura.ai.debug/com.aura.ai.MainActivity` back to foreground; screenshot confirms “Ready quietly. Say ‘Yo, yo, yo.’” and the hands-free green indicator. `WakeWordService` remains in the foreground.
+- No fresh command-recognition/provider event appeared in the running filtered log monitor and no owner-reported transcript/answer was received. Therefore no spoken-phrase test has passed yet. Existing Ollama 402 is persisted history; no new model request was sent.
+- No code, settings, permissions, or app data changed in this follow-up. Next: speak the test phrase while Aura is in front and report the exact transcript and spoken answer; then correlate the logs.

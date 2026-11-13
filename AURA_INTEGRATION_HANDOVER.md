@@ -398,3 +398,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - No source, app data, settings, permissions, or installed APK changed during this check. No tests were run. The candidate's prior automated verification (767 Android unit tests and debug assembly) is recorded above; real-device voice acceptance is still pending.
 - Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no Git remote and pre-existing user changes preserved. This update is documentation-only on the integration branch; production `main` was not changed.
 - Next: after exact-hash approval, make and verify a fresh private-data backup, update Aura in place, then capture the complete transcript, spoken answer, model route and latency. Do not treat the wake acknowledgement as task completion.
+
+
+## PC preview and web voice regression check — 2026-11-13
+
+- Existing Aura web preview at `http://127.0.0.1:3008/` returned HTTP 200 with a 30,456-byte response. This establishes that the page is serving, not that microphone or spoken conversation works.
+- `pnpm.cmd typecheck`: passed. `node --test --test-isolation=none app/simple-arithmetic.test.mjs`: 22/22 passed, 0 failed. `git diff --check`: passed with existing LF/CRLF warnings.
+- Computer Use UI inspection stopped before input because the helper could not verify the browser URL. No window input or setting change occurred; no live PC mic/voice test was performed.
+- No application source, phone data/settings, permissions, or APK changed during this check. The Honor remains on the previous approved APK; candidate `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9` is still uninstalled pending exact-hash approval.
+- Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote, existing edits preserved. This is a handover-only commit on the integration branch; production main is unchanged. Next: test the PC microphone via a supported verified browser path; install/test the Android candidate only after exact-hash approval and a fresh verified backup.

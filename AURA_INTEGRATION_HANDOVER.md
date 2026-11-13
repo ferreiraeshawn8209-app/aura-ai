@@ -581,3 +581,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Build/tests do not prove live microphone/TTS/continuous conversation/acoustic interruption. Android remains 782 JVM tests passing; B7 APK awaits exact hash approval, and the Honor still has 41E.
 - Local Git is `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no source commit/push and `main` unchanged.
 - Next: actual browser voice acceptance, then approved B7 backup/in-place update and live Honor voice/provider tests.
+
+
+## Honor-to-PC Ollama connectivity check — 2026-11-13
+
+- PC Ollama version: 0.40.16. `ollama list` and `/api/tags` show `qwen3:1.7b` and `qwen3:4b-q4_K_M`; `ollama ps` was empty (no active model).
+- PC Wi-Fi IPv4 is `192.168.8.18`; port 11434 listens on all interfaces. From the ADB-connected Honor, read-only `curl http://192.168.8.18:11434/api/tags` succeeded and returned both models. ICMP ping timed out, which does not contradict successful HTTP connectivity.
+- No inference request was sent and no model was loaded. Phone-to-PC API reachability and model discovery are verified; chat inference, Aura settings, cloud fallback, and spoken behavior are not.
+- Honor remains on approved APK `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`; final B7 build is uninstalled pending exact-hash approval. No app data/settings changed.
+- No source edits. Local Git remains `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote. Production `main` unchanged.
+- Next: after approval for exact B7 SHA, back up and install in place; run one small local inference when owner is ready for model load, then test real cloud failure/local fallback and voice turn-taking.

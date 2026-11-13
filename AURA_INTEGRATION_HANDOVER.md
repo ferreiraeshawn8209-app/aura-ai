@@ -571,3 +571,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Android still has 782/782 JVM tests passing. The B7 APK awaits exact-hash approval and remains uninstalled; the Honor remains on approved 41E. Its live spoken recognition/provider behavior is still unverified on the newer source.
 - Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no local source commit or `main` change.
 - Next: test live browser speech when available; after approval for exact B7 APK hash, back up and update Aura in place and test full voice/provider behavior on the Honor.
+
+
+## Windows production build verification — 2026-11-13
+
+- The default Turbopack build failed because a pre-existing root folder `tmp7sn2c9j5` is access denied to the compiler; that folder and its ACL were left untouched. `OLLAMA_MODELS` was confirmed to point at the user's regular Ollama model directory.
+- Webpack initially returned `spawn EPERM` in the restricted runner. With authorized child-process access and the repository's `AURA_NEXT_INLINE_BUILD=1` option, `pnpm.cmd exec next build --webpack` completed: compilation, typecheck, data collection, 20 static pages, route listing, and build tracing passed.
+- After the build, the existing preview at `http://127.0.0.1:3008/` still returned HTTP 200. In this work turn, `pnpm.cmd typecheck` and browser voice-policy tests passed 22/22. No web source changed.
+- Build/tests do not prove live microphone/TTS/continuous conversation/acoustic interruption. Android remains 782 JVM tests passing; B7 APK awaits exact hash approval, and the Honor still has 41E.
+- Local Git is `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no source commit/push and `main` unchanged.
+- Next: actual browser voice acceptance, then approved B7 backup/in-place update and live Honor voice/provider tests.

@@ -481,3 +481,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Honor connected, ChatGPT top-resumed. Candidate is not installed; the earlier 41E build remains installed. No on-device speech result for this fix. Recognition accuracy, spoken answer, multi-turn conversation, interruption, and local/cloud routing remain unverified.
 - Local checkout is `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a configured remote. No source was pushed. This is a documentation-only commit on `integration/aura-voice-consolidation`; production `main` is untouched.
 - Next: obtain exact-hash approval, back up and verify Aura private data, update in place without uninstall/clear-data, then run a real Honor phrase/follow-up/interruption test and capture transcript, answer, provider, and latency.
+
+## Voice transcript persistence source trace — 2026-11-13
+
+- Read-only code trace: once a command is accepted, `WakeWordService.handleCommand` inserts the recognized request as a user row in the existing Room message store. `ChatViewModel` observes those rows and maps them into visible turns. `ChatScreen` has saved-history search and copy-transcript controls.
+- Wake/ASR preview text is transient in-memory UI state. It is not a substitute for an accepted, persisted conversation turn. No database/schema change was made.
+- This proves the source path exists, not that the Honor recognized, displayed, or retained a real spoken transcript. Add transcript visibility, persistence after reopening, search, and copy to the device acceptance test after the exact E561 APK is approved and installed.
+- Local docs were updated. No code or app data changed in this trace; production `main` remains untouched.

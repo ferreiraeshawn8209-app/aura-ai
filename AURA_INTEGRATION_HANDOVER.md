@@ -1,3 +1,14 @@
+## Workspace/GitHub reconciliation and local Qwen runtime check — 2026-11-14
+
+- Read the connected GitHub repository read-only. The canonical integration branch is present at `97dfa28541edd2f44f025ae888b3d69238a10850` (2026-11-13 06:25 UTC). GitHub comparison reports `integration/aura-voice-consolidation` is 182 commits ahead and 5 behind `main`; no merge or source sync was attempted.
+- The local writable workspace is a separate checkout, `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no configured remote and pre-existing dirty user work. It is not the GitHub integration checkout. No source files were overwritten or copied between these checkouts. The GitHub handover says an earlier 5A17 build was installed on 2026-11-13; current ADB sees no Honor, so that historical phone state cannot be freshly verified here.
+- From this local workspace, Ollama 0.40.16 at `127.0.0.1:11434` listed `qwen3:1.7b` and `qwen3:4b-q4_K_M`. A direct Qwen request without disabling thinking used a tiny response budget and yielded blank visible content; with Ollama's documented `think:false` parameter it returned a visible answer. The existing Aura PC route `POST /api/ollama/chat` then streamed `2 + 3 = 5` from `qwen3:1.7b`; the one-shot request unloaded the model. The active Ollama API behavior is documented at https://github.com/ollama/ollama/blob/main/docs/api.md.
+- Android `OllamaRepository` already adds `think=false` for Qwen3 local and hosted routes; added a regression assertion to `OllamaChatRequestSerializationTest`. Focused command `:app:testDebugUnitTest --tests com.aura.ai.data.remote.ollama.OllamaChatRequestSerializationTest` passed: 2 tests, 0 failures/errors/skips. The first run hit access denied on the shared user Gradle wrapper lock; rerun with `--gradle-user-home .gradle-aura-cache` succeeded in 1m33s using the in-process compiler fallback after a Kotlin daemon marker access denial.
+- Prior Windows website status correction is in the separate local checkout: a successful Explorer dispatch is reported as `launchRequested`, not a verified browser page. Local typecheck passed and focused Windows-control/status tests passed 16/16. A visible Aura preview window was not identified, so page-load behavior is not claimed verified.
+- Current device/network state: `adb devices -l` reports no Honor. Remote Desktop Commander reports BEATK offline. From this workspace, `192.168.8.18:11434` and local port 11435 were unreachable; only local loopback Ollama is verified. No fresh phone backup, install, phone voice test, firewall change, or public service exposure occurred.
+- Approved local APK remains `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8`, package `com.aura.ai.debug` v1.0.0/code 1. Signature verification passed on the APK; installed-phone signature comparison and data backup remain pending because ADB has no device. No APK was installed in this check.
+- No production `main` changes and no merge. Next: reconnect the Honor; compare installed package/signature and make/verify a fresh data backup before installing only the approved hash. Test wake, full transcript, spoken response, multi-turn interruption, selected voice, and actual app-to-PC Ollama. Separately restore PC LAN reachability before testing phone-local inference.
+
 # Aura AI Integration Handover
 
 Updated: 2026-11-05 Africa/Johannesburg
@@ -178,7 +189,6 @@ GitHub accepted the integration branch push: origin/integration/aura-voice-conso
 - No physical phone or live model/provider test occurred. Honor is disconnected; Ollama is stopped; cloud credentials are not configured. No APK installed. Existing app package/database remain unchanged.
 - Next after this docs update: commit only the quota implementation and handover records on integration/aura-voice-consolidation, push branch and confirm remote head. When the phone reconnects, obtain authorization for this exact build before in-place installation, then test voice, wake, interruptions, local Ollama, WhatsApp draft opening, and cloud success/fallback/recovery. Continue Austrian TTS integration only with an authorized provider/voice identity. Keep main unchanged.
 ## Implementation commit — 2026-11-06
-
 - Daily cloud request cap and verification record committed as f4a2e0a9d5cb50c2ee97f084f9e6209e3e2593b6 on integration/aura-voice-consolidation. The commit preserves existing app identity/data and excludes device-backups/. Main remains unchanged. Branch publication is pending.
 ## GitHub publication — 2026-11-06
 
@@ -359,7 +369,6 @@ This update reflects work in the local Windows checkout at C:\\Users\\shawn\\Des
 
 Next: complete the focused Android compile/JUnit test without a prolonged uncontrolled build, have the owner foreground original Aura and provide the live phrase result, then build/hash/signature-check an APK and request approval for that exact new hash before any backup or in-place install.
 
-
 ## Honor foreground recheck — 2026-11-13
 
 - A fresh ADB check now shows the Honor connected and original Aura top-resumed as com.aura.ai.debug/com.aura.ai.MainActivity. This supersedes the preceding observation that Chrome was foreground.
@@ -538,7 +547,6 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 
 
 ## Recognition/usage-error evidence recheck — 2026-11-13
-
 - Read-only Honor check: ADB currently sees `com.aura.ai.debug` v1.0.0. Recent filtered logcat (30,000 lines) contained no matching speech-finalization, HTTP 402, provider-fallback, or request-error messages, so it does not establish what the owner's latest spoken request produced. No install, launch, app preference, or data operation was performed.
 - Source trace: `CloudChatRepository` emits `OllamaError.CloudFailure` for non-2xx cloud responses (including HTTP 402). `ProviderChatRouter` tries the next configured route only when `automaticProviderFallback` is enabled; local fallback also requires a configured local model. Existing generic cloud-failure tests do not specifically simulate HTTP 402.
 - No source or test changes were made in this diagnostic pass. The previously completed 781-test suite remains the automated evidence; it is not fresh device speech/provider evidence.

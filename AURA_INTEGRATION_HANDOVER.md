@@ -424,3 +424,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - The phone had returned to ChatGPT while the initial post-install monitor ran. Brought the original Aura activity `com.aura.ai.debug/com.aura.ai.MainActivity` back to foreground; screenshot confirms “Ready quietly. Say ‘Yo, yo, yo.’” and the hands-free green indicator. `WakeWordService` remains in the foreground.
 - No fresh command-recognition/provider event appeared in the running filtered log monitor and no owner-reported transcript/answer was received. Therefore no spoken-phrase test has passed yet. Existing Ollama 402 is persisted history; no new model request was sent.
 - No code, settings, permissions, or app data changed in this follow-up. Next: speak the test phrase while Aura is in front and report the exact transcript and spoken answer; then correlate the logs.
+
+
+## Honor wake log recheck — 2026-11-13
+
+- At the time of a read-only device log sample, ChatGPT was top-resumed. The original Aura background service finalized three Vosk segments (alternative counts 4, 5, and 2), each with `wakePhraseDetected=false`. This shows no wake activation for those audio segments, but it is not a valid test of the owner speaking directly to Aura because another app was foreground.
+- Brought original Aura back to foreground; ActivityManager resolves `com.aura.ai.debug/com.aura.ai.MainActivity`. The screen remains “Ready quietly”; no final command transcript or answer has been logged. Current end-to-end voice result remains pending.
+- No code, data, settings, or permissions changed. Next: end any other voice session, speak the arithmetic phrase directly to Aura, and record visible transcript and spoken result.

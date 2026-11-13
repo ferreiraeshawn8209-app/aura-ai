@@ -365,3 +365,14 @@ Next: complete the focused Android compile/JUnit test without a prolonged uncont
 - A fresh ADB check now shows the Honor connected and original Aura top-resumed as com.aura.ai.debug/com.aura.ai.MainActivity. This supersedes the preceding observation that Chrome was foreground.
 - No owner-run test phrase/result has arrived yet. Wake recognition, transcript, local-model answer, selected-voice playback, continuous listening and interruption therefore remain unverified on the phone. No test prompt or action was initiated by the agent; app data/settings were not changed and no APK was installed.
 - Local docs were updated. The Android focused Gradle test remains incomplete; only the standalone 5-assertion policy smoke passed. No production merge.
+
+
+## Honor ASR failure and candidate route change — 2026-11-13
+
+Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura-original, HEAD 471ef9d4c34bc62758908b9efe1f5dff2af54941, no configured remote. The source changes below have not been pushed to this GitHub branch; this entry records test evidence and current installation gate.
+
+- Owner reported the Honor captured only the first word, then showed a “usage error.” Logcat during the test showed Android Speech Services requested en-US and logged “Failed to get language pack of required locale: error 13.” The device system locale is en-ZA. Aura logged 4–5 alternatives but wakePhraseDetected=false; no AI provider call or 402/429 is evidenced. The failure occurred before AI inference; the exact UI wording was not found in logs.
+- Local code changes now prioritize the regular Android system recognizer when available, keep on-device recognition as fallback, preserve bundled Vosk fallback, set EXTRA_PREFER_OFFLINE=false, and log backend/language/error code/result word count without transcript text. Saved language setting was not modified.
+- Verification: standalone routing harness passed 5/5; focused Gradle policy test passed; full :app:testDebugUnitTest passed with 766 tests, 0 failures/errors/skips across 175 XML report files. Debug APK assembly succeeded.
+- Candidate android/app/build/outputs/apk/debug/app-debug.apk SHA-256 0AB97E6B77FA4E01DC3E529C65731885AFE88EC347220CD69BF1E6C708EDFA99, package com.aura.ai.debug v1.0.0/code 1. Signature verified; signer SHA-256 59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b matches installed Aura. Installed base APK hash is D7F8322BDA43C98A2FF7099EB749ED87F3807A2301451EAF0585AA20330CFCD6. Candidate is update-compatible but not installed; prior approval applied to a different hash. No backup/install occurred. Latest foreground was Lovable, not Aura; post-fix device voice is unverified.
+- No production main change. Next: request approval for exact candidate hash, make/verify app-data backup, install in place, test phrase/transcript/spoken result/provider route, and inspect new diagnostic logs if it still truncates.

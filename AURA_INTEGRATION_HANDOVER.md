@@ -455,3 +455,9 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Filtered Android Gradle run for `HandsFreeTranscriptMergerTest`, `WakeWordDetectorTest`, and `WakeTranscriptPreviewPolicyTest`: **25 passed, 0 failed/errors/skipped** (19 + 3 + 3). These validate deterministic transcript/wake policies; they do not exercise a physical microphone.
 - Latest Honor read-only check: device connected, Honor Camera top-resumed. Two Vosk segments logged `wakePhraseDetected=false` while Aura was not foreground; no valid Aura-directed utterance or spoken answer was observed.
 - No new APK install, app setting/data change, or permission change. Candidate hash remains `5E7332DBFD0348083634F1B25598AE0CF16D7F19BABD42821A24391BF40A5A5C` and requires exact-hash install approval.
+
+### Full Android regression confirmation — 2026-11-13
+
+- Ran `:app:testDebugUnitTest --no-daemon --max-workers=1`: **770 tests across 176 suites passed, 0 failures/errors/skips**. This is automated JVM evidence, not physical-device speech acceptance.
+- `git diff --check` passed with existing Windows LF/CRLF warnings. No APK install, app-data/setting change, or permission change occurred.
+- Exact candidate remains `5E7332DBFD0348083634F1B25598AE0CF16D7F19BABD42821A24391BF40A5A5C`; it is not installed pending approval for this exact hash. The Honor's latest foreground app was Camera, so no spoken test was captured.

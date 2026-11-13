@@ -525,3 +525,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - This is a new APK hash; the Honor remains on approved 41E. No fresh approval was supplied for EFE, so it was not installed. No real cloud or Ollama request and no voice test were run for these changes. Automated mocks do not prove provider availability on the user's phone.
 - Git local source remains `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote, with pre-existing changes; source was not committed/pushed. Only this handover is being updated on `integration/aura-voice-consolidation`; production `main` remains unchanged.
 - Next: request exact-hash approval, back up app data afresh, install EFE in place, then test actual cloud success, cloud failure to local Qwen, saved Automatic selection after restart, local-only App Builder, and spoken multi-turn conversation. Record actual device results separately.
+
+
+## Final automatic online-first build verification — 2026-11-13
+
+- Final source revision rebuilt successfully: `:app:testDebugUnitTest :app:assembleDebug --no-daemon --offline --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process` (BUILD SUCCESSFUL; 32m43s). XML reports: 781 tests, 0 failures, 0 errors, 0 skipped across 176 suite files. `git diff --check` passed; local Git printed only line-ending normalization warnings.
+- Final APK: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385`. Signature verification passed. Package `com.aura.ai.debug`, label Aura AI, version 1.0.0/code 1; signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
+- This hash differs from both previously approved APKs and has NOT been installed. Honor remains on the already installed approved build with app data preserved. Obtain exact-hash approval before backup and in-place install.
+- Tests exercise provider routing with mocks only. No live cloud call, PC Ollama request, or Honor voice test was performed on this APK. Previous owner speech report described incomplete recognition/usage error; this provider-routing change does not prove transcript accuracy or actual provider connectivity.
+- Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote, with existing user edits. No source was committed/pushed; production `main` unchanged.
+- Next: after approval for B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385, back up app data, install in place without uninstall/clear-data, and verify full transcript, spoken answer, follow-up, interruption, and actual online/local provider routing on the Honor.

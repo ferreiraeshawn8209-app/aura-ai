@@ -601,3 +601,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - This verifies direct phone-to-PC local inference only, not inference through installed Aura, speech recognition, TTS, wake flow, or cloud fallback.
 - Honor still has approved APK `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`; final B7 APK awaits its own exact-hash approval. Local Git remains `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no local source commit and production `main` unchanged.
 - Next: after exact B7 approval, back up and update in place, then test the full voice/provider flow through Aura itself.
+
+
+## Voice understanding status recheck — 2026-11-13
+
+- The owner asked whether Aura understood the spoken test. The latest previously reported result was only the first word followed by a usage error; this does **not** establish successful recognition or AI processing.
+- Read-only ADB check confirmed the Honor is connected but ChatGPT is the top-resumed app, not Aura. A filtered 5,000-line log sample contained no fresh Aura wake, command-capture, provider, or request-error event. No new voice test occurred in this check, and no root cause for the reported usage error can be inferred.
+- The installed original Aura remains the user-approved `com.aura.ai.debug` APK with SHA-256 `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`. New B7 routing APK remains uninstalled and requires its own exact-hash approval.
+- No source files changed and no automated tests were run in this read-only verification. Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with existing user edits and no configured remote; no local commit or push was made.
+- Next: with other voice sessions closed, bring the original Aura app to the foreground for one test. Capture the full displayed transcript and exact usage/error message before diagnosing whether failure is in speech recognition or provider inference. Test a second turn only after the first is correct.

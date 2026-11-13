@@ -544,3 +544,13 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - No source or test changes were made in this diagnostic pass. The previously completed 781-test suite remains the automated evidence; it is not fresh device speech/provider evidence.
 - Full-sentence recognition is still unverified; the owner's prior report indicates unreliable capture. Final APK SHA-256 `B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385` is not installed. Next: obtain approval for that exact hash, back up and update in place, then capture the transcript/error/provider/response for one live test.
 - Local source checkout is still `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote; no source push/commit, production `main` unchanged.
+
+
+## HTTP 402 cloud-to-local regression test — 2026-11-13
+
+- Added test `automaticModeFallsBackToLocalAfterCloudUsageCreditsError` in `ProviderChatRouterTest.kt`. It simulates the HTTP 402 usage-credit response with Automatic routing and fallback enabled, then verifies configured local `qwen3:1.7b` returns `10` as the final result.
+- Focused command: `:app:testDebugUnitTest --tests com.aura.ai.data.remote.ProviderChatRouterTest --no-daemon --offline --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process`. Result: **14 passed, 0 failures/errors/skips**, BUILD SUCCESSFUL in 2m44s. `git diff --check` passed.
+- Test-only edit; production source and built APK unchanged. Read-only ADB SHA confirms the Honor still has approved APK `41E164EF25434FB200E2547E7CB857002880DE715709BCCA9C1F5DE218CF13D9`. New APK `B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385` remains uninstalled pending exact-hash approval.
+- This simulated case only proves local fallback when enabled and a local model is configured. It does not prove those settings, live API behavior, speech capture, or spoken response on the Honor.
+- Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote and existing user edits. Do not commit/push local source or modify `main`.
+- Next: after exact B7 hash approval, back up app data, update in place, and test one complete spoken request plus provider/error status and actual local fallback.

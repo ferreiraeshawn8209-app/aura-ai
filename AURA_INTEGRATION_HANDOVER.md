@@ -554,3 +554,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - This simulated case only proves local fallback when enabled and a local model is configured. It does not prove those settings, live API behavior, speech capture, or spoken response on the Honor.
 - Local Git remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote and existing user edits. Do not commit/push local source or modify `main`.
 - Next: after exact B7 hash approval, back up app data, update in place, and test one complete spoken request plus provider/error status and actual local fallback.
+
+
+## Full Android suite after HTTP 402 test — 2026-11-13
+
+- After adding the focused usage-credit fallback test, full `:app:testDebugUnitTest --no-daemon --offline --max-workers=1 -Pkotlin.compiler.execution.strategy=in-process` completed successfully: **782 passed, 0 failures/errors/skips across 176 suites** (1m01s). `git diff --check` passed.
+- This was test-only; APK SHA remains `B7EA9FDE535D5BA9D0FC18342F68D3875940B2D7FDAC64F366952D97A428C385`. The Honor still runs the earlier approved 41E APK. No new voice/provider test was performed on-device.
+- Exact-hash approval for B7 is still required before backup/install; then verify transcript, speech, follow-up, interruption, and actual provider fallback on the Honor.

@@ -1216,3 +1216,11 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - Read-only inspection of the local Android source shows the unset provider default is `AUTOMATIC`. Its order is configured OpenAI-compatible cloud, then configured Ollama Cloud, then local Ollama; cloud candidates are only included when their corresponding API key is saved. Provider failure cooldown and bounded route attempts are present.
 - This matches an online-first/local-fallback policy at source level. The 804 local tests pass, but live Aura app failover and recovery have not been observed. Raw Honor-to-PC Ollama inference is separate evidence and does not prove the app router.
 - No source/settings/API-key/APK/data change. Original-source Git remote remains unresolved.
+
+
+## Honor unlocked: foreground voice diagnostics — 2026-11-14 09:10 SAST
+
+- Owner confirmed unlock. Installed original com.aura.ai.debug was brought forward; UI verified Aura AI, robot skull, Hands-free ON, Tap to speak, and Ready quietly.
+- Microphone and notification permissions are granted. Android's current capture snapshot showed 16 kHz recording, silenced:false, with AEC attached. No permissions changed.
+- Live observation 09:09:07–09:10:07 recorded six Vosk finals, all wakePhraseDetected=false; foreground preview briefly showed Heard: yeah. No accepted command or spoken answer was verified. Owner's exact wake/math and no-wake follow-up result remains pending.
+- Chat still displays an Ollama HTTP 402 error. No source/APK/settings/app-data change or test rerun; diagnostic UI XML only under /data/local/tmp. Local checkout remains codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941, dirty/no remote. Next: correlate exact utterance/transcript, then isolate wake recognition from provider routing.

@@ -936,3 +936,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - Previously read phone DataStore stored `speech_voice_id=elevenlabs:2IgbPrbutSMSQWwJ9beb`, which matches neither workspace voice. This does not prove what was audibly played. No phone setting was changed; Aura's key access to either voice and real playback are untested.
 - Keep the Austrian voice marked unverified. After the multi-turn candidate is installed/tested, verify the existing user's selected Option 3 can be loaded and persisted in Aura settings, then play a device preview. Do not silently replace preferences or claim voice consistency before that check.
 - Local `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md` record the same result. No source sync/merge or `main` change.
+
+
+## PC/web voice-path automated verification — 2026-11-14
+
+- Reviewed existing `app/use-hands-free.ts` and `app/hands-free-policy.ts`. The browser flow keeps conversation mode through reply playback, starts recognition for barge-in, requires two stable non-echo partials before interrupting, buffers final command segments, and restarts recognition on browser `onend` while enabled. This is code review, not runtime proof.
+- Existing suites executed directly in-process because Node's `--test` worker harness failed before test execution with Windows `spawn EPERM`: `tools/hands-free-policy.test.mjs` 5/5; `app/simple-arithmetic.test.mjs` 24/24; `app/website-open-status.test.mjs` 3/3. Total 32/32 passed. `pnpm run typecheck` passed.
+- No web source changed. No live PC microphone, TTS audio, browser permission, or end-to-end voice conversation test. Android candidate remains pending exact-hash approval and Honor reconnect.
+- Local `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md` updated. Local checkout remains dirty `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote. No source sync/merge; production `main` unchanged.
+- Next: run live PC voice acceptance in Chrome/Edge when the Aura web app and microphone are available; separately back up/install/test the exact approved Android candidate only after approval and device reconnect.

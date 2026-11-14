@@ -1175,3 +1175,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - All 13 existing Node test files passed: **70 tests, 0 failures**. Coverage includes wake/interrupt policies, memory/search helpers, URL and scoped-file policies, and Windows control policies. No live browser mic session or fresh real desktop-control task was exercised.
 - Android local JUnit suite remains 804 passed, 0 failures/errors/skips. The Honor remains connected, but Aura's main activity is behind the notification shade; real-device conversation/follow-up/interrupt tests are not verified.
 - No app source, APK, device data, or permissions changed. Original Aura source provenance remains unresolved. Next: obtain visible Honor test results after unlock, then establish authoritative source mapping before voice-path edits.
+
+
+## Live PC companion smoke test — 2026-11-14
+
+- The existing Aura web preview responded HTTP 200 at `http://127.0.0.1:3008/` and identified itself as Aura AI.
+- The local Windows agent's read-only `list_windows` action returned 12 visible windows. No app was opened, focused, typed into, or changed in this test. This confirms one live PC-agent read path only; it is not a complete desktop-control test.
+- TypeScript typecheck passed and existing web Node tests passed 70/70. Android local JUnit remains 804/804. Honor Aura is still behind the notification shade; two-turn voice test remains pending. No source/APK/device-data change or merge.

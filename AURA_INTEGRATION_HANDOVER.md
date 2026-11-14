@@ -972,3 +972,11 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - `adb connect 192.168.8.6:43283` returned Windows connection refused (10061). Restarted the ADB server on BEATK while no device was attached, rediscovered the same endpoint, and retried; connection remained refused. No phone settings/app data changed; no logs or voice retest were obtained.
 - Current local candidate remains `com.aura.ai.debug` v1.0.0 SHA-256 `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2`; it is not installed and lacks approval for this exact hash. No source change, install, or production merge.
 - Next: refresh Wireless debugging on the Honor (off/on, same Wi-Fi as BEATK, keep the settings page open), connect to its newly advertised endpoint, then collect bounded service/ASR logs across wake, response, and one follow-up. Use that trace to fix multi-turn capture and retest before claiming success.
+
+
+## Fresh ADB endpoint retry — 2026-11-14
+
+- BEATK remains online. ADB mDNS now resolves Honor serial `AYAV6R3707021141` at `192.168.8.17:43283` (the phone IP changed from `.6` to `.17`). `adb devices -l` lists no connected phone.
+- `adb connect 192.168.8.17:43283` and a Python TCP `connect_ex` probe both returned Windows connection refused (10061). No phone settings/app data were touched; no logcat or voice retest was possible.
+- The first wake turn passed by owner report; the subsequent no-wake turn failed. Current candidate `com.aura.ai.debug` v1.0.0 SHA-256 `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2` remains uninstalled and lacks exact-hash approval.
+- No source change or test run in this check. Next: refresh Wireless debugging on the phone (off/on, same Wi-Fi as BEATK, keep the screen awake) so the advertised endpoint accepts a trusted ADB connection; then collect bounded wake/answer/follow-up logs.

@@ -683,3 +683,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Existing prompt configuration already asks for concise situational military phrasing: “Affirmative”, “Copy that”, “Roger”, “Negative”, “Standing by”; Alpha/Bravo/Charlie/Delta/Echo for spelling only; occasional “Hasta la vista, baby” after successful work. One exact pre-action acknowledgment remains “I'll be back.” Tests/source confirm instructions only, not what the TTS voice says aloud.
 - The local checkout remains codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941, with no remote and pre-existing user modifications. No local source was copied to this GitHub branch. This handover entry is a docs-only communication update; production main is unchanged.
 - Next: reconnect the Honor, back up and verify existing app data/signature, obtain approval for this exact new APK hash before installing, then test the single-utterance wake phrase, exact transcript, spoken answer, multiple turns, and interruption behavior. Do not call recognition fixed until device verification.
+
+
+## Follow-up voice wording unit checks — 2026-11-14
+
+- After the wake-handoff record, the local checkout also ran `:app:testDebugUnitTest --tests com.aura.ai.agent.AgentPromptsTest --tests com.aura.ai.voice.VoiceReplyAcknowledgementPolicyTest`: **7 passed, 0 failed/errors/skipped**.
+- These tests validate the configured “I'll be back” acknowledgement and situational military-language instructions, not physical synthesized speech, accent, or live interaction. Honor remains absent from ADB.
+- This is a docs-only GitHub handover update. The local-only APK remains SHA-256 `C2E3E2D7620FE3F64CC74674F0A75821DDCCCA4457F27B9AAAC1BCDB60EEBF40`; it has not been approved or installed. Main remains unchanged.

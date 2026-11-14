@@ -339,3 +339,11 @@ This section supersedes any earlier handover statements claiming `com.aura.ai` i
 - The writable local checkout remains a separate dirty tree at `codex/aura-original`; its Android code is under `android/app/src/main`, while this integration branch uses `app/src/main`. A separate local diagnostic APK from that checkout is not aligned with this branch and remains uninstalled. Honor still has the previously approved APK SHA-256 `44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C` (read-only pulled hash). No new source has been installed on-device.
 - Latest bounded Honor logs on the existing install showed two finalized standby recognizer results with `wakePhraseDetected=false` at 07:26:32 and 07:26:39; transcript text was not logged, Aura was backgrounded, and the owner’s exact two-turn result is still unknown. This is not a device test of the branch change.
 - Next: restore an actionable Android CI runner or build the integration branch in a verified local checkout; execute tests/build; then request exact-hash approval before backing up/installing and testing wake, follow-up, transcript, and speech. Do not use the unaligned local candidate.
+
+
+## Wake matcher verification retry — 2026-11-14
+
+- Retried GitHub Actions run #254 (run ID `43561921766`) once. Attempt 2 also failed in 3 seconds before execution; the GitHub jobs response has `logs_url=null` and `steps=null`, consistent with no runner/test execution. This remains an infrastructure blocker, not a test assertion result.
+- A standalone Java `Pattern` smoke check using the exact regex logic passed 6 cases: exact phrase, two homophone variants, merged form, incomplete phrase rejection, and non-leading phrase rejection. This is only a regex-level smoke check; the Android Kotlin/JUnit test and app build remain unexecuted on the integration source.
+- Branch code is unchanged after commits `4f159677f3b0fa2b33746b1c694624d7b2b9ad8c` (matcher) and `18d8b1db7c9c64cceaa54bb07b410282323eed64` (tests). Honor has not received this code.
+- Next: resolve GitHub Actions runner availability or otherwise build this exact integration branch in a verified environment; then run the focused test and app build before requesting exact-hash device install approval.

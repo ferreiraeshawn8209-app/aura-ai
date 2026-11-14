@@ -1188,3 +1188,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 
 - Used the live Aura local Windows agent to open Calculator. The response identified the opened app as Calculator; a subsequent read-only `list_windows` call found exactly one Calculator window. This confirms one supported low-risk app-launch path. No voice-driven routing or arbitrary desktop control is claimed. Calculator remains open.
 - No Android app source, APK, installation, or phone data changed. The Honor still needs to be unlocked with Aura visibly foregrounded for the pending two-turn hands-free test.
+
+
+## Honor-to-PC Ollama reachability check — 2026-11-14
+
+- Read-only checks show PC Wi-Fi address `192.168.8.18`, Honor Wi-Fi address `192.168.8.6`; Ollama 0.40.16 is available on the PC and lists `qwen3:1.7b` and `qwen3:4b-q4_K_M`. `ollama ps` was empty, so no model was loaded.
+- From the Honor, port 11434 was reachable and `curl http://192.168.8.18:11434/api/tags` returned both model entries. This verifies phone-to-PC discovery transport only; it does not verify Aura's saved routing or inference. No firewall/network change.
+- Original Aura remains behind the phone lock/Pictorial screen; hands-free two-turn testing remains pending. No APK/source/data changes.

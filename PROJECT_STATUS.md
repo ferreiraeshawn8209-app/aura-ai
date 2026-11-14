@@ -497,3 +497,9 @@ This section supersedes any earlier handover statements claiming `com.aura.ai` i
 - The HTTP 402 indicates a credit-gated Ollama endpoint was reached. Given saved local preference/fallback and the timing, cloud fallback after a failed or timed-out local attempt is plausible but not proven: the available device logs do not record provider-route transitions. The local checkout's 30-second voice fallback policy is from a separate, unaligned source tree and cannot be treated as the integration-branch implementation.
 - The Honor remains on installed APK SHA-256 `44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C`; no new APK installed. The most recent ADB check had the Honor launcher foreground and two standby finals logged with `wakePhraseDetected=false`; exact text is not recorded there. The new integration-branch matcher has not been built or device-tested because GitHub Actions has no runner/job steps.
 - Next: resolve integration-branch build/test execution, then test its cloud/local routing and voice flow on the Honor with explicit route diagnostics that do not expose keys or store unapproved transcripts. Reconcile which app build is actually installed before any install approval; do not use the unaligned local candidate.
+
+
+## Latest Honor observation — 2026-11-14
+
+- The background WakeWordService is active while the Honor launcher is foreground. Two finalized recognizer results (07:54:33 and 07:54:43 local) had `wakePhraseDetected=false`; recognized words are not logged. This does not verify the app-foreground conversation test.
+- Exact user test result remains pending. The integration-branch code/test commits are not built or installed; GitHub CI run 43561921766 stopped before a runner or steps. No change to the app or device this check.

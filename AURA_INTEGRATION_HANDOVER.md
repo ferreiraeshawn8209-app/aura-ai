@@ -928,3 +928,11 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - Candidate APK: `com.aura.ai.debug` v1.0.0/code 1; SHA-256 `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2`; `apksigner verify --print-certs` passed with signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`. This exact APK is not installed; earlier approvals were for other hashes. ADB lists no Honor.
 - No device retest was possible. The fix is not physically verified, and the previous build's follow-up failure remains outstanding. No app data changed, no APK installed, no source synced/merged, and production `main` remains unchanged.
 - Local checkout remains codex/aura-original at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote and pre-existing user edits preserved. Local handover/status/voice tests/next steps updated. Next: owner approves this exact APK hash, reconnect Honor, back up app data, verify package/signer, update in place without uninstall/data clear, then test multiple no-wake follow-ups and barge-in.
+
+
+## ElevenLabs saved voice ID mismatch — 2026-11-14
+
+- Read-only connected ElevenLabs workspace query found two saved voices: “Aura Austrian Male — Option 3” (`TqK0pPhqb2Kaoa1VWUMI`) and “Aura Austrian Male · Cinematic Deep 2” (`JqNKQLBjDVraAK8Y8G9e`). Workspace descriptions identify masculine English with Austrian German influence.
+- Previously read phone DataStore stored `speech_voice_id=elevenlabs:2IgbPrbutSMSQWwJ9beb`, which matches neither workspace voice. This does not prove what was audibly played. No phone setting was changed; Aura's key access to either voice and real playback are untested.
+- Keep the Austrian voice marked unverified. After the multi-turn candidate is installed/tested, verify the existing user's selected Option 3 can be loaded and persisted in Aura settings, then play a device preview. Do not silently replace preferences or claim voice consistency before that check.
+- Local `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md` record the same result. No source sync/merge or `main` change.

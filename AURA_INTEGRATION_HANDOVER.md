@@ -649,3 +649,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - Local source docs were updated. Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, has no configured remote and contains pre-existing dirty changes; no local commit/push. The local diagnostic source change is therefore not part of this GitHub branch. This entry records the verified local result only and does not assert source synchronization.
 - Exact previously approved APK remains SHA-256 `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8`. Installation still requires a fresh backup and signer match after Honor reconnects; do not uninstall or clear app data.
 - Next: collect device logs and exact transcript for same-utterance wake+command; if Vosk is inaccurate, evaluate a non-truncating handoff to Android SpeechRecognizer with tests. Separately verify actual spoken “I'll be back” and situational military wording on the Honor. No change to main or merge.
+
+
+## Local Aura debug artifact build — 2026-11-14
+
+- The separate active local checkout `codex/aura-original` built a debug APK with `:app:assembleDebug` (**BUILD SUCCESSFUL**): package `com.aura.ai.debug`, version 1.0.0/code 1, size 106,018,493 bytes, SHA-256 `8D822DB1088C4C0CF0310BA981C5F8BD893172E41A3EADA7C6D269CE5521B901`. APK signature verification passed; Android Debug signer certificate SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
+- This APK was built from the local checkout and has not been copied into or installed from this GitHub branch. It differs from the prior exact approved APK hash `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8`; do not install the new hash until the owner approves it. ADB still has no Honor device, so backup, installed-signature comparison, and device acceptance remain pending.
+- The same local checkout's four focused test classes passed 40/40. The handover is recording evidence across checkouts; it does not imply their source histories are synchronized. Main remains untouched.

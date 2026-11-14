@@ -1195,3 +1195,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - Read-only checks show PC Wi-Fi address `192.168.8.18`, Honor Wi-Fi address `192.168.8.6`; Ollama 0.40.16 is available on the PC and lists `qwen3:1.7b` and `qwen3:4b-q4_K_M`. `ollama ps` was empty, so no model was loaded.
 - From the Honor, port 11434 was reachable and `curl http://192.168.8.18:11434/api/tags` returned both model entries. This verifies phone-to-PC discovery transport only; it does not verify Aura's saved routing or inference. No firewall/network change.
 - Original Aura remains behind the phone lock/Pictorial screen; hands-free two-turn testing remains pending. No APK/source/data changes.
+
+
+## Honor-originated local Qwen inference — 2026-11-14
+
+- From the Honor shell, sent Ollama `/api/chat` to PC `192.168.8.18:11434` with `qwen3:1.7b`, `think:false`, `keep_alive:0`, and a small token cap. The model returned `5 + 5 = 10` in about 16.3 seconds. This verifies direct phone-to-PC local inference, not Aura's app-level router or voice pipeline.
+- Curl reported a header-argument parsing warning (`Could not resolve host: application`) while a valid model JSON response was returned. The result is a successful API smoke test with a command warning. Immediate `ollama ps` showed no model remained loaded. No firewall/network settings changed.
+- Honor is still at the lock/notification shade. In-app wake, transcript, TTS, follow-up, and barge-in remain unverified; no app source, APK, or data changed.

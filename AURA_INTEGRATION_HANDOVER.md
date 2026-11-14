@@ -1182,3 +1182,9 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - The existing Aura web preview responded HTTP 200 at `http://127.0.0.1:3008/` and identified itself as Aura AI.
 - The local Windows agent's read-only `list_windows` action returned 12 visible windows. No app was opened, focused, typed into, or changed in this test. This confirms one live PC-agent read path only; it is not a complete desktop-control test.
 - TypeScript typecheck passed and existing web Node tests passed 70/70. Android local JUnit remains 804/804. Honor Aura is still behind the notification shade; two-turn voice test remains pending. No source/APK/device-data change or merge.
+
+
+## Verified Windows Calculator launch — 2026-11-14
+
+- Used the live Aura local Windows agent to open Calculator. The response identified the opened app as Calculator; a subsequent read-only `list_windows` call found exactly one Calculator window. This confirms one supported low-risk app-launch path. No voice-driven routing or arbitrary desktop control is claimed. Calculator remains open.
+- No Android app source, APK, installation, or phone data changed. The Honor still needs to be unlocked with Aura visibly foregrounded for the pending two-turn hands-free test.

@@ -509,3 +509,10 @@ This section supersedes any earlier handover statements claiming `com.aura.ai` i
 
 - Rerun of integration-branch Android workflow `43561921766` completed in failure before executing any steps: job `132353984081` returned an empty step list and its logs were unavailable (`BlobNotFound`). No Gradle tests or APK build ran.
 - The only registered Codex environment has `cwd=null`; no verified branch checkout is available for local building. Existing dirty checkout is not the integration source and was not used.
+
+
+## Original Aura source mapping blocker — 2026-11-14
+
+- Honor has `com.aura.ai.debug` v1.0.0 installed. Local `android/app` uses the debug suffix and `Aura AI` label with Vosk wake code.
+- GitHub `integration/aura-voice-consolidation` declares `com.aura.ai`, labels the app `T1000`, and has a different platform SpeechRecognizer wake implementation. It is not yet proven to be the installed Aura's update source.
+- Local checkout is dirty and has no remote. No code/build/install was done; do not produce or install an APK until the correct original-source remote/branch is identified.

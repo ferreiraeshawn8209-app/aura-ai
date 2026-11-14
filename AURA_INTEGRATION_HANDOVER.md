@@ -722,3 +722,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - The Honor is absent from ADB. The exact APK approval F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8 remains pending backup, installed-signer checks, and physical-device speech validation; no install or device test occurred.
 - Local checkout remains separate at codex/aura-original / 471ef9d4c34bc62758908b9efe1f5dff2af54941, no remote, with pre-existing dirty user changes preserved. No source sync, local commit, or main-branch change.
 - Next: reconnect Honor, perform backup/package/signer checks, install only the approved exact hash if compatible, then record exact transcript and speech for one action and one direct question. If model output still violates the wording prompt, evaluate a narrowly scoped response policy based on actual observed output.
+
+
+## Wake acknowledgement implementation and local APK verification — 2026-11-14
+
+- In the separate local checkout, changed the wake reply to one central “Standing by. Go ahead.” string; `WakeWordService` uses the shared policy constant. The pre-action acknowledgement remains “I'll be back.” This code is not present on this GitHub branch because local and remote source histories remain separate.
+- Local Android suite passed: 792 tests / 0 failures, errors, or skips. Debug APK built and signature-verified: package com.aura.ai.debug v1.0.0/code 1, SHA-256 4856A5FA0D6062669B57BC6F6FA0EC40513D742266AD7FDBB84F45BEBCDFAF60, signer SHA-256 59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b.
+- No Honor in ADB; no backup, install, or physical TTS/voice test occurred. Prior install approval was for a different APK hash, so this artifact remains uninstalled and requires its own approval after device/package/signer checks.
+- Local branch codex/aura-original remains at 471ef9d4c34bc62758908b9efe1f5dff2af54941, no remote and pre-existing dirty changes preserved. This handover update is docs-only on integration/aura-voice-consolidation; no code sync or main-branch change.
+- Next: reconnect Honor and verify backups/signature, obtain approval for the exact new APK if needed, then test wake reply, full transcript, two-way turns, barge-in, Austrian voice and local/cloud routing. The PC Settings page previously reported the saved ElevenLabs key was rejected.

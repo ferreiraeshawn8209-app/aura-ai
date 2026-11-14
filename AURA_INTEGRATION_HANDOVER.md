@@ -908,3 +908,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - No new phone test was possible in this update. The retry fix is not device-verified. The previous installed build's first-turn transcript and spoken answer (“10”) passed by owner report; its next-turn continuity failed by owner report.
 - Local checkout: `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`; no configured remote and pre-existing user edits preserved. No local commit/push or source sync. This GitHub update is documentation-only; production `main` remains unchanged.
 - Next: after exact-hash approval and Honor reconnection, make a fresh private-data backup, verify installed package/signature, update in place without uninstall/data clear, then test two or more consecutive turns without repeating the wake phrase and capture bounded ASR logs if a turn fails.
+
+
+## Candidate verification rerun — 2026-11-14
+
+- Re-ran the focused voice recovery suites with `--rerun-tasks` (not a test-cache hit): 9 tests passed, 0 failures/errors/skips. Gradle took 6m58s because Windows denied Kotlin daemon temporary marker files and Gradle compiled using its in-process fallback.
+- Rechecked the candidate artifact: SHA-256 remains `E2ADEC373945565A797E98851C14CDC04748FDC0A0DF047572BA4B214EFDE7FE`; package is `com.aura.ai.debug` v1.0.0/code 1; `apksigner verify --print-certs` passed with signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
+- This is automated/artifact verification only. ADB lists no Honor; this exact candidate remains uninstalled pending exact-hash approval. The installed build passed one owner-reported first turn, then failed its no-wake follow-up; recovery is not device-verified.
+- Local handover, status, voice tests, and next steps were updated. Local checkout is still separate/dirty at `codex/aura-original` HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote. No source sync, merge, or change to production `main`.
+- Next: get approval for this exact APK hash, reconnect the Honor, make a fresh private-data backup and verify package/signer, then update in place without clearing data and retest consecutive turns and interruption.

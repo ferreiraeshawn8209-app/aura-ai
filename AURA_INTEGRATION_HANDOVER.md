@@ -964,3 +964,11 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - ADB currently reports no connected Honor, so no logcat for this event was available. The local quiet-retry candidate SHA-256 is `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2`; it remains uninstalled and lacks approval for this exact hash. No install attempted.
 - This is a handover-only update; no Android source, settings, app data, APK, or `main` branch was changed. Local source checkout remains dirty `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a configured remote.
 - Next: reconnect the Honor and capture bounded `WakeWordService`/`AuraSpeechToText` logs across wake, answer playback, and the next no-wake utterance. Identify whether command capture starts, Android ASR becomes ready, speech is detected, and which final/error/timeout/service event occurs. Fix the observed transition, then back up and install only after exact-hash approval; retest multiple consecutive turns.
+
+
+## Honor wireless ADB reconnection attempt — 2026-11-14
+
+- BEATK is online through the authorized Remote Desktop Commander. Read-only `adb devices -l` showed no connected Honor. `adb mdns services` discovered device serial `AYAV6R3707021141` advertising `_adb-tls-connect._tcp` at `192.168.8.6:43283`.
+- `adb connect 192.168.8.6:43283` returned Windows connection refused (10061). Restarted the ADB server on BEATK while no device was attached, rediscovered the same endpoint, and retried; connection remained refused. No phone settings/app data changed; no logs or voice retest were obtained.
+- Current local candidate remains `com.aura.ai.debug` v1.0.0 SHA-256 `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2`; it is not installed and lacks approval for this exact hash. No source change, install, or production merge.
+- Next: refresh Wireless debugging on the Honor (off/on, same Wi-Fi as BEATK, keep the settings page open), connect to its newly advertised endpoint, then collect bounded service/ASR logs across wake, response, and one follow-up. Use that trace to fix multi-turn capture and retest before claiming success.

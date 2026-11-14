@@ -690,3 +690,8 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - After the wake-handoff record, the local checkout also ran `:app:testDebugUnitTest --tests com.aura.ai.agent.AgentPromptsTest --tests com.aura.ai.voice.VoiceReplyAcknowledgementPolicyTest`: **7 passed, 0 failed/errors/skipped**.
 - These tests validate the configured “I'll be back” acknowledgement and situational military-language instructions, not physical synthesized speech, accent, or live interaction. Honor remains absent from ADB.
 - This is a docs-only GitHub handover update. The local-only APK remains SHA-256 `C2E3E2D7620FE3F64CC74674F0A75821DDCCCA4457F27B9AAAC1BCDB60EEBF40`; it has not been approved or installed. Main remains unchanged.
+
+
+## Local wake-handoff task file inventory
+
+Local-only code files changed for this update: `android/app/src/main/java/com/aura/ai/voice/wake/WakeWordSpeechPolicy.kt`, `android/app/src/main/java/com/aura/ai/voice/WakeWordService.kt`, and `android/app/src/test/java/com/aura/ai/voice/wake/WakeWordSpeechPolicyTest.kt`. Local status documents updated: `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md`. No source synchronization or production-main modification.

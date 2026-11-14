@@ -503,3 +503,9 @@ This section supersedes any earlier handover statements claiming `com.aura.ai` i
 
 - The background WakeWordService is active while the Honor launcher is foreground. Two finalized recognizer results (07:54:33 and 07:54:43 local) had `wakePhraseDetected=false`; recognized words are not logged. This does not verify the app-foreground conversation test.
 - Exact user test result remains pending. The integration-branch code/test commits are not built or installed; GitHub CI run 43561921766 stopped before a runner or steps. No change to the app or device this check.
+
+
+## CI retry result — 2026-11-14
+
+- Rerun of integration-branch Android workflow `43561921766` completed in failure before executing any steps: job `132353984081` returned an empty step list and its logs were unavailable (`BlobNotFound`). No Gradle tests or APK build ran.
+- The only registered Codex environment has `cwd=null`; no verified branch checkout is available for local building. Existing dirty checkout is not the integration source and was not used.

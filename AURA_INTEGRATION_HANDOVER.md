@@ -1014,3 +1014,12 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - ADB lists no connected Honor. mDNS advertises `AYAV6R3707021141` at `192.168.8.6:43283`; connecting to that endpoint is refused (10061). No phone logs, backup, install, or settings change occurred.
 - Candidate `com.aura.ai.debug` SHA-256 `44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C` remains uninstalled and without approval for this exact hash. Previous automated evidence is 803/803 Android JVM tests plus successful APK assembly; continuous multi-turn voice remains unverified on device and failed on the previously installed build.
 - No source changed and no tests reran. Local source remains dirty `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no remote; no local source commit/sync or production merge. Next: restore ADB connectivity, obtain exact-hash approval, back up app data, verify package/signer, update in place, then test two consecutive no-wake follow-ups with bounded service/ASR logs.
+
+
+## Voice output consistency check and approved APK connection attempt — 2026-11-14
+
+- Corrected a stale comment in `WakeWordService.kt`: the selected ElevenLabs voice reports a failure and does not fall back to Android TTS. No runtime behavior changed.
+- Focused `SpeechOutputFallbackPolicyTest`: 2 passed, 0 failures/errors/skips. Gradle test completed in 6m48 using compiler fallback after a Kotlin daemon temp-marker access denial; `git diff --check` passed. No APK rebuild was needed for a comment-only source edit.
+- Owner explicitly approved candidate `com.aura.ai.debug` SHA-256 `44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C` and refreshed Wireless debugging. BEATK mDNS advertises `192.168.8.6:43283`, but `adb connect` returns Windows error 10061 (connection refused). No backup, install, or phone retest yet.
+- No runtime code changed; local documentation and the stale comment changed. Local checkout remains dirty `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote; no source sync/merge and `main` remains unchanged.
+- Next: pair ADB using the Honor's Wireless debugging “Pair device with pairing code” endpoint/code or connect by USB. Then back up Aura data, verify package/signature, install the approved APK in place, and test consecutive no-wake follow-ups plus logs.

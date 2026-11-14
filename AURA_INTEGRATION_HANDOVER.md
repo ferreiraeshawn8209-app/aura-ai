@@ -817,3 +817,13 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - No source or app settings changed. Local checkout remains separate branch `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no configured remote and dirty user edits preserved. No source copied or merged to GitHub; `main` unchanged.
 - Honor remains absent in ADB; no backup/install/device voice test. Exact previously approved APK `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8` was not found among workspace APKs; current artifact differs and is not approved.
 - Next: reconnect Honor and provide the exact approved APK artifact or approve the exact current hash; back up data and verify installed signer before updating in place. Then verify on-device wake, transcript, spoken answer, turn-taking, interruption, and local route. Cloud failover/recovery remains pending authorized credentials and tests.
+
+
+## Android speech phrase-bias improvement — 2026-11-14
+
+- Added full arithmetic request variants to `SpeechRecognitionBiasPolicy` (“what is five plus five?”, “what's five plus five?”, plus numeric forms) so Android SpeechRecognizer receives the complete utterance as contextual bias hints. This may improve ranking; it is not proof or a guaranteed fix for spoken recognition.
+- Changed local source/test files: `android/app/src/main/java/com/aura/ai/voice/SpeechRecognitionBiasPolicy.kt`, `android/app/src/test/java/com/aura/ai/voice/SpeechRecognitionBiasPolicyTest.kt`. Local docs also updated (`AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, `NEXT_STEPS.md`).
+- Focused test: 2/2 passed. Full `:app:testDebugUnitTest --offline --max-workers=1`: 798 tests / 177 suites passed, 0 failures/errors. APK build succeeded and signature verified: `com.aura.ai.debug` v1.0.0/code 1, SHA-256 `C92B15DC41071F910D39CB434A3DC5074234C109F905D6CC5EEB942FF8A7ABD2`, signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
+- ADB lists no Honor. The previously approved artifact SHA `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8` was not found. This new APK is a different hash and was not installed; no device transcript/audio result.
+- Local checkout remains separate branch `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no configured remote, with extensive pre-existing user edits; no source sync, merge or push. `main` unchanged.
+- Next: reconnect Honor; get the exact approved APK or approve the new exact hash. Back up and verify signer/package before in-place installation, then test the phrase, visible transcript, spoken result, multi-turn conversation, interruption and actual voice. Keep this improvement marked unverified until then.

@@ -1063,3 +1063,12 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - The candidate APK was built from available local dirty checkout `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`; this source has not been reconciled with GitHub's source-of-truth branch, so do not install the candidate until source alignment is verified. The local checkout has no configured remote; no local commit or main merge. This GitHub write is handover-only on `integration/aura-voice-consolidation`.
 - Device status: prior approved install/data/signature checks passed. Earlier wake-service logs showed ASR finals without a wake match and omitted recognized words. Owner's requested two-turn report remains pending; wake detection, transcript accuracy and continuous follow-up are not claimed fixed.
 - Next: record the exact two-turn transcript/answers; request approval for this candidate hash; back up data and verify package/signature before any in-place install; then retest one-wake plus follow-up. If it still fails, capture visible transcript and bounded voice-state logs.
+
+
+## Follow-up ADB observation — 2026-11-14
+
+- ADB still sees the Honor. A read-only pull of installed `com.aura.ai.debug` base APK matches SHA-256 `44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C`; the new diagnostic candidate is not installed.
+- Latest resumed activity was the Honor launcher, not Aura. A bounded logcat sample showed two finalized `WakeWordService` speech results (`alternatives=1`, `wakePhraseDetected=false`) at 07:26:32 and 07:26:39. No wake-to-command handoff appeared. Logs omit recognized text, so these events cannot establish the exact transcript or whether they correspond to the owner's requested utterance.
+- This adds evidence that the background listener received speech but did not match the wake phrase in those two events. It does not verify the owner's first/second spoken answer, exact transcript, or cause. Because Aura was not foreground, its local visible `Heard:` preview would not show.
+- GitHub integration source layout was checked read-only: Android code is under `app/src/main/...`, while the writable local checkout used for the candidate has code under `android/app/src/main/...`. Do not install the candidate until the correct integration source is reconciled and rebuilt.
+- Next: capture the owner's exact two-turn result. For visible transcript diagnostics, bring original Aura foreground and repeat the test, then trace bounded events. Do not install the unaligned candidate.

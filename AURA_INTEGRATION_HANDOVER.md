@@ -917,3 +917,14 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - This is automated/artifact verification only. ADB lists no Honor; this exact candidate remains uninstalled pending exact-hash approval. The installed build passed one owner-reported first turn, then failed its no-wake follow-up; recovery is not device-verified.
 - Local handover, status, voice tests, and next steps were updated. Local checkout is still separate/dirty at `codex/aura-original` HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote. No source sync, merge, or change to production `main`.
 - Next: get approval for this exact APK hash, reconnect the Honor, make a fresh private-data backup and verify package/signer, then update in place without clearing data and retest consecutive turns and interruption.
+
+
+## Quiet retry after detected follow-up speech — 2026-11-14
+
+- The owner reported that the installed original Aura completed one wake/math turn correctly, then stopped listening or did not answer the next turn. The installed build still fails multi-turn acceptance.
+- Implemented a quiet single retry if speech was detected but Android ASR returns no usable transcript; Aura delays speaking “didn't catch that” until the retry has failed. A no-speech timeout continues to report immediately. The retry preserves active conversation state and does not require another wake phrase.
+- Changed files: `android/app/src/main/java/com/aura/ai/voice/WakeWordService.kt`, `VoiceCommandCapturePolicy.kt`, test `VoiceCommandCapturePolicyTest.kt`; prior recovery changes remain in `SpeechToText.kt` and `OfflineSpeechFallbackPolicy.kt`.
+- Tests: focused voice-recovery suites executed, 10 passed/0 failed/errors/skips; full Android JVM suite 802 tests across 177 suites passed/0 failed/errors/skips. `:app:assembleDebug --offline --max-workers=1 --project-prop=kotlin.compiler.execution.strategy=in-process` passed. `git diff --check` passed for changed source/docs.
+- Candidate APK: `com.aura.ai.debug` v1.0.0/code 1; SHA-256 `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2`; `apksigner verify --print-certs` passed with signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`. This exact APK is not installed; earlier approvals were for other hashes. ADB lists no Honor.
+- No device retest was possible. The fix is not physically verified, and the previous build's follow-up failure remains outstanding. No app data changed, no APK installed, no source synced/merged, and production `main` remains unchanged.
+- Local checkout remains codex/aura-original at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no remote and pre-existing user edits preserved. Local handover/status/voice tests/next steps updated. Next: owner approves this exact APK hash, reconnect Honor, back up app data, verify package/signer, update in place without uninstall/data clear, then test multiple no-wake follow-ups and barge-in.

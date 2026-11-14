@@ -808,3 +808,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - This local source checkout remains separate, dirty, and without a configured remote: branch `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`. No code was copied or merged to this GitHub branch; `main` unchanged.
 - PC safety tests: desktop control policy 4/4, website URL validation 3/3, scoped user file handling 8/8 (15 passed, 0 failed). Military prompt/ack policy test 7/7; device audio remains unverified.
 - Next: reconnect the Honor. Locate the exact approved artifact only if its provenance is clear, back up app data and verify package/signer before in-place installation. Otherwise obtain approval for the new exact APK hash. Then validate wake capture, full transcript, spoken answer, multiple turns, interruption, actual selected voice and phone-to-PC actions.
+
+
+## Live local Ollama inference verification — 2026-11-14
+
+- Aura PC `GET /api/ollama/models` returned `serverOnline=True` and models `qwen3:1.7b`, `qwen3:4b-q4_K_M`. Local Ollama `/api/tags` agreed.
+- Sent a simple arithmetic prompt through the live Aura PC route `POST http://127.0.0.1:3008/api/ollama/chat` with `qwen3:1.7b`. HTTP 200 streamed “10”. Ollama reported 7.01 seconds total, 5.46 seconds model load, 1.32 seconds prompt evaluation, and 0.23 seconds generation. The request asked to unload after response; subsequent `ollama ps` showed no loaded model. This confirms PC-local inference only, not cloud fallback or Android.
+- No source or app settings changed. Local checkout remains separate branch `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no configured remote and dirty user edits preserved. No source copied or merged to GitHub; `main` unchanged.
+- Honor remains absent in ADB; no backup/install/device voice test. Exact previously approved APK `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8` was not found among workspace APKs; current artifact differs and is not approved.
+- Next: reconnect Honor and provide the exact approved APK artifact or approve the exact current hash; back up data and verify installed signer before updating in place. Then verify on-device wake, transcript, spoken answer, turn-taking, interruption, and local route. Cloud failover/recovery remains pending authorized credentials and tests.

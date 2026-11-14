@@ -1137,3 +1137,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - This identity conflict supersedes the prior assumption that the integration branch can safely generate the installed Aura update. Before further code changes, confirm a verified remote/branch for the installed original Aura or explicitly decide whether the T1000-labelled `com.aura.ai` branch is intended to become the primary app. Do not install it beside/over `com.aura.ai.debug` before package, signing, resources, and database compatibility are verified.
 - Tests/build: none in this identity audit. Latest Android Actions retry failed before steps (run `43561921766`, job `132353984081`).
 - Next: resolve the source mapping, then compare signer, app ID, database, icon/label, wake engine, and settings before building a verified in-place update. No production merge.
+
+
+## Original Aura remote provenance search — 2026-11-14
+
+- The local installed-app source under `T1000-main/android/app` has local-only Git history and no remote; its baseline commit was created as `Codex Local Project`. The timestamped source backup contains no `.git/config`. This GitHub repo's integration branch is explicitly identified in its own source as T1000 and is not the original Aura's verified update source.
+- Read-only GitHub search also found `spokdot777-dot/aura-ai`, an older `AURA AI` prototype with package base `com.aura.ai`. Its README describes hotword support as a future phase, and no history/source evidence ties it to the installed Vosk-based `com.aura.ai.debug` application. Do not treat it as verified original source.
+- No app source was changed, built, or installed. Next: owner or repository records must identify the existing remote/branch that corresponds to the installed original Aura; then reconcile source history, package/signing, UI/resources, and databases before an update build. Keep this integration branch and `main` unchanged for app code until that mapping is known.

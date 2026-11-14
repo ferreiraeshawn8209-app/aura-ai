@@ -838,3 +838,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - The exact previously approved APK `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8` was not found in the workspace. Current APK has a different hash and is not authorized for installation. ADB sees no Honor; no backup/install or phone speech/model test occurred.
 - Local source checkout is separate, dirty, and has no remote: `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`. No local commit or code sync/merge; production `main` unchanged.
 - Next: reconnect Honor; obtain the exact approved artifact or approval for the current hash; back up data and verify the installed signer/package before updating in place. Then confirm model list and run wake, transcript, answer, turn-taking, interruption, actual voice and cloud-fallback checks on the phone.
+
+
+## Approved APK install attempt — 2026-11-14
+
+- Owner approved exact APK SHA-256 `CB1FC0A2C75BF3EC979BF53FD2119815A2B1C253DD966202789673EA859A433D`, package `com.aura.ai.debug` v1.0.0/code 1, signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`. Approval is conditional on backing up existing Aura app data and verifying package/signature, then updating in place; it does not authorize uninstall or data clearing.
+- Rechecked `adb devices -l` after the owner said they would reconnect the Honor. ADB listed no devices. No backup, install, app launch, or real-device test occurred. The exact approved APK remains available at `android/app/build/outputs/apk/debug/app-debug.apk`; its hash, package, and signer were reverified in the local workspace.
+- Automated evidence remains the latest full Android JVM run: 798 tests across 177 suites, 0 failures/errors/skips; APK assembly/signature verification passed. These results do not verify install compatibility or device voice behavior.
+- Local source checkout remains separate at `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no configured remote and pre-existing user edits preserved. No source code was changed, copied, or merged here; production `main` is unchanged.
+- Next: reconnect the Honor, identify the installed Aura package and signer, create and integrity-check a fresh private-data backup, and update only with the exact approved APK. Then verify data retention, model discovery, wake, full transcript, spoken answer, follow-up turn, and interruption on the phone. Do not substitute another APK hash.

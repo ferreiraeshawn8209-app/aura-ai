@@ -1,3 +1,10 @@
+## Full regression rerun and pending candidate install — 2026-11-14
+
+- After the active-session ASR recovery changes, full Android JVM regression passed: **801 tests across 177 suites, 0 failures/errors/skips**. Focused recovery tests passed 9/9. `:app:assembleDebug --offline --max-workers=1` succeeded.
+- Candidate remains `com.aura.ai.debug` v1.0.0, SHA-256 `E2ADEC373945565A797E98851C14CDC04748FDC0A0DF047572BA4B214EFDE7FE`, signer verified. The previous approval does not cover this new hash; owner approval requested. No install performed.
+- ADB now lists no Honor, so device retest awaits exact-hash approval and reconnect. The failure on the currently installed build remains: wake/math first turn passed, next no-wake utterance returned Android no-match.
+- Local handover/status/test/next-step docs were updated. Local source is still a separate dirty worktree; no code sync/merge and `main` unchanged.
+
 ## Honor follow-up no-match recovery candidate — 2026-11-14
 
 - Owner reported that after a successful wake/math turn, Aura failed on the next utterance. Honor logs show platform ASR detected speech and end-of-speech, then returned `ERROR_NO_MATCH` (code 7). Source trace found that ended-session handling discarded the partial and returned to Vosk instead of retrying full command capture.

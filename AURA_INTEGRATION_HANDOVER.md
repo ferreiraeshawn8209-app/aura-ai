@@ -1,3 +1,14 @@
+## Approved Honor installation and one-turn voice check — 2026-11-14
+
+- Owner approved exact APK SHA-256 `BBCF723A51AE1BFCB50672A9C39DF0B41AD942F7723FBA4B3E0D51C148CF0EF1`, package `com.aura.ai.debug` v1.0.0/code 1. Honor ADB device `AYAV6R3707021141` reconnected.
+- Before installation, backed up Aura private data to `backups/aura-com.aura.ai.debug-20261114-050014.tar.gz` (365,653 bytes, 128 readable entries, includes Room database and shared preferences) and saved the pre-install APK. Verified installed package/version and signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b` matched the approved APK.
+- Ran `adb install -r`; Android returned `Success`. No uninstall or data clear. After update, `t1000_database`, WAL/SHM, and saved preferences were present. Pulled installed APK SHA-256 exactly matches the approved artifact; signer verification passed.
+- Owner completed one physical-device test in the original Aura: wake phrase/question produced a correct transcript and spoken answer “10.” This verifies one wake-to-transcript-to-answer turn only; repeated turns, interruption, five-minute conversation, and sustained hands-free listening remain unverified.
+- Android created Aura `MainActivity`; Chrome was top-resumed shortly afterward, so stable foreground rendering is not confirmed by ADB. The owner did report the voice test from Aura, so the single turn passed at the user level.
+- Automated evidence for this APK: Android JVM suite 799 tests across 177 suites passed (0 failures/errors/skips); debug assembly passed. Physical-device speech acceptance is reported separately above.
+- Local source checkout is `codex/aura-original`, HEAD `471ef9d4c34bc62758908b9efe1f5dff2af54941`, no configured remote and pre-existing user work. This GitHub handover update is documentation-only; no source sync or merge, and `main` remains unchanged.
+- Next: test at least one follow-up turn and interruption; verify stable foreground display and selected voice. If either fails, capture relevant logs and diagnose before another APK. Preserve current data and backup.
+
 ## Workspace/GitHub reconciliation and local Qwen runtime check — 2026-11-14
 
 - Read the connected GitHub repository read-only. The canonical integration branch is present at `97dfa28541edd2f44f025ae888b3d69238a10850` (2026-11-13 06:25 UTC). GitHub comparison reports `integration/aura-voice-consolidation` is 182 commits ahead and 5 behind `main`; no merge or source sync was attempted.

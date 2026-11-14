@@ -695,3 +695,12 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 ## Local wake-handoff task file inventory
 
 Local-only code files changed for this update: `android/app/src/main/java/com/aura/ai/voice/wake/WakeWordSpeechPolicy.kt`, `android/app/src/main/java/com/aura/ai/voice/WakeWordService.kt`, and `android/app/src/test/java/com/aura/ai/voice/wake/WakeWordSpeechPolicyTest.kt`. Local status documents updated: `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md`. No source synchronization or production-main modification.
+
+
+## PC runtime voice readiness evidence — 2026-11-14
+
+- Read-only inspection of the current Aura PC page at `http://127.0.0.1:3008/`: HTTP 200, correct Aura title, page rendered. UI showed hands-free enabled, Ollama ready, local model `qwen3:1.7b`, and two local models found.
+- Settings reported `ElevenLabs rejected the saved API key` and the selected custom voice unavailable. The Austrian voice is not verifiably available on the PC until the owner replaces the rejected key directly in Aura Settings and loads/previews the saved voice. No key was inspected or changed; no alternate voice was selected.
+- `pnpm.cmd typecheck` passed. Focused web tests (`simple-arithmetic`, `website-open-status`, and `local-request-policy`) passed **32/32**. No live microphone, spoken response, barge-in, or Android phone test was performed.
+- Honor remained absent from ADB; no install or data action. No local source code changed or synced. The local checkout is still `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote and existing dirty user work. Main is unchanged.
+- Next: owner corrects the ElevenLabs credential inside Aura Settings. Reconnect Honor, preserve and verify its data/signature, obtain exact approval for the current APK hash if testing that build, then conduct real voice acceptance.

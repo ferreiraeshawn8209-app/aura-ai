@@ -731,3 +731,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - No Honor in ADB; no backup, install, or physical TTS/voice test occurred. Prior install approval was for a different APK hash, so this artifact remains uninstalled and requires its own approval after device/package/signer checks.
 - Local branch codex/aura-original remains at 471ef9d4c34bc62758908b9efe1f5dff2af54941, no remote and pre-existing dirty changes preserved. This handover update is docs-only on integration/aura-voice-consolidation; no code sync or main-branch change.
 - Next: reconnect Honor and verify backups/signature, obtain approval for the exact new APK if needed, then test wake reply, full transcript, two-way turns, barge-in, Austrian voice and local/cloud routing. The PC Settings page previously reported the saved ElevenLabs key was rejected.
+
+
+## Windows desktop agent live smoke check — 2026-11-14
+
+- In the separate local checkout, Aura's PC preview at http://127.0.0.1:3008/ returned HTTP 200. The existing local Windows-control GET returned 175 Start-menu apps, 8 visible windows, and phonePaired=false. ADB lists no Honor.
+- Via the existing Windows-control route, opened Calculator; the API returned opened=Calculator and a fresh window snapshot found one Calculator window. Read-only UI Automation inspection returned 37 controls and visible text. A history-flyout invocation returned verified=false, so that state change is not claimed verified.
+- Closed the test Calculator window; a fresh snapshot found zero Calculator windows. This confirms only basic PC app open/close and read-only inspect in the current desktop session; phone pairing, browser workflows, file changes, speech-triggered actions, and other app operations remain untested.
+- No source code changed and no automated tests ran in this runtime check. Local handover/status/next-steps updated. Local branch codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 has no configured remote and retains user changes; no code synchronization, local commit, install, or main-branch change.
+- Next: enable private pairing from Aura on PC and original Aura Android, reconnect ADB, back up/verify the app before any newly approved APK install, then test an actual phone-originated PC action and the remaining real-device voice functions.

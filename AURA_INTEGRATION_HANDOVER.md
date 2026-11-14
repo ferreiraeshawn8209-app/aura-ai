@@ -740,3 +740,13 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - Closed the test Calculator window; a fresh snapshot found zero Calculator windows. This confirms only basic PC app open/close and read-only inspect in the current desktop session; phone pairing, browser workflows, file changes, speech-triggered actions, and other app operations remain untested.
 - No source code changed and no automated tests ran in this runtime check. Local handover/status/next-steps updated. Local branch codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 has no configured remote and retains user changes; no code synchronization, local commit, install, or main-branch change.
 - Next: enable private pairing from Aura on PC and original Aura Android, reconnect ADB, back up/verify the app before any newly approved APK install, then test an actual phone-originated PC action and the remaining real-device voice functions.
+
+
+## Private PC-to-Android pairing session — 2026-11-14
+
+- In the separate local Aura runtime, created a session-only Windows listener on private LAN address 192.168.8.18:3002 through the app's existing pair-phone route. No firewall rule or public Ollama exposure was added.
+- An unauthenticated request received HTTP 403; a request carrying the generated bearer received HTTP 200 and the read-only desktop list (175 apps, 10 windows). This verifies the listener and gate, but not Android-side pairing: the Honor is absent from ADB and has not entered the code.
+- The one-time bearer was shared directly with the owner and is intentionally omitted from this handover. It is valid only while the PC Aura runtime remains active; recreate/revoke via PC Settings after restart/as needed.
+- A first HTTP probe used the environment's configured local proxy and failed; proxy-bypassed LAN probes produced the 403/200 results above.
+- No Android settings, app code, APK, or user data changed; no voice/device test. Local docs updated; local branch codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 has no remote and retains user changes. Docs-only update on this integration branch; no code sync or main change.
+- Next: enter PC address 192.168.8.18, port 3002, and the code already supplied to the owner in original Aura > Settings > Windows desktop agent, then run a read-only connection check from the Honor.

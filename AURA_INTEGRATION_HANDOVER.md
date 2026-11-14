@@ -955,3 +955,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - Preview process ownership/lifecycle was not verified. A start attempt failed due to argument parsing; direct Next startup hit `spawn EPERM`, and elevated startup reported port 3008 already occupied. A direct GET/browser render succeeded. No code or user data changed.
 - Local handover/status/voice-tests/next-steps updated. Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no remote and existing user changes. No source sync/merge; `main` unchanged.
 - Next: verify a stable PC preview process, run browser mic/TTS/wake/follow-up/interruption acceptance with browser permission, and keep Android install/device tests gated on exact-hash APK approval plus Honor reconnection.
+
+
+## Owner-reported follow-up failure — 2026-11-14
+
+- Owner reports the first wake-to-answer turn passed, but the next question without repeating “Yo, yo, yo” stopped listening or produced no response. Continuous conversation remains failed on the installed build.
+- The existing code is intended to hand off to a fresh platform speech capture after every completed answer while the wake session remains active. Unit tests cover follow-up command routing but do not exercise the Android microphone/service handoff between turns.
+- ADB currently reports no connected Honor, so no logcat for this event was available. The local quiet-retry candidate SHA-256 is `B1AB27C66BAB518A1C1D0A57D11FA0CADE096246A7CDE0708DBC5272499BF0B2`; it remains uninstalled and lacks approval for this exact hash. No install attempted.
+- This is a handover-only update; no Android source, settings, app data, APK, or `main` branch was changed. Local source checkout remains dirty `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, without a configured remote.
+- Next: reconnect the Honor and capture bounded `WakeWordService`/`AuraSpeechToText` logs across wake, answer playback, and the next no-wake utterance. Identify whether command capture starts, Android ASR becomes ready, speech is detected, and which final/error/timeout/service event occurs. Fix the observed transition, then back up and install only after exact-hash approval; retest multiple consecutive turns.

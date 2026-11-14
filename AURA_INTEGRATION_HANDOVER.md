@@ -713,3 +713,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - No app source changed in this continuation. Local branch `codex/aura-original` remains at `471ef9d4c34bc62758908b9efe1f5dff2af54941` without a configured remote and with pre-existing user edits.
 - Physical Honor testing remains pending: ADB lists no device. No new install or data operation. The current local APK SHA remains `C2E3E2D7620FE3F64CC74674F0A75821DDCCCA4457F27B9AAAC1BCDB60EEBF40`, not approved for installation.
 - PC Settings still reports the saved ElevenLabs key rejected, so the Austrian voice remains unavailable there; replace it only inside Aura Settings. No credential was read or changed. Production main untouched.
+
+
+## Military wording follow-up — 2026-11-14
+
+- Reviewed the active local Aura source. The action acknowledgement is deterministically “I'll be back”; the system prompt already permits concise situational military wording (“Affirmative”, “Copy that”, “Roger”, “Negative”, “Standing by”), reserves Alpha/Bravo/Charlie/Delta/Echo for spelling, and allows “Hasta la vista, baby” occasionally only after a successful task. No code change was needed.
+- Focused automated tests passed: AgentPromptsTest 5/5 and VoiceReplyAcknowledgementPolicyTest 2/2. These verify configured instructions, not synthesized speech or actual use by the model.
+- The Honor is absent from ADB. The exact APK approval F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8 remains pending backup, installed-signer checks, and physical-device speech validation; no install or device test occurred.
+- Local checkout remains separate at codex/aura-original / 471ef9d4c34bc62758908b9efe1f5dff2af54941, no remote, with pre-existing dirty user changes preserved. No source sync, local commit, or main-branch change.
+- Next: reconnect Honor, perform backup/package/signer checks, install only the approved exact hash if compatible, then record exact transcript and speech for one action and one direct question. If model output still violates the wording prompt, evaluate a narrowly scoped response policy based on actual observed output.

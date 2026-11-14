@@ -1,3 +1,12 @@
+## Honor follow-up no-match recovery candidate — 2026-11-14
+
+- Owner reported that after a successful wake/math turn, Aura failed on the next utterance. Honor logs show platform ASR detected speech and end-of-speech, then returned `ERROR_NO_MATCH` (code 7). Source trace found that ended-session handling discarded the partial and returned to Vosk instead of retrying full command capture.
+- Local candidate preserves a partial after final no-match and retries the platform command recognizer once inside an active conversation without repeating the wake phrase; a subsequent failure returns to the wake listener. Files: `WakeWordService.kt`, `SpeechToText.kt`, `OfflineSpeechFallbackPolicy.kt`, `VoiceCommandCapturePolicy.kt`; tests `OfflineSpeechFallbackPolicyTest.kt`, `VoiceCommandCapturePolicyTest.kt`.
+- Focused Android tests: 9 passed, 0 failed/errors/skips. `:app:assembleDebug --offline --max-workers=1` passed; `git diff --check` passed aside from line-ending notices. The Kotlin daemon was denied a temp marker and Gradle completed with its in-process fallback.
+- Candidate APK SHA-256 `E2ADEC373945565A797E98851C14CDC04748FDC0A0DF047572BA4B214EFDE7FE`, package `com.aura.ai.debug` v1.0.0/code 1, verified signer SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`. Not installed; prior approval was for another hash. Exact-hash approval required.
+- Local checkout remains a separate dirty `codex/aura-original` worktree at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no configured remote. This remote write records findings only; no source sync, merge, or change to `main`.
+- Next: obtain exact APK approval, back up and verify app data/package/signer, update in place, then test a no-wake follow-up, repeated turn, and interruption. The candidate fix is not device-verified.
+
 ## Approved Honor installation and one-turn voice check — 2026-11-14
 
 - Owner approved exact APK SHA-256 `BBCF723A51AE1BFCB50672A9C39DF0B41AD942F7723FBA4B3E0D51C148CF0EF1`, package `com.aura.ai.debug` v1.0.0/code 1. Honor ADB device `AYAV6R3707021141` reconnected.

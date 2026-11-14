@@ -1167,3 +1167,11 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - After the previous read-only check, ADB launched the already-installed original package `com.aura.ai.debug`. Android reports Aura's `MainActivity` resumed, but `NotificationShade` still has current focus and the Honor launcher is the focused app. The phone remains behind the lock/notification shade; no unlock was attempted. App data/install was not changed.
 - The two-turn voice test is not yet underway. Owner needs to unlock and bring original Aura visibly to the foreground, then test the wake/math prompt and no-wake follow-up and report exact visible transcripts and spoken answers.
 - Local test status remains 804 Android JVM tests passing; no device voice pass is claimed. No source/APK changes or install/merge occurred. Local original-source provenance remains unresolved.
+
+
+## Windows/web automated checks — 2026-11-14
+
+- `pnpm.cmd typecheck` passed in the local workspace.
+- All 13 existing Node test files passed: **70 tests, 0 failures**. Coverage includes wake/interrupt policies, memory/search helpers, URL and scoped-file policies, and Windows control policies. No live browser mic session or fresh real desktop-control task was exercised.
+- Android local JUnit suite remains 804 passed, 0 failures/errors/skips. The Honor remains connected, but Aura's main activity is behind the notification shade; real-device conversation/follow-up/interrupt tests are not verified.
+- No app source, APK, device data, or permissions changed. Original Aura source provenance remains unresolved. Next: obtain visible Honor test results after unlock, then establish authoritative source mapping before voice-path edits.

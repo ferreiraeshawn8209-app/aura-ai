@@ -996,3 +996,13 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 ## Final Honor ADB state for queued-capture candidate — 2026-11-14
 
 After the build, BEATK reported no ADB devices and no mDNS services. The Honor is currently unreachable for logs or installation. Candidate SHA-256 44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C remains uninstalled and not approved for this exact hash. No additional device changes or tests occurred.
+
+
+## Owner reports follow-up stopped after successful first turn — 2026-11-14
+
+- Owner reports the first wake-to-answer turn succeeded, but Aura then stopped listening or did not respond to a follow-up without another wake phrase. Multi-turn hands-free is still failing on the installed build.
+- The queued recognizer-capture repair is present in the local candidate and has already passed focused policy tests (4/4), the full Android JVM suite (803/803), debug APK assembly, and `git diff --check`. These are automated checks only; they do not prove Android's microphone/ASR handoff works on the Honor.
+- Rechecked the authorized BEATK computer through Remote Desktop Commander: it is online, but `adb devices -l` is empty and `adb mdns services` reports no devices. No phone logs, backup, install, or live retest were possible in this turn.
+- Candidate remains `android/app/build/outputs/apk/debug/app-debug.apk`, `com.aura.ai.debug` v1.0.0/code 1, SHA-256 `44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C`; signer verification passed earlier. This exact hash is not approved or installed. Earlier approvals refer to different APK hashes.
+- No code changed and no tests were rerun in this turn. Local branch/HEAD remain `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941`; no configured remote and pre-existing user work preserved. No source sync, commit, install, or merge; production `main` remains untouched.
+- Next: refresh Wireless debugging on the Honor and leave its page open on the same Wi-Fi as BEATK. After the Honor is discoverable, request approval for this exact APK hash, make a fresh app-data backup, verify package/signature, and update in place without uninstall/data clear. Test two consecutive no-wake follow-ups and collect bounded `WakeWordService`/ASR logs if either fails.

@@ -2,7 +2,13 @@ package com.aura.ai.voice.wake
 
 /** Matches Aura's sole wake phrase and returns words spoken after it, if any. */
 object WakePhraseMatcher {
-    private val prefix = Regex("^\\s*yo(?:[\\W_]+)yo(?:[\\W_]+)yo\\b[\\s,.:;!?-]*", RegexOption.IGNORE_CASE)
+    // Offline speech recognition may render the spoken "yo" as a close homophone.
+    // Require three consecutive wake-like tokens at the start to limit false activations.
+    private const val WAKE_TOKEN = "(?:yo|yoh|yoo|you|yah|ya|yeh|yeah)"
+    private val prefix = Regex(
+        "^\\s*(?:$WAKE_TOKEN(?:[\\W_]+$WAKE_TOKEN){2}|yoyoyo)\\b[\\s,.:;!?-]*",
+        RegexOption.IGNORE_CASE,
+    )
 
     data class Match(
         val transcript: String,

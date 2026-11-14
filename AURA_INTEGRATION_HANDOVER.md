@@ -1119,3 +1119,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - This is evidence of wake mismatch for those background recognizer events, not evidence about the in-app two-turn conversation (Aura was not foreground). The owner's exact manual test transcript/answer remains pending. A read-only Room snapshot attempt could not be completed because the Windows execution environment denied writing its temporary local database copy; no phone database or settings were modified.
 - Verification: ADB device connected; launcher and service state read; two wake results captured. No automated test, app build, or APK install performed. The source-level echo-monitor stall remains a hypothesis. GitHub Android workflow still has no runner steps.
 - Next: obtain the owner's exact two-turn transcript/result. For a live test, keep original Aura foreground and use its visible transcript; only then correlate recognition, model route, and speech completion. Build the exact integration branch and run tests before any exact-hash install approval.
+
+
+## Android CI retry — 2026-11-14
+
+- Retried failed GitHub Actions run `43561921766` for the integration branch after discovering a configured default remote environment. The retry queued job `132353984081` and then completed as failure. Job steps returned an empty list; log download returned GitHub `BlobNotFound`. Therefore no Gradle test or APK build executed in this attempt. This reproduces the runner/steps infrastructure failure; it is not a code-test failure.
+- The registered default environment reports `canRun=true` but has no checked-out working directory (`cwd=null`). No remote coding task was started. Local checkout remains dirty on `codex/aura-original` without a remote, so it is not suitable as a verified build of the source-of-truth branch.
+- Next: regain actionable Android Actions runner/build access or a directly accessible checked-out executor, then test/build the exact branch. Do not install any unverified candidate.

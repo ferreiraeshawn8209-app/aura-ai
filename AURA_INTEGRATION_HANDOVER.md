@@ -750,3 +750,13 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - A first HTTP probe used the environment's configured local proxy and failed; proxy-bypassed LAN probes produced the 403/200 results above.
 - No Android settings, app code, APK, or user data changed; no voice/device test. Local docs updated; local branch codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 has no remote and retains user changes. Docs-only update on this integration branch; no code sync or main change.
 - Next: enter PC address 192.168.8.18, port 3002, and the code already supplied to the owner in original Aura > Settings > Windows desktop agent, then run a read-only connection check from the Honor.
+
+
+## Refreshed Android-to-PC pairing session — 2026-11-14
+
+- Rechecked live state: the local PC preview at http://127.0.0.1:3008/ returned HTTP 200, while the previous Android agent listener was no longer active. ADB lists no connected Honor.
+- Created a fresh private pairing session on the existing PC Aura service at 192.168.8.18:3002. The bearer code was provided directly to the owner and is intentionally omitted here.
+- Verified the new LAN listener: authenticated read-only request returned 175 apps, 11 windows, and 2 saved Ollama model entries; unauthenticated request returned HTTP 403. This verifies the PC listener and gate, not Android-side pairing.
+- No app source, phone data, firewall rules, public endpoint, APK, or production main branch changed. Android pairing and real-device voice tests remain pending.
+- Local checkout remains codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 with no remote; existing dirty user changes were preserved. No local commit or source sync.
+- Next: enter the fresh address/port/code in original Aura Android Settings > Windows desktop agent, tap Save and test, and verify a phone-originated read-only listing. Recreate the session if PC Aura restarts.

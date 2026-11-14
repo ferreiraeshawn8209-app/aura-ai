@@ -898,3 +898,13 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - Earlier approval was for different hashes and does not authorize this APK. ADB still lists no Honor. No app-data backup, install, live cloud request, or phone voice test occurred. The fallback test uses mock providers; actual cloud fallback remains unverified.
 - Local source is separate branch `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no remote and existing dirty user changes preserved. No source sync or merge; production `main` unchanged.
 - Next: reconnect the Honor and approve this exact APK hash. Back up private data, verify installed package/signer, update in place without uninstall/data clear, then test voice transcript and latency on-device; exercise live cloud fallback only with the authorized credential configured.
+
+
+## Follow-up still fails on installed build — 2026-11-14
+
+- Owner reports the first wake-and-answer turn on the installed Aura build succeeded, but Aura stopped listening or did not respond to the next question without another wake phrase. This confirms the installed build does not yet meet continuous multi-turn conversation acceptance.
+- The no-match recovery candidate preserves an interim transcript after Android `ERROR_NO_MATCH`, retries full platform command capture once during an active conversation, then returns to the wake listener. It passed focused tests (9/9) and the full Android regression (801 tests across 177 suites, 0 failures/errors/skips); `:app:assembleDebug --offline --max-workers=1` succeeded.
+- Candidate APK `com.aura.ai.debug` v1.0.0 SHA-256 `E2ADEC373945565A797E98851C14CDC04748FDC0A0DF047572BA4B214EFDE7FE` remains uninstalled. Prior approval was for another hash; do not install this candidate until the owner explicitly approves this exact hash. ADB currently lists no connected Honor.
+- No new phone test was possible in this update. The retry fix is not device-verified. The previous installed build's first-turn transcript and spoken answer (“10”) passed by owner report; its next-turn continuity failed by owner report.
+- Local checkout: `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`; no configured remote and pre-existing user edits preserved. No local commit/push or source sync. This GitHub update is documentation-only; production `main` remains unchanged.
+- Next: after exact-hash approval and Honor reconnection, make a fresh private-data backup, verify installed package/signature, update in place without uninstall/data clear, then test two or more consecutive turns without repeating the wake phrase and capture bounded ASR logs if a turn fails.

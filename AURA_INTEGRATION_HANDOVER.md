@@ -991,3 +991,8 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - This exact APK is not installed and has no exact-hash approval. BEATK ADB mDNS sees the Honor at 192.168.8.17:43283, but connection attempts are refused (10061). No device logs or voice retest occurred. The old installed build still has the owner-reported failed follow-up; this change is not device-verified and is not claimed fixed.
 - Local source checkout is dirty codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 with no configured remote. No local source commit/push or sync; this update is documentation-only on the integration branch, production main unchanged.
 - Next: reconnect the Honor, obtain exact-hash approval, make/verify a fresh app-data backup and package/signer checks, install in place without uninstall/data clear, then test at least two consecutive no-wake turns and interruption. Capture service/ASR logs; do not claim voice continuity until actual phone tests pass.
+
+
+## Final Honor ADB state for queued-capture candidate — 2026-11-14
+
+After the build, BEATK reported no ADB devices and no mDNS services. The Honor is currently unreachable for logs or installation. Candidate SHA-256 44636F2B74C4B60784088F1FA973E2331C3E3F4716040ADD53E3BC72E1EE1E4C remains uninstalled and not approved for this exact hash. No additional device changes or tests occurred.

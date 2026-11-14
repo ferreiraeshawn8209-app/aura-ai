@@ -771,3 +771,11 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - ADB still lists no Honor. No app-data backup, install, Android-side action, or real voice test occurred. Existing exact APK approval names a different hash and does not authorize this one. Local source is not synced to this branch; no merge to main.
 - Local checkout: codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941, no remote, dirty user work preserved. No local commit/push.
 - Next: reconnect Honor, back up and verify package/signer, obtain approval for the exact APK hash before in-place installation, then test the new Android-to-PC actions from the phone and separately verify hands-free voice/TTS.
+
+
+## Pairing and APK approval state rechecked — 2026-11-14
+
+- Current private PC listener at 192.168.8.18:3002 still accepts the generated bearer: authenticated read-only inventory returned 175 apps, 12 windows, and 2 saved model entries; no-auth request returned HTTP 403. The code was supplied directly to the owner and remains live while PC Aura stays running.
+- ADB still lists no Honor. Exact-hash approval for the newly built Android connector APK is pending; the previous approval covered a different APK. No device backup/install occurred.
+- No code or user data changed in this recheck. The latest handover includes the Android connector extension, focused test results (25/25), successful APK build/signature verification, local checkout state, and remaining device tests. No source sync or merge to main.
+- Next: phone-side pair and connect; after exact-build approval and ADB reconnection, back up existing app data, verify package/signer, install in place, and test paired website/file actions and hands-free voice on the actual Honor.

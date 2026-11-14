@@ -704,3 +704,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - `pnpm.cmd typecheck` passed. Focused web tests (`simple-arithmetic`, `website-open-status`, and `local-request-policy`) passed **32/32**. No live microphone, spoken response, barge-in, or Android phone test was performed.
 - Honor remained absent from ADB; no install or data action. No local source code changed or synced. The local checkout is still `codex/aura-original` / `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote and existing dirty user work. Main is unchanged.
 - Next: owner corrects the ElevenLabs credential inside Aura Settings. Reconnect Honor, preserve and verify its data/signature, obtain exact approval for the current APK hash if testing that build, then conduct real voice acceptance.
+
+
+## Full Android regression rerun — 2026-11-14
+
+- Current local checkout ran `:app:testDebugUnitTest --offline --max-workers=1` using the repository-local Gradle cache. Result: **BUILD SUCCESSFUL; 791 tests across 177 suites; 0 failures, errors, or skips**. `git diff --check` passed.
+- A first attempt had a PowerShell-split Gradle property and failed during task selection before tests started. The corrected invocation without that property passed the full suite.
+- No app source changed in this continuation. Local branch `codex/aura-original` remains at `471ef9d4c34bc62758908b9efe1f5dff2af54941` without a configured remote and with pre-existing user edits.
+- Physical Honor testing remains pending: ADB lists no device. No new install or data operation. The current local APK SHA remains `C2E3E2D7620FE3F64CC74674F0A75821DDCCCA4457F27B9AAAC1BCDB60EEBF40`, not approved for installation.
+- PC Settings still reports the saved ElevenLabs key rejected, so the Austrian voice remains unavailable there; replace it only inside Aura Settings. No credential was read or changed. Production main untouched.

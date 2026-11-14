@@ -1209,3 +1209,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - Repository listings across the connected GitHub accounts found `spokdot777-dot/T1000` (default branch `main`). Its README calls the project T1000 and specifies the wake phrase “Hey T1000”; this alone does not prove it is the installed original Aura source.
 - GitHub code searches of default-branch indexes for `vosk-model-small-en-us-0.15`, `com.aura.ai.debug`, and `WakePhraseSession` across `ferreiraeshawn8209-app/aura-ai`, `aura-core`, `Aura-Voice-Subsystem`, and `tony-my-ai-friend` returned no matches. Index scope is limited; private or unindexed branches remain possible.
 - No repository was selected or modified. Keep local original Aura source unchanged until its authoritative remote/branch is identified or the user explicitly overrides the current provenance rule.
+
+
+## Automatic provider routing source review — 2026-11-14
+
+- Read-only inspection of the local Android source shows the unset provider default is `AUTOMATIC`. Its order is configured OpenAI-compatible cloud, then configured Ollama Cloud, then local Ollama; cloud candidates are only included when their corresponding API key is saved. Provider failure cooldown and bounded route attempts are present.
+- This matches an online-first/local-fallback policy at source level. The 804 local tests pass, but live Aura app failover and recovery have not been observed. Raw Honor-to-PC Ollama inference is separate evidence and does not prove the app router.
+- No source/settings/API-key/APK/data change. Original-source Git remote remains unresolved.

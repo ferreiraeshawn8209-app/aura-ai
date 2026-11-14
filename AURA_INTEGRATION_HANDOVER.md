@@ -656,3 +656,10 @@ Local Windows checkout: C:\\Users\\shawn\\Desktop\\T1000-main, branch codex/aura
 - The separate active local checkout `codex/aura-original` built a debug APK with `:app:assembleDebug` (**BUILD SUCCESSFUL**): package `com.aura.ai.debug`, version 1.0.0/code 1, size 106,018,493 bytes, SHA-256 `8D822DB1088C4C0CF0310BA981C5F8BD893172E41A3EADA7C6D269CE5521B901`. APK signature verification passed; Android Debug signer certificate SHA-256 `59df53c4026967ee86f6313a0ae8aa1ce4f4fbd9c025cd808e41d3eaf7da3a3b`.
 - This APK was built from the local checkout and has not been copied into or installed from this GitHub branch. It differs from the prior exact approved APK hash `F010A4E144451B587AB8D5D93F595A6A95EE64F24ADE761AB594F2B5AE3ED5B8`; do not install the new hash until the owner approves it. ADB still has no Honor device, so backup, installed-signature comparison, and device acceptance remain pending.
 - The same local checkout's four focused test classes passed 40/40. The handover is recording evidence across checkouts; it does not imply their source histories are synchronized. Main remains untouched.
+
+
+## Current acknowledgement source scan — 2026-11-14
+
+- A scan of current Android/PC runtime source in the local workspace found no fixed spoken “I'm on it” response: `VoiceReplyAcknowledgementPolicy.MESSAGE` is exactly “I'll be back”, and the agent prompt rejects “I'm on it” as filler. It permits concise military wording only when fitting, and the optional “Hasta la vista, baby” only after successful tasks.
+- Older notes about a delayed “I'm on it” line describe historical implementation and are superseded by the current source scan. A model could still disobey its prompt; audio must be tested on-device to verify spoken output.
+- This is a source-level check in separate local checkout `codex/aura-original`, not evidence that these uncommitted local files are present in this GitHub branch. Latest local APK SHA is `8D822DB1088C4C0CF0310BA981C5F8BD893172E41A3EADA7C6D269CE5521B901`; not installed or approved for install. ADB still has no Honor.

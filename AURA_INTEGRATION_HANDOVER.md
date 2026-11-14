@@ -1160,3 +1160,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - ADB is connected. Read-only window state showed the Honor on the launcher/notification shade, not Aura. In the 08:10:59–08:17:06 local-time window, the background WakeWordService emitted 86 speech-final events, all with `wakePhraseDetected=false`. Transcripts are intentionally absent from logs; these events cannot identify what was said. The requested in-app two-turn wake/math/follow-up test is not verified.
 - No app source, APK, app data, device setting, or production branch was changed. No installation or merge occurred. Local original-source mapping remains unresolved; do not treat `integration/aura-voice-consolidation` as the installed original app source solely because of package similarity.
 - Next: complete the two-turn test with original Aura foreground and capture the visible transcript/answer for both turns. After authoritative original source mapping is established, diagnose the standby mismatch and session recovery, rerun tests against that source, build and verify the candidate, then seek exact-hash install approval with data backup.
+
+
+## Honor app launch staged for owner voice test — 2026-11-14
+
+- After the previous read-only check, ADB launched the already-installed original package `com.aura.ai.debug`. Android reports Aura's `MainActivity` resumed, but `NotificationShade` still has current focus and the Honor launcher is the focused app. The phone remains behind the lock/notification shade; no unlock was attempted. App data/install was not changed.
+- The two-turn voice test is not yet underway. Owner needs to unlock and bring original Aura visibly to the foreground, then test the wake/math prompt and no-wake follow-up and report exact visible transcripts and spoken answers.
+- Local test status remains 804 Android JVM tests passing; no device voice pass is claimed. No source/APK changes or install/merge occurred. Local original-source provenance remains unresolved.

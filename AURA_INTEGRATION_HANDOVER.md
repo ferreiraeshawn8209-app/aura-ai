@@ -1202,3 +1202,10 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - From the Honor shell, sent Ollama `/api/chat` to PC `192.168.8.18:11434` with `qwen3:1.7b`, `think:false`, `keep_alive:0`, and a small token cap. The model returned `5 + 5 = 10` in about 16.3 seconds. This verifies direct phone-to-PC local inference, not Aura's app-level router or voice pipeline.
 - Curl reported a header-argument parsing warning (`Could not resolve host: application`) while a valid model JSON response was returned. The result is a successful API smoke test with a command warning. Immediate `ollama ps` showed no model remained loaded. No firewall/network settings changed.
 - Honor is still at the lock/notification shade. In-app wake, transcript, TTS, follow-up, and barge-in remain unverified; no app source, APK, or data changed.
+
+
+## Additional source-provenance search — 2026-11-14
+
+- Repository listings across the connected GitHub accounts found `spokdot777-dot/T1000` (default branch `main`). Its README calls the project T1000 and specifies the wake phrase “Hey T1000”; this alone does not prove it is the installed original Aura source.
+- GitHub code searches of default-branch indexes for `vosk-model-small-en-us-0.15`, `com.aura.ai.debug`, and `WakePhraseSession` across `ferreiraeshawn8209-app/aura-ai`, `aura-core`, `Aura-Voice-Subsystem`, and `tony-my-ai-friend` returned no matches. Index scope is limited; private or unindexed branches remain possible.
+- No repository was selected or modified. Keep local original Aura source unchanged until its authoritative remote/branch is identified or the user explicitly overrides the current provenance rule.

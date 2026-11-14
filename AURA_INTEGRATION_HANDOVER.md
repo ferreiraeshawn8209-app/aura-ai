@@ -779,3 +779,12 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - ADB still lists no Honor. Exact-hash approval for the newly built Android connector APK is pending; the previous approval covered a different APK. No device backup/install occurred.
 - No code or user data changed in this recheck. The latest handover includes the Android connector extension, focused test results (25/25), successful APK build/signature verification, local checkout state, and remaining device tests. No source sync or merge to main.
 - Next: phone-side pair and connect; after exact-build approval and ADB reconnection, back up existing app data, verify package/signer, install in place, and test paired website/file actions and hands-free voice on the actual Honor.
+
+
+## Full Android regression after paired-PC connector extension — 2026-11-14
+
+- Ran :app:testDebugUnitTest --offline --max-workers=1 from the local source checkout using repository-local Gradle home. Result: BUILD SUCCESSFUL; 177 test suites, 798 tests, 0 failures, 0 errors, 0 skipped. The test task was the only executed task; Kotlin main/test compilation was up to date.
+- git diff --check passed for the Android connector/prompt source and test files (Git reports only existing LF-to-CRLF notices). No source code changed in this verification.
+- ADB still lists no Honor. The suite does not establish wake/microphone/TTS/interrupt behavior, actual Android-to-PC calls, or hardware acceptance. Exact-hash install approval remains pending for the new APK SHA-256 0BC02E5F95C208AC36035235E01E04ECE1AEE078AC3B0E6C3FD8D6682F7CC508.
+- Local checkout stays codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941 with no remote; dirty user changes preserved. No local commit, source sync, or merge to main.
+- Next: reconnect the Honor; back up data and verify package/signer before the exact-approved in-place APK install; test paired website/file actions, then actual wake/transcript/reply/interrupt/voice behavior.

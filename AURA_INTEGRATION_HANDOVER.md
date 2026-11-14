@@ -945,3 +945,13 @@ Local-only code files changed for this update: `android/app/src/main/java/com/au
 - No web source changed. No live PC microphone, TTS audio, browser permission, or end-to-end voice conversation test. Android candidate remains pending exact-hash approval and Honor reconnect.
 - Local `AI_HANDOVER.md`, `PROJECT_STATUS.md`, `VOICE_TESTS.md`, and `NEXT_STEPS.md` updated. Local checkout remains dirty `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941` with no remote. No source sync/merge; production `main` unchanged.
 - Next: run live PC voice acceptance in Chrome/Edge when the Aura web app and microphone are available; separately back up/install/test the exact approved Android candidate only after approval and device reconnect.
+
+
+## PC preview availability and cross-device boundary — 2026-11-14
+
+- `http://127.0.0.1:3008/` returned HTTP 200 and title “Aura AI | Your personal assistant”; the existing Aura page was opened and rendered with the workspace, saved conversation, and hands-free toggle. This confirms preview availability at the time checked only.
+- The page explicitly says calls, GPS, voice, and phone media run in Android and that the web companion is not connected to the phone. Cross-device control parity is incomplete.
+- No live PC mic, browser permission, or TTS test was run. Automated browser suites passed 32/32 in-process (`tools/hands-free-policy.test.mjs` 5, `app/simple-arithmetic.test.mjs` 24, `app/website-open-status.test.mjs` 3); `pnpm run typecheck` passed. Node's `--test` harness failed with `spawn EPERM` before execution, so the same test modules were executed directly.
+- Preview process ownership/lifecycle was not verified. A start attempt failed due to argument parsing; direct Next startup hit `spawn EPERM`, and elevated startup reported port 3008 already occupied. A direct GET/browser render succeeded. No code or user data changed.
+- Local handover/status/voice-tests/next-steps updated. Local checkout remains `codex/aura-original` at `471ef9d4c34bc62758908b9efe1f5dff2af54941`, with no remote and existing user changes. No source sync/merge; `main` unchanged.
+- Next: verify a stable PC preview process, run browser mic/TTS/wake/follow-up/interruption acceptance with browser permission, and keep Android install/device tests gated on exact-hash APK approval plus Honor reconnection.

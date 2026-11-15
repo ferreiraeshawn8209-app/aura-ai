@@ -1224,3 +1224,11 @@ After the build, BEATK reported no ADB devices and no mDNS services. The Honor i
 - Microphone and notification permissions are granted. Android's current capture snapshot showed 16 kHz recording, silenced:false, with AEC attached. No permissions changed.
 - Live observation 09:09:07–09:10:07 recorded six Vosk finals, all wakePhraseDetected=false; foreground preview briefly showed Heard: yeah. No accepted command or spoken answer was verified. Owner's exact wake/math and no-wake follow-up result remains pending.
 - Chat still displays an Ollama HTTP 402 error. No source/APK/settings/app-data change or test rerun; diagnostic UI XML only under /data/local/tmp. Local checkout remains codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941, dirty/no remote. Next: correlate exact utterance/transcript, then isolate wake recognition from provider routing.
+
+
+## Latest continuation: device disconnected, source gate unchanged
+
+- ADB now lists no Honor. Prior foreground/microphone evidence is historical; no new device acceptance result.
+- Local original checkout remains codex/aura-original at 471ef9d4c34bc62758908b9efe1f5dff2af54941, dirty/no remote. Current AGENTS.md requires source preservation when source history/remote is ambiguous. No source change/build/install/test rerun.
+- Bundled US-English Vosk config has trailing-silence endpoints 0.5/0.75/1.0 seconds. Possible segmentation contribution only; no acoustic diagnosis claimed. Python Vosk unavailable and bounded project audio-fixture search found no WAV/PCM/FLAC samples; no dependencies downloaded.
+- Local handover/status/voice-tests/next-steps updated. Required next input: restore device connection and provide original-source mapping or explicit authorization overriding the current provenance gate for local original-source edits. Existing automated results are unchanged; no claim of working voice.

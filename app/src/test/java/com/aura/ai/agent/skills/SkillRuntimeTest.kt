@@ -19,7 +19,7 @@ class SkillRuntimeTest {
     }
 
     @Test
-    fun runsApprovedDeclarativeSkill() = runBlocking {
+    fun runsRoutineDeclarativeSkillWithoutApproval() = runBlocking {
         val runtime = SkillRuntime(
             tools = ToolRegistry(setOf(EchoTool())),
             approval = SkillApproval { _, _ -> true },
@@ -44,6 +44,7 @@ class SkillRuntimeTest {
             override val name = "dangerous"
             override val description = "Test tool"
             override val parameters = emptyMap<String, String>()
+            override val requiresUserApproval = true
             override suspend fun execute(args: Map<String, String>): ToolResult {
                 executed = true
                 return ToolResult(true, "unexpected")

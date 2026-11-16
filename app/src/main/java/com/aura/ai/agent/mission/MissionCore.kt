@@ -67,7 +67,7 @@ object MissionCore {
                 !it.id.matches(Regex("[A-Za-z0-9._-]{1,64}")) ||
                     it.description.isBlank() ||
                     it.description.length > 500 ||
-                    it.description.any { character -> character.isISOControl() && character != '\\n' && character != '\\t' }
+                    it.description.any { character -> character.isISOControl() && character != '\n' && character != '\t' }
             }) {
             return Result.failure(IllegalArgumentException("Every mission task needs a safe ID and a description of 1 to 500 characters"))
         }

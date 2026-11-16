@@ -185,6 +185,17 @@ class AgentOrchestrator @Inject constructor(
         val toolName = step.tool ?: return Observation(step.index, true, "(reasoning) ${step.description}")
         val tool = registry.get(toolName)
             ?: return Observation(step.index, false, "", "Unknown tool: $toolName")
+        // The orchestrator must not silently execute a consequential tool.
+        // Routine research/reversible tools default to execution; tools that
+        // require approval are held until an approval UI is wired into this flow.
+        if (tool.requiresUserApproval) {
+            return Observation(
+                step.index,
+                false,
+                "",
+                "This action requires explicit user approval; the approval workflow is not connected yet.",
+            )
+        }
         return try {
             val result = tool.execute(step.args)
             Observation(step.index, result.success, result.output, result.error)

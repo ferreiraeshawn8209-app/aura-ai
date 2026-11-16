@@ -13,6 +13,14 @@ interface Tool {
     /** Parameter name -> human description, injected into the planning prompt. */
     val parameters: Map<String, String>
 
+    /**
+     * Routine research and reversible tools run by default. Override to true
+     * only for consequential actions that need per-action user authorization.
+     * This is tool-owned metadata, never model-authored skill data.
+     */
+    val requiresUserApproval: Boolean
+        get() = false
+
     suspend fun execute(args: Map<String, String>): ToolResult
 }
 

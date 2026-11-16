@@ -13,12 +13,12 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - name: Restore and verify Gradle wrapper
-        run: sh scripts/restore-wrapper.sh
+      - name: Set up Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
       - name: Test and build debug APK
-        run: |
-          chmod +x gradlew
-          ./gradlew testDebugUnitTest assembleDebug --stacktrace
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: aura-t1000-debug

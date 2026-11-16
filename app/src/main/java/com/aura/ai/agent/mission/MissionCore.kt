@@ -63,8 +63,13 @@ object MissionCore {
         if (mission.date.isBlank()) return Result.failure(IllegalArgumentException("Mission date is required"))
         if (mission.tasks.isEmpty()) return Result.failure(IllegalArgumentException("A daily mission needs at least one task"))
         if (mission.tasks.size > 20) return Result.failure(IllegalArgumentException("Daily mission exceeds 20 tasks"))
-        if (mission.tasks.any { it.id.isBlank() || it.description.isBlank() }) {
-            return Result.failure(IllegalArgumentException("Every mission task needs an ID and description"))
+        if (mission.tasks.any {
+                !it.id.matches(Regex("[A-Za-z0-9._-]{1,64}")) ||
+                    it.description.isBlank() ||
+                    it.description.length > 500 ||
+                    it.description.any { character -> character.isISOControl() && character != '\\n' && character != '\\t' }
+            }) {
+            return Result.failure(IllegalArgumentException("Every mission task needs a safe ID and a description of 1 to 500 characters"))
         }
         if (mission.tasks.map { it.id }.distinct().size != mission.tasks.size) {
             return Result.failure(IllegalArgumentException("Mission task IDs must be unique"))

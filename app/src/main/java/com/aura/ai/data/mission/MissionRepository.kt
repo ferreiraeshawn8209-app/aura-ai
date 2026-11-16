@@ -70,6 +70,7 @@ class MissionRepository @Inject constructor(
                 prefs[Keys.TASKS] = encoded
                 prefs[Keys.REVIEWED_AT] = mission.reviewedAtEpochMillis
             }
+            Unit
         }
     }
 

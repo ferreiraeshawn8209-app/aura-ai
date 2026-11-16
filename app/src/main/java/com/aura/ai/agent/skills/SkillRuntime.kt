@@ -22,7 +22,6 @@ data class SkillStep(
     val id: String,
     val toolName: String,
     val arguments: Map<String, String> = emptyMap(),
-    val requiresApproval: Boolean = true,
 )
 
 sealed interface SkillRunEvent {
@@ -65,11 +64,10 @@ class SkillRuntime(
                 return reject(emit, "Unsupported arguments for ${step.toolName}: ${unknownArguments.joinToString()}")
             }
 
-            if (step.requiresApproval) {
-                emit(SkillRunEvent.AwaitingApproval(step))
-                if (!approval.approve(skill, step)) {
-                    return reject(emit, "Approval declined for step ${step.id}")
-                }
+            // Approval is enforced by the runtime, never controlled by model-authored skill data.
+            emit(SkillRunEvent.AwaitingApproval(step))
+            if (!approval.approve(skill, step)) {
+                return reject(emit, "Approval declined for step ${step.id}")
             }
 
             val result = try {

@@ -7,8 +7,9 @@ import com.aura.ai.agent.tool.ToolResult
  * Skills are declarative workflows, not executable source code.
  *
  * A model may propose a SkillManifest, but the runtime validates every tool
- * name and argument before execution. This deliberately avoids eval, scripts,
- * shell commands, and arbitrary downloaded code.
+ * name and argument before execution. Routine research and reversible steps
+ * run by default. Only tools explicitly marked as consequential by their
+ * implementation require per-action user approval.
  */
 data class SkillManifest(
     val name: String,
@@ -64,10 +65,13 @@ class SkillRuntime(
                 return reject(emit, "Unsupported arguments for ${step.toolName}: ${unknownArguments.joinToString()}")
             }
 
-            // Approval is enforced by the runtime, never controlled by model-authored skill data.
-            emit(SkillRunEvent.AwaitingApproval(step))
-            if (!approval.approve(skill, step)) {
-                return reject(emit, "Approval declined for step ${step.id}")
+            // Routine tools execute immediately. Approval is requested only
+            // when the trusted tool implementation marks the action consequential.
+            if (tool.requiresUserApproval) {
+                emit(SkillRunEvent.AwaitingApproval(step))
+                if (!approval.approve(skill, step)) {
+                    return reject(emit, "Approval declined for step ${step.id}")
+                }
             }
 
             val result = try {

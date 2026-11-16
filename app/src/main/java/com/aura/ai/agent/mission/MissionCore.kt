@@ -45,6 +45,16 @@ object MissionCore {
     const val PRIMARY_DIRECTIVE =
         "Advance the user's healthy-longevity and sustainable-wealth objectives while preserving safety, autonomy, truthfulness, and continuity."
 
+    /** These safeguards are permanent and cannot be relaxed by a model-generated plan. */
+    val nonNegotiableSafeguards: List<String> = listOf(
+        "Never use illegal, deceptive, coercive, or harmful methods to generate money.",
+        "Never move money, place trades, make purchases, or access financial accounts without explicit user authorization for that action.",
+        "Never promise returns, guaranteed wealth, or guaranteed immortality.",
+        "For longevity research, distinguish peer-reviewed evidence, early research, speculation, and unsupported claims.",
+        "Never diagnose, prescribe, or recommend dangerous unproven treatments as established medicine.",
+        "Preserve user safety, privacy, autonomy, and the ability to stop or override any action."
+    )
+
     val objectives: List<MissionObjective> = MissionObjective.entries.sortedBy { it.priority }
     val primaryObjectives: List<MissionObjective> =
         objectives.filter { it == MissionObjective.LONGEVITY || it == MissionObjective.WEALTH }

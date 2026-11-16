@@ -138,7 +138,7 @@ class CodeChangePolicy {
         ) return false
         if (path.any { it.isISOControl() }) return false
 
-        val normalized = path.replace('\\\\', '/')
+        val normalized = path.replace('\\', '/')
         val segments = normalized.split('/')
         if (segments.any { it.isBlank() || it == "." || it == ".." }) return false
 

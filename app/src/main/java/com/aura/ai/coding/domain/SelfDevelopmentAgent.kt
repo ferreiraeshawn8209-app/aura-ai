@@ -133,7 +133,9 @@ class SelfDevelopmentAgent(
  */
 class CodeChangePolicy {
     fun isAllowed(path: String): Boolean {
-        if (path.isBlank() || path.startsWith("/") || path.startsWith("\\\\")) return false
+        if (path.isBlank() || path.startsWith("/") || path.startsWith("\\\\") ||
+            Regex("^[A-Za-z]:").containsMatchIn(path)
+        ) return false
         if (path.any { it.isISOControl() }) return false
 
         val normalized = path.replace('\\\\', '/')

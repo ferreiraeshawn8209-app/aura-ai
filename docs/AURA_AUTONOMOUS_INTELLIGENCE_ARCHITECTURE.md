@@ -208,3 +208,24 @@ A feature is not complete because code exists or an AI says it worked. Completio
 ## 10. Current status and honesty
 
 This file is an architecture proposal. The current repository already contains agent, coding, finance and trading packages, but their existence does not prove they are complete, integrated, secure or passing tests. The separate feature branches are audit candidates, not automatically safe to merge. No production deployment, live trading, customer outreach or successful build is claimed by this document.
+
+
+## 11. Preliminary repository audit findings (2026-11-20)
+
+Verified against the connected GitHub repository; these are observations, not a complete audit:
+
+- PR #10 (T1000 amalgamation) is merged.
+- PR #15 (build/Ollama repair) is merged, but its own description says a full Android build could not run in its authoring environment; compiler, Room instrumentation and physical-device checks were still required.
+- PR #16 (agent verification / wake-word restart backoff) is merged, but its description also requires Android build, tests and physical-device verification.
+- Current `main` contains agent orchestration and learning classes, plus separate `agent.core.AgentPipeline` and `agent.tool.ToolRegistry` paths. The existing progress report explicitly warns that these execution paths and registries need consolidation and that several finance/browser/coding/trading repositories contain mocks.
+- Current `main` contains `coding`, `finance` and `trading` packages. Their presence is not evidence of production integrations.
+- The unmerged `feature/self-development-agent` branch contains `agent/mission/MissionCore.kt`. Its current priority order puts LONGEVITY before WEALTH, which conflicts with the owner's latest standing priority: measurable income first, longevity research second, self-development third. Do not merge its charter unchanged. Reconcile its useful code with this architecture and the current priority order.
+- The unmerged `feature/trading-engine` branch exists separately. It must be reviewed file-by-file and tested before reuse; branch names alone do not prove completeness.
+- The architecture PR's first Android workflow run reported failure. The job-log endpoint was unavailable during this audit, so the failure cause is unknown. It must not be described as an Android compilation failure or as a passing build until logs and a baseline run are obtained.
+
+### Required audit before Phase 1 coding
+1. Compare `feature/self-development-agent` and `feature/trading-engine` against `main` by commit ancestry and changed files.
+2. Inspect Room entities/DAOs/migrations, WorkManager jobs, Hilt bindings, tool registries, coding/finance/trading data sources and all test suites.
+3. Inspect the actual Aura Core repository/API and the Android Core client before deciding where the durable scheduler belongs.
+4. Obtain a green baseline CI build or record the exact blocker from logs.
+5. Reconcile the immutable mission charter so income is priority 1, longevity priority 2, self-development priority 3, and continuity is a cross-cutting requirement.
